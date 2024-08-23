@@ -265,8 +265,8 @@ if (!function_exists('ghl_oauth_call')) {
         $url = 'https://api.msgsndr.com/oauth/token';
         $curl = curl_init();
         $data = [];
-        $data['client_id'] = env('GHL_CLIENT_ID');
-        $data['client_secret'] = env('GHL_CLIENT_SECRET');
+        $data['client_id'] = '668eb5cf0291d90e9f353acf-lyg20chd';
+        $data['client_secret'] = '871e4edf-276d-484f-a2bb-a3c90273c717';
         $md = empty($method) ? 'code' : 'refresh_token';
         $data[$md] = $code;
         $data['grant_type'] = empty($method) ? 'authorization_code' : 'refresh_token';

@@ -44,13 +44,13 @@ class LoginRequest extends FormRequest
     public function authenticate()
     {
         $this->ensureIsNotRateLimited();
-        
+
         $user = Auth::getProvider()->retrieveByCredentials(['email' => $this->input('email')]);
 
     // Check if the user exists and is active
     if (!$user || !$user->status) {
         throw ValidationException::withMessages([
-            'email' => __('Your account is not activate! please contact admin.'),
+            'email' => __('Your account is not activate! please contact Super Admin.'),
         ]);
     }
 

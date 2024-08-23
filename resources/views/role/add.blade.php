@@ -114,12 +114,15 @@
     <div class="row">
         <div class="col-md-6 mx-auto">
             <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Role and Permissions Management</h4>
+                </div>
                 <div class="card-body">
                     <form id="roleForm" action="{{ route('role.save') }}" method="POST" class="card-box">
                         @csrf
                         <div class="form-group row">
                             <div class="col-md-12">
-                                <label for="name">Name *</label>
+                                <label for="name">Role Name *</label>
                                 <input type="text" placeholder="Name"
                                     class="form-control @error('name') is-invalid @enderror" name="name"
                                     value="{{ old('name') }}" id="name" autocomplete="off">
@@ -130,6 +133,41 @@
                                 @enderror
                             </div>
                         </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label for="permissions">Assign Permissions</label>
+                                <table class="table mb-0 table-bordered table-hover" id="managePerm">
+                                    <thead>
+                                        <tr>
+                                            <th class="fw-bold">Permissions</th>
+                                            <th class="fw-bold">Assign</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($permissions as $perm)
+                                            <tr>
+                                                <td>{{ $perm->name }}</td>
+                                                <td>
+                                                    <fieldset>
+                                                        <div class="vs-checkbox-con vs-checkbox-success">
+                                                            <div class="holder">
+                                                                <div class="checkdiv grey400">
+                                                                    <input type="checkbox" class="le-checkbox permissions"
+                                                                        id="chkbox{{ $perm->id }}"
+                                                                        value="{{ $perm->id }}" name="permissions[]">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <a href="{{ route('role.list') }}"
                                 class="btn btn-danger btn-sm text-light px-4 mt-3 float-right mb-0 ml-2">Cancel</a>
@@ -139,126 +177,8 @@
                     </form>
                 </div>
             </div>
-            <div class="card perm d-none">
-                <div class="card-header">
-                    <h4 class="card-title">Permissions Management</h4>
-                </div>
-                <div class="card-body">
-                    <div class="container">
-                        <table class="table mb-0 table-bordered table-hover" id="managePerm">
-                            <thead>
-                                <tr>
-                                    <th class="fw-bold">Permissions</th>
-                                </tr>
-                                <tr>
-                                    <th class="fw-bold">Available Permissions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
 
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
 
-            </div>
         </div>
     </div>
-@endsection
-@section('js')
-
-    <script>
-        $(document).ready(function() {
-            $('#roleForm').on('submit', function(e) {
-                e.preventDefault(); // Prevent the default form submission
-                var formData = $(this).serialize(); // Serialize the form data
-
-                $.ajax({
-                    url: "{{ route('role.save') }}", // The route to save the role
-                    method: "POST",
-                    data: formData,
-                    success: function(response) {
-                        if (response.success) {
-                            // Show success message (optional, you can implement a better way to display messages)
-                            alert(response.message);
-
-                            // Hide the form card and show the permissions card
-                            $('.card').not('.perm').hide();
-                            $('.perm').removeClass('d-none').show();
-
-                            // Load the permissions into the table
-                            let permissionsHtml = '';
-                            response.permissions.forEach(function(permission) {
-                                permissionsHtml += `
-                                    <tr>
-                                        <td>${permission.name}</td>
-                                        <td>
-                                            <fieldset>
-                                                <div class="vs-checkbox-con vs-checkbox-success">
-                                                    <div class="holder">
-                                                        <div class="checkdiv grey400">
-                                                            <input type="checkbox" class="le-checkbox permissions"
-                                                                id="chkbox_${permission.id}" value="1"
-                                                                data-permission="${permission.id}" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-                                        </td>
-                                    </tr>`;
-                            });
-                            $('#managePerm tbody').html(permissionsHtml);
-                        }
-                    },
-                    error: function(xhr) {
-                        // Handle validation errors and display them to the user
-                        const errors = xhr.responseJSON.errors;
-                        for (let key in errors) {
-                            alert(errors[key][
-                                0
-                            ]); // Replace this with a more user-friendly display
-                        }
-                    }
-                });
-            });
-        });
-        $(document).on("change", ".permissions", function() {
-            let elm = $(this);
-            $.ajax({
-                type: "GET",
-                url: "{{ route('permission.manage') }}",
-                data: {
-                    role: elm.data('role'),
-                    permission: elm.data('permission'),
-                },
-                success: function(response) {
-                    if (response.status == 200) {
-                        toastr.success(response.message)
-                    }
-                }
-            });
-        });
-
-        var table = $('#datatables').DataTable({
-            "sort": false,
-            "ordering": false,
-            "pagingType": "full_numbers",
-            "processing": true,
-            "serverSide": true,
-            "lengthMenu": [
-                [10, 25, 50, -1],
-                [10, 25, 50, "All"]
-            ],
-            responsive: true,
-            orderable: true,
-            searchable: true,
-            language: {
-                search: "_INPUT_",
-                searchPlaceholder: "Search records",
-            }
-        });
-    </script>
-
-
-
 @endsection

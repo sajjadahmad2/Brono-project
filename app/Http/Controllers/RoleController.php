@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use DataTables;
 use Illuminate\Http\Request;
-
-use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
@@ -15,11 +14,10 @@ class RoleController extends Controller
     {
         if ($req->ajax()) {
             $query = Role::orderBy('id', 'DESC')
-            ->where(function($query) {
-                $query->where('name', '!=', 'admin')
-                      ->where('name', '!=', 'superadmin');
-            });
-
+                ->where(function ($query) {
+                    $query->where('name', '!=', 'admin')
+                        ->where('name', '!=', 'superadmin');
+                });
 
             return DataTables::eloquent($query)
                 ->addIndexColumn()
@@ -30,14 +28,14 @@ class RoleController extends Controller
                     return setting('role_prefix') . $row->name;
                 })
                 ->addColumn('action', function ($row) {
-                    $html ='';
+                    $html = '';
                     if (Auth::user()->can('edit role')) {
-                        $html.= '
+                        $html .= '
                                  <a href="' . route('role.edit', $row->id) . '" class="mr-2"><i class="fas fa-edit text-info font-16"></i></a>
                         ';
                     }
-                    if (Auth::user()->can('delete role')){
-                        $html.= '
+                    if (Auth::user()->can('delete role')) {
+                        $html .= '
                                  <a href="' . route('role.delete', $row->id) . '" onclick="event.preventDefault(); deleteMsg(\'' . route('role.delete', $row->id) . '\')"><i class="fas fa-trash-alt text-danger font-16"></i></a>
                         ';
                     }
@@ -67,27 +65,30 @@ class RoleController extends Controller
 
     public function save(Request $req, $id = null)
     {
-
         $req->validate([
             'name' => 'required',
         ]);
 
+        // Creating or updating the role
         if (is_null($id)) {
-            Role::create([
+            $role = Role::create([
                 'name' => $req->name,
             ]);
-
-            $msg = "Record Added Successfully!";
+            $msg = "Role Added Successfully!";
         } else {
-            Role::find($id)->update([
+            $role = Role::find($id);
+            $role->update([
                 'name' => $req->name,
-
             ]);
-
-            $msg = "Record Edited Successfully!";
+            $msg = "Role Edited Successfully!";
         }
 
-        return redirect()->back()->with('success', $msg);
+        // Handling permissions if provided
+        if ($req->has('permissions')) {
+            $role->permissions()->sync($req->permissions);
+        }
+
+        return redirect()->route('role.list')->with('success', $msg);
     }
 
     public function delete($id = null)

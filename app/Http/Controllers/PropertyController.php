@@ -4,87 +4,58 @@ namespace App\Http\Controllers;
 
 use App\Models\Property;
 use App\Services\PropertyImporter;
-use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class PropertyController extends Controller
 {
-
     public function list(Request $req)
-{
-    $perpage = $req->has('perpage') ? $req->perpage : 12;
+    {
+        $perpage = $req->input('perpage', 12);
 
-    // Filtering logic
-    $query = Property::query();
+        $query = Property::query();
 
-    if ($req->filled('keyword')) {
-        $query->where('name', 'like', '%' . $req->keyword . '%');
+        // Filtering logic
+        if ($req->ajax()) {
+            if ($req->filled('keyword')) {
+                $keyword = $req->keyword;
+                $query->where(function ($q) use ($keyword) {
+                    $q->where('ref', 'like', "%$keyword%")->orWhere('title', 'like', "%$keyword%")
+                        ->orWhere('description', 'like', "%$keyword%");
+                });
+            }
+
+            if ($req->filled('location') && $req->location != 'all') {
+                $query->where('location_detail', $req->location);
+            }
+
+            if ($req->filled('type') && $req->type != 'all') {
+                $query->where('type', $req->type);
+            }
+
+            if ($req->filled('category') && $req->category != 'all') {
+                $query->where('new_build', $req->category);
+            }
+
+            if ($req->filled('price_range')) {
+                $priceRange = explode(',', $req->price_range);
+                $query->whereBetween('price', [$priceRange[0], $priceRange[1]]);
+            }
+
+            $properties = $query->orderBy('id', 'DESC')->paginate($perpage);
+            return view('property.partials-list', compact('properties'))->render();
+        }
+
+        // Fetch distinct types, locations, and price range
+        $properties = $query->orderBy('id', 'DESC')->paginate($perpage);
+        $types = Property::select('type')->distinct()->pluck('type');
+        $location_detail = Property::select('location_detail')->distinct()->pluck('location_detail');
+        $maxPrice = Property::max('price');
+        $minPrice = Property::min('price');
+
+        return view('property.list', compact('properties', 'types', 'location_detail', 'maxPrice', 'minPrice'));
     }
-
-    if ($req->filled('location')) {
-        $query->where('location_detail', $req->location);
-    }
-
-    if ($req->filled('property_type')) {
-        $query->where('type', $req->property_type);
-    }
-
-    if ($req->filled('category')) {
-        $query->where('category', $req->category);
-    }
-
-    if ($req->filled('price_min') && $req->filled('price_max')) {
-        $query->whereBetween('price', [$req->price_min, $req->price_max]);
-    }
-
-    if ($req->filled('area_min') && $req->filled('area_max')) {
-        $query->whereBetween('surface_area', [$req->area_min, $req->area_max]);
-    }
-
-    // Pagination
-    $properties = $query->orderBy('id', 'DESC')->paginate($perpage);
-
-    // Fetch distinct types and locations
-    $types = Property::select('type')->distinct()->pluck('type');
-    $location_detail = Property::select('location_detail')->distinct()->pluck('location_detail');
-    $maxPrice = Property::max('price');
-    $minPrice = Property::min('price');
-
-    if ($req->ajax()) {
-        return response()->json([
-            'properties' => $properties->map(function($property) {
-                return [
-                    'id' => $property->id,
-                    'price' => $property->price,
-                    'beds' => $property->beds,
-                    'baths' => $property->baths,
-                    'pool' => $property->pool,
-                    'location_detail' => $property->location_detail,
-                    'price_freq' => $property->price_freq,
-                    'description' => Str::limit(strip_tags($property->descriptionEn->description), 200),
-                    'full_description' => $property->descriptionEn->description,
-                    'images' => $property->images->map(function($image) {
-                        return $image->url;
-                    }),
-                ];
-            }),
-            'pagination' => [
-                'current_page' => $properties->currentPage(),
-                'last_page' => $properties->lastPage(),
-                'total' => $properties->total(),
-                'per_page' => $properties->perPage(),
-            ]
-        ]);
-    }
-
-    return view('property.list', compact('properties', 'types', 'location_detail', 'maxPrice', 'minPrice'));
-}
-
-
-
 
     public function show(Property $property)
     {
@@ -272,19 +243,14 @@ class PropertyController extends Controller
         return redirect()->route('property.list');
     }
 
-
 // New Funtion
-        // use App\Models\Property; // Make sure to import your Property model
+    // use App\Models\Property; // Make sure to import your Property model
 
-        public function showAllLocationImages()
-        {
-            // Fetch all properties with their image URLs, longitude, and latitude
+    public function showAllLocationImages()
+    {
+        // Fetch all properties with their image URLs, longitude, and latitude
 
-            return view('property.list', compact('properties'));
-        }
-
-
-
-
+        return view('property.list', compact('properties'));
+    }
 
 }

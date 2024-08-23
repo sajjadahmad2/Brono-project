@@ -83,16 +83,20 @@
                             'users.write',
                             'workflows.readonly',
                         ]);
-                        $href = 'https://marketplace.gohighlevel.com/oauth/chooselocation?response_type=code&redirect_uri=' 
-                            . route('authorization.gohighlevel.callback') 
-                            . '&client_id=' . env('GHL_CLIENT_ID') 
+                        $href = 'https://marketplace.gohighlevel.com/oauth/chooselocation?response_type=code&redirect_uri='
+                            . route('authorization.gohighlevel.callback')
+                            . '&client_id=668eb5cf0291d90e9f353acf-lyg20chd'
                             . '&scope=' . urlencode($scopes);$description = 'Connect to GoHighLevel';
-                            
+
                         if (is_connected()) {
-                            $description = 'Location: '.  auth()->user()->crm->location_id ?? '';
+                            //$description = 'Location: '.  auth()->user()->crm->location_id ?? '';
+                            $description = 'GHL Connected ';
+                        }else{
+                            $description = 'Connect GHL';
                         }
                     @endphp
-                    <a href="{{ $href }}" class="menu-link px-3">
-                        <img src="{{ asset('ghl_icon.jpeg') }}" alt="Logo" class="h-30px mx-3" />
-                        <span class="menu-title fs-5">{{ $description }}</span>
+                    <a href="{{ $href }}" class="d-flex flex-column flex-center text-center text-gray-800 text-hover-primary bg-hover-light rounded py-4 px-3 mb-3">
+                        <img src="{{ asset('ghl_icon.jpeg') }}" alt="Logo" class="w-25px h-25px mb-2" />
+                        <span class="fw-semibold">{{ $description }}</span>
                     </a>
+

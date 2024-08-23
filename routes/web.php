@@ -21,6 +21,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/profile-save', 'general')->name('profile.save');
         Route::post('/password-save', 'password')->name('password.save');
         Route::get('/', 'dashboard')->name('dashboard');
+
         Route::get('/settings', 'setting')->name('setting')->middleware('permission:manage settings');
         Route::post('/setting-save', 'settingSave')->name('setting.save');
         Route::post('/users-setting-save', 'userSettingSave')->name('users.setting.save');

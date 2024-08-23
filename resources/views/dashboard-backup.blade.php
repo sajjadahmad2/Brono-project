@@ -36,7 +36,7 @@
                         @endrole
                         <!--end::Col-->
                         <!--begin::Col-->
-                        
+
                         <div class="col-6">
                             <!--begin::Card-->
                             <div class="card card-shadow">
@@ -167,9 +167,9 @@
                                     <a href="{{ request()->fullUrl().'/dashboard_css.js' }}" class="btn btn-warning me-lg-2 copy-script" >
                                         Copy the designer script
                                     </a>
-                                    
+
                                 </div>
-                                
+
                             @endcan
                             <!--end::Action-->
                         </div>
@@ -304,7 +304,7 @@
     <script>
         document.querySelector('.copy-script').addEventListener('click', function(e) {
            e.preventDefault();
-            
+
             const domain = window.location.origin;
             const scriptContent = `<script src="${domain}/dashboard_css.js"><\/script>`;
             const tempTextArea = document.createElement('textarea');
