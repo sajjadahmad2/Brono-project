@@ -657,6 +657,7 @@ class ComposerStaticInit1ba5b86d365129089bcdbd88a3dc1005
         'App\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/app/Providers/EventServiceProvider.php',
         'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
         'App\\Services\\BaserowService' => __DIR__ . '/../..' . '/app/Services/BaserowService.php',
+        'App\\Services\\PropertyImporter' => __DIR__ . '/../..' . '/app/Services/PropertyImporter.php',
         'App\\View\\Components\\AppLayout' => __DIR__ . '/../..' . '/app/View/Components/AppLayout.php',
         'App\\View\\Components\\GuestLayout' => __DIR__ . '/../..' . '/app/View/Components/GuestLayout.php',
         'Asm89\\Stack\\Cors' => __DIR__ . '/..' . '/asm89/stack-cors/src/Cors.php',

@@ -4,7 +4,17 @@
     <div class="row g-5 g-xxl-10">
         <!--begin::Col-->
         <div class="col-xxl-4 mb-xxl-10">
+            <div class="container mt-5">
+                <h2>Upload JSON File</h2>
+                <form id="uploadForm" enctype="multipart/form-data">
 
+                    <div class="form-group">
+                        <input type="file" id="jsonFile" name="jsonFile" class="form-control" accept=".json" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </form>
+                <div id="progress" class="mt-3"></div>
+            </div>
             <!--begin::Card Widget 22-->
             <div class="card card-reset mb-5 mb-xl-10">
                 <!--begin::Body-->
@@ -314,6 +324,63 @@
             document.execCommand('copy');
             document.body.removeChild(tempTextArea);
             toastr.success("script copied successfully!")
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+
+            $('body').on('submit','#uploadForm', function (e) {
+                e.preventDefault();
+                const csrfToken = $('meta[name="csrf-token"]').attr('content');
+                console.log(csrfToken);
+                const fileInput = $('#jsonFile')[0].files[0];
+
+                if (fileInput) {
+                    const reader = new FileReader();
+                    reader.onload = function () {
+                        const jsonData = JSON.parse(reader.result);
+
+                        uploadChunks(jsonData);
+                    };
+                    reader.readAsText(fileInput);
+                }
+            });
+
+            function uploadChunks(data, csrfToken,chunkSize = 1000) {
+                data=data.leadsData;
+                const totalChunks = Math.ceil(data.length / chunkSize);
+                let currentChunk = 0;
+                function sendChunk() {
+                    if (currentChunk < totalChunks) {
+                        const start = currentChunk * chunkSize;
+                        const end = Math.min(start + chunkSize, data.length);
+                        const chunk = data.slice(start, end);
+                        console.log(chunk);
+                        $.ajax({
+                            url: "{{route('uploadChunks')}}",
+                            type: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                chunk: JSON.stringify(chunk),
+                                chunkIndex: currentChunk,
+                                totalChunks: totalChunks
+                            },
+                            success: function () {
+                                currentChunk++;
+                                $('#progress').text(`Uploading chunk ${currentChunk} of ${totalChunks}`);
+                                sendChunk();
+                            },
+                            error: function () {
+                                alert('Failed to upload chunk');
+                            }
+                        });
+                    } else {
+                        $('#progress').text('Upload complete');
+                    }
+                }
+                sendChunk();
+            }
         });
     </script>
 

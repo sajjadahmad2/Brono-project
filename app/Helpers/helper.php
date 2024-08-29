@@ -1,18 +1,18 @@
 <?php
 
-use App\Models\Setting;
-use App\Models\User;
 use App\Models\CrmAuth;
 use App\Models\DashboardStyle;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use App\Models\Setting;
+use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Redirect;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
-function setting($key, $uid=null)
+function setting($key, $uid = null)
 {
     $user_id = is_null($uid) ? auth()->id() : $uid;
     try {
@@ -41,7 +41,6 @@ function setting($key, $uid=null)
 function getCrmToken($type, $id = null)
 {
 
-
     $auth = CrmAuth::where('user_id', $id)->first();
     if ($type == 'refresh') {
         return $auth->refresh_token ?? null;
@@ -56,8 +55,7 @@ function getCrmToken($type, $id = null)
     }
 }
 
-
-function logo($key, $uid=null)
+function logo($key, $uid = null)
 {
     $user_id = is_null($uid) ? auth()->id() : $uid;
     $setting = Setting::where('name', $key)->where('user_id', $user_id)->first();
@@ -66,7 +64,6 @@ function logo($key, $uid=null)
     } else {
         return asset('assets/media/logos/logo.png');
     }
-
 
 }
 
@@ -87,7 +84,6 @@ function uploadFile($file, $path, $name)
     $file->move($path, $name);
     return $path . '/' . $name;
 }
-
 
 function checkRolePerm($role_id, $permission_id)
 {
@@ -115,7 +111,6 @@ function totalPermissions()
 {
     return Permission::count();
 }
-
 
 function number_format_short($n)
 {
@@ -159,9 +154,9 @@ function checkEmptyValue($value)
 function get_user()
 {
     $user = auth()->user();
-    if($user->hasRole('admin')){
+    if ($user->hasRole('admin')) {
         return "Admin";
-    }else{
+    } else {
         return "Company";
     }
 }
@@ -225,14 +220,18 @@ if (!function_exists('generateSingleButton')) {
     }
 }
 
-
-function login_id(){
+function login_id()
+{
     return auth()->id();
 }
 
-function save_auth($code, $type = 'code')
+function save_auth($code, $type = 'code', $userid = null)
 {
-    $user_id = login_id();
+    if (is_null($userid)) {
+        $user_id = login_id();
+    } else {
+        $user_id = $userid;
+    }
     $data = [
         'access_token' => $code->access_token,
         'refresh_token' => $code->refresh_token,
@@ -250,10 +249,10 @@ function save_auth($code, $type = 'code')
     );
 
     //update user's location_id
-    $user = auth()->user();
+    //auth()->user();
+    $user = User::where('id', $user_id)->first();
     $user->location_id = $auth->location_id;
     $user->save();
-
 
     return $auth;
 }
@@ -298,18 +297,28 @@ if (!function_exists('ghl_oauth_call')) {
     }
 }
 
-function ghl_token($request, $type = '')
+function ghl_token($request, $type = '', $userid = null)
 {
     $code = $request->code;
     $code = ghl_oauth_call($code, $type);
 
     $route = '/';
-    $id = login_id();
+    if (is_null($userid)) {
+        $id = login_id();
+    } else {
+        $id = $userid;
+    }
+
     if ($code) {
         if (property_exists($code, 'access_token')) {
             session()->put('ghl_api_token', $code->access_token);
-            save_auth($code, $type);
-            abort(redirect()->route('dashboard')->with('success', 'Connected successfully'));
+            save_auth($code, $type, $id);
+            if (empty($type)) {
+                abort(redirect()->route('dashboard')->with('success', 'Connected successfully'));
+            } else {
+                return true;
+            }
+
         } else {
             if (property_exists($code, 'error_description')) {
                 if (empty($type)) {
@@ -333,37 +342,39 @@ function is_connected()
     return false;
 }
 
-
-function dashboard_css($id=null, $name=''){
+function dashboard_css($id = null, $name = '')
+{
     $id = $id ?? login_id();
-    $design = DashboardStyle::where(['user_id'=>$id, 'name' => $name])->first();
-    if($design){
+    $design = DashboardStyle::where(['user_id' => $id, 'name' => $name])->first();
+    if ($design) {
         return $design->value;
     }
     return '';
 }
 
-function save_dashboard_css($css, $name=''){
-    $design = DashboardStyle::where(['user_id'=>login_id(), 'name' => $name])->first();
-    if($design){
+function save_dashboard_css($css, $name = '')
+{
+    $design = DashboardStyle::where(['user_id' => login_id(), 'name' => $name])->first();
+    if ($design) {
         $design->update([
-            'value' => $css
+            'value' => $css,
         ]);
-    }else{
+    } else {
         DashboardStyle::create([
             'user_id' => login_id(),
             'name' => $name,
             'value' => $css,
-            'type' => 'css'
+            'type' => 'css',
         ]);
     }
     return redirect()->back();
 }
 
-function dashboard_keys($key, $id=null){
+function dashboard_keys($key, $id = null)
+{
     $id = $id ?? login_id();
-    $design = DashboardStyle::where(['user_id'=>$id, 'name' => $key])->first();
-    if($design){
+    $design = DashboardStyle::where(['user_id' => $id, 'name' => $key])->first();
+    if ($design) {
         return $design->value;
     }
     return '';
@@ -417,7 +428,6 @@ function dashboard_keys($key, $id=null){
 //                     <!--end::Card body-->
 //                 </div>
 
-
 // function that will return the card html
 function statcard($title, $icon, $value, $stats, $label, $color = 'primary', $url = '#')
 {
@@ -454,35 +464,36 @@ function statcard($title, $icon, $value, $stats, $label, $color = 'primary', $ur
     return $html;
 }
 
-function totalCompanies(){
+function totalCompanies()
+{
 
     //create stat card
-   $users = User::where('id','!=',1)->count();
+    $users = User::where('id', '!=', 1)->count();
     return $users;
 }
 
-function totalStatusUser($active=true)
+function totalStatusUser($active = true)
 {
 
     $status = $active ? 1 : 0;
-    $users = User::where('id','!=',1)->where('status', $status)->count();
-   return $users;
+    $users = User::where('id', '!=', 1)->where('status', $status)->count();
+    return $users;
 }
-
-
-
-
-
 
 //ghl api call
 if (!function_exists('ghl_api_call')) {
-    function ghl_api_call($urlmain = '', $method = 'get', $data = '', $headers = [], $json = false, $token = '')
+    function ghl_api_call($urlmain = '', $userid = null, $method = 'get', $data = '', $headers = [], $json = false, $token = '')
     {
         $url = $urlmain;
         $api_call_version = '2021-04-15';
         $api_call = 'oauth';
         $oauth = $api_call == 'oauth';
-        $login_id = login_id();
+        if (is_null($userid)) {
+            $login_id = login_id();
+        } else {
+            $login_id = $userid;
+        }
+
         if ($oauth) {
             $token = empty($token) ? getCrmToken('access', $login_id) : $token;
 
@@ -500,7 +511,7 @@ if (!function_exists('ghl_api_call')) {
             } else if (strtolower($method) == 'get') {
                 $urlap = (strpos($url, '?') !== false) ? '&' : '?';
                 if (strpos($url, 'location_id=') === false && strpos($url, 'locationId=') === false && strpos($url, 'locations/') === false) {
-                    if (strpos($url, 'opportunities/search') !== false ) {
+                    if (strpos($url, 'opportunities/search') !== false) {
                         $url .= $urlap;
                         $url .= 'location_id=' . $location;
                     } else {
@@ -536,8 +547,6 @@ if (!function_exists('ghl_api_call')) {
                 // dd($url);
             }
 
-
-
             $lastsl = '/';
             $sep = '?';
             $slash = explode($sep, $url);
@@ -570,7 +579,6 @@ if (!function_exists('ghl_api_call')) {
             return '';
         }
         $url1 = $main_url . $url;
-
 
         $client = new \GuzzleHttp\Client(['http_errors' => false, 'headers' => $headers]);
         $options = [];
@@ -607,31 +615,33 @@ if (!function_exists('ghl_api_call')) {
             $options[GuzzleHttp\RequestOptions::JSON] = $dat;
         }
 
-
         $response = $client->request($method, $url1, $options);
         $cd = $response->getBody()->getContents();
         $bd = json_decode($cd);
 
-        if (isset($bd->error) && strpos($bd->error, 'Unauthorized') !== false  && strpos($api_call, 'oauth') !== false ) {
-            $code = getCrmToken('refresh',$login_id);
+        if (isset($bd->error) && strpos($bd->error, 'Unauthorized') !== false && strpos($api_call, 'oauth') !== false) {
+            $code = getCrmToken('refresh', $login_id);
             request()->code = $code;
-            ghl_token(request(), 'refresh the token please');
-            return ghl_api_call($url, $method, $data, $headers, $json);
+            $refresh_token = ghl_token(request(), 'refresh the token please',$login_id);
+
+            if ($refresh_token) {
+                return ghl_api_call($url, $login_id, $method, $data, $headers, $json);
+            }
             abort(401, 'Unauthorized');
         }
         return $cd;
     }
 }
 
-
 //ghl Api calls
 
-function fetch_all_contacts() {
+function fetch_all_contacts()
+{
     $all_contacts = [];
     $current_page = 1;
 
-       $response = ghl_api_call('contacts/?page=' . $current_page);
-       dd($response);
+    $response = ghl_api_call('contacts/?page=' . $current_page);
+    dd($response);
 
     do {
 
@@ -650,7 +660,8 @@ function fetch_all_contacts() {
     return $all_contacts;
 }
 
-function fetch_all_opportunities() {
+function fetch_all_opportunities()
+{
     $all_opportunities = [];
     $current_page = 1;
 
@@ -672,64 +683,65 @@ function fetch_all_opportunities() {
     return $all_opportunities;
 }
 
-function makeTagsArray($tags){
-    if(is_array($tags)){
-       // make sure all tags are strings
-         $tags = array_map('strval', $tags);
+function makeTagsArray($tags)
+{
+    if (is_array($tags)) {
+        // make sure all tags are strings
+        $tags = array_map('strval', $tags);
     }
 
     $tags = explode(',', $tags);
     $tags = array_map('trim', $tags);
-    $tag  = array_unique($tags);
+    $tag = array_unique($tags);
     // only values
     $tags = array_values($tag);
     return $tags;
 }
 
 if (!function_exists('array_group_by')) {
-	function array_group_by(array $array, $key)
-	{
-		if (!is_string($key) && !is_int($key) && !is_float($key) && !is_callable($key) ) {
-			trigger_error('array_group_by(): The key should be a string, an integer, or a callback', E_USER_ERROR);
-			return null;
-		}
+    function array_group_by(array $array, $key)
+    {
+        if (!is_string($key) && !is_int($key) && !is_float($key) && !is_callable($key)) {
+            trigger_error('array_group_by(): The key should be a string, an integer, or a callback', E_USER_ERROR);
+            return null;
+        }
 
-		$func = (!is_string($key) && is_callable($key) ? $key : null);
-		$_key = $key;
+        $func = (!is_string($key) && is_callable($key) ? $key : null);
+        $_key = $key;
 
-		// Load the new array, splitting by the target key
-		$grouped = [];
-		foreach ($array as $value) {
-			$key = null;
+        // Load the new array, splitting by the target key
+        $grouped = [];
+        foreach ($array as $value) {
+            $key = null;
 
-			if (is_callable($func)) {
-				$key = call_user_func($func, $value);
-			} elseif (is_object($value) && property_exists($value, $_key)) {
-				$key = $value->{$_key};
-			} elseif (isset($value[$_key])) {
-				$key = $value[$_key];
-			}
+            if (is_callable($func)) {
+                $key = call_user_func($func, $value);
+            } elseif (is_object($value) && property_exists($value, $_key)) {
+                $key = $value->{$_key};
+            } elseif (isset($value[$_key])) {
+                $key = $value[$_key];
+            }
 
-			if ($key === null) {
-				continue;
-			}
+            if ($key === null) {
+                continue;
+            }
 
-			$grouped[$key][] = $value;
-		}
+            $grouped[$key][] = $value;
+        }
 
-		// Recursively build a nested grouping if more parameters are supplied
-		// Each grouped array value is grouped according to the next sequential key
-		if (func_num_args() > 2) {
-			$args = func_get_args();
+        // Recursively build a nested grouping if more parameters are supplied
+        // Each grouped array value is grouped according to the next sequential key
+        if (func_num_args() > 2) {
+            $args = func_get_args();
 
-			foreach ($grouped as $key => $value) {
-				$params = array_merge([ $value ], array_slice($args, 2, func_num_args()));
-				$grouped[$key] = call_user_func_array('array_group_by', $params);
-			}
-		}
+            foreach ($grouped as $key => $value) {
+                $params = array_merge([$value], array_slice($args, 2, func_num_args()));
+                $grouped[$key] = call_user_func_array('array_group_by', $params);
+            }
+        }
 
-		return $grouped;
-	}
+        return $grouped;
+    }
 }
 if (!function_exists('image')) {
     /**
@@ -741,10 +753,9 @@ if (!function_exists('image')) {
      */
     function image($path)
     {
-        return asset('assets/media/'.$path);
+        return asset('assets/media/' . $path);
     }
 }
-
 
 if (!function_exists('getIcon')) {
     /**
@@ -765,12 +776,13 @@ if (!function_exists('theme')) {
         return app(App\Core\Theme::class);
     }
 }
-function convertFeatureData($data, $mode='toArray') {
+function convertFeatureData($data, $mode = 'toArray')
+{
     if ($mode === 'toJson') {
         if (!is_array($data)) {
             throw new InvalidArgumentException('Data must be an array when converting to JSON.');
         }
-        $formattedArray = array_map(function($feature) {
+        $formattedArray = array_map(function ($feature) {
             return ['value' => $feature];
         }, $data);
 
@@ -786,10 +798,14 @@ function convertFeatureData($data, $mode='toArray') {
             throw new RuntimeException('Failed to decode JSON string.');
         }
 
-        return array_map(function($item) {
+        return array_map(function ($item) {
             return $item['value'];
         }, $decodedArray);
     } else {
         throw new InvalidArgumentException('Invalid mode. Use "toJson" or "toArray".');
     }
+}
+function getRandomColor()
+{
+    return sprintf('#%06X', mt_rand(0, 0xFFFFFF));
 }

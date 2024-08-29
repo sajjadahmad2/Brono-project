@@ -7,7 +7,7 @@
     <title>XMS Panel | @yield('title')</title>
     <meta charset="utf-8" />
     <link rel="icon" href="{{ logo('company_main_logo', 1) }}" type="image/png">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!--begin::Fonts(mandatory for all pages)-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
     <!--end::Fonts-->
@@ -18,7 +18,7 @@
     <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet"
         type="text/css" />
     <!--end::Vendor Stylesheets-->
-
+    <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.3/dist/flowbite.min.css" />
 
     <!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
     <link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
@@ -36,9 +36,7 @@
     <link href="https://keenthemes.com/metronic" rel="canonical" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
         rel="stylesheet" />
-    <link href="assets/vendors/apexcharts/apexcharts.css" rel="stylesheet" />
-    <link href="assets/vendors/keenicons/styles.bundle.css" rel="stylesheet" />
-    <link href="assets/css/styles.css" rel="stylesheet" />
+
 
     <style>
         .page-title-box {
@@ -90,7 +88,7 @@
                         {{-- Logo --}}
                         <!--begin::Logo-->
                         <div class="d-flex align-items-center">
-                            <a href="{{ route('dashboard') }}">
+                            <a href="{{ route('dashboard') }}" hidden>
                                 <img alt="Logo" src="{{ logo('company_main_logo', auth()->id()) }}"
                                     class="h-20px h-lg-30px theme-light-show">
                                 <img alt="Logo" src="{{ logo('company_main_logo') }}"
@@ -375,15 +373,9 @@
         });
     </script>
 
-    <script src="assets/js/core.bundle.js">
-    </script>
-    <script src="assets/vendors/apexcharts/apexcharts.min.js">
-    </script>
-    <script src="assets/js/widgets/general.js">
-    </script>
-    <script src="assets/js/layouts/demo1.js">
-    </script>
-
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/flowbite@1.4.3/dist/flowbite.js"></script>
+<script src="https://unpkg.com/flowbite@1.4.3/dist/datepicker.js"></script>
 
     @yield('js')
 </body>

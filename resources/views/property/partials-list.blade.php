@@ -2,12 +2,15 @@
 
     <div class="row g-6">
         @forelse ($properties as $property)
-            <div class="col-lg-3 col-md-4 col-sm-6">
+
+            <div class="col-lg-3 col-md-4  col-sm-6">
+                <a href="{{ route('property.edit', $property-> id) }}">
                 <div class="card shadow-sm rounded border-0 overflow-hidden">
                     <!-- Carousel Section -->
                     <div class="position-relative">
                         @if ($property->images->isNotEmpty())
-                            <div id="carousel-{{ $property->id }}" class="carousel slide" data-bs-ride="carousel">
+                            <div id="carousel-{{ $property->id }}" class="carousel slide" data-bs-interval="false">
+
                                 <div class="carousel-inner">
                                     @foreach ($property->images as $index => $image)
                                         <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
@@ -61,12 +64,13 @@
                             <span id="short-description-{{ $property->id }}">
                                 {!! Str::limit(strip_tags($property->descriptionEn->description), 200) !!}
                             </span>
-                            <span id="full-description-{{ $property->id }}" style="display:none;">
+                            {{-- <span id="full-description-{{ $property->id }}" style="display:none;">
                                 {!! $property->descriptionEn->description !!}
-                            </span>
+                            </span> --}}
                         </p>
                     </div>
                 </div>
+            </a>
             </div>
         @empty
             <div class="col-12">

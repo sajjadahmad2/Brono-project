@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contact;
 use App\Models\Property;
+use App\Models\PropertySurfaceArea;
 use App\Services\PropertyImporter;
 use Illuminate\Http\Request;
+use App\Models\Opportunity;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -18,32 +21,44 @@ class PropertyController extends Controller
 
         // Filtering logic
         if ($req->ajax()) {
-            if ($req->filled('keyword')) {
+
+            if ($req->has('keyword') && !empty($req->keyword)) {
                 $keyword = $req->keyword;
                 $query->where(function ($q) use ($keyword) {
-                    $q->where('ref', 'like', "%$keyword%")->orWhere('title', 'like', "%$keyword%")
-                        ->orWhere('description', 'like', "%$keyword%");
+                    $q->where('ref', 'like', "%$keyword%")->orWhere('title', 'like', "%$keyword%");
+
                 });
             }
 
-            if ($req->filled('location') && $req->location != 'all') {
+            if ($req->has('location') && $req->location != 'all') {
                 $query->where('location_detail', $req->location);
             }
 
-            if ($req->filled('type') && $req->type != 'all') {
-                $query->where('type', $req->type);
+            if ($req->has('propertyType') && $req->type != 'all') {
+                $query->where('type', $req->propertyType);
             }
 
-            if ($req->filled('category') && $req->category != 'all') {
+            if ($req->has('category') && $req->category != 'all') {
                 $query->where('new_build', $req->category);
             }
 
-            if ($req->filled('price_range')) {
-                $priceRange = explode(',', $req->price_range);
+            if ($req->has('priceRange')) {
+                $priceRange = explode(';', $req->priceRange);
+
                 $query->whereBetween('price', [$priceRange[0], $priceRange[1]]);
             }
+            // if ($req->filled('areaRange')) {
+            //     $areaRange = explode(';', $req->areaRange);
+            //     $minArea = round($areaRange[0] * 0.092903, 2);
+            //     $maxArea = round($areaRange[1] * 0.092903, 2);
+            //     $query->whereHas('surfaceArea', function($q) use ($minArea, $maxArea) {
+            //         $q->whereBetween('built', [$minArea, $maxArea])
+            //           ->orWhereBetween('plot', [$minArea, $maxArea]);
+            //     });
+            // }
 
             $properties = $query->orderBy('id', 'DESC')->paginate($perpage);
+            dd($properties);
             return view('property.partials-list', compact('properties'))->render();
         }
 
@@ -53,8 +68,14 @@ class PropertyController extends Controller
         $location_detail = Property::select('location_detail')->distinct()->pluck('location_detail');
         $maxPrice = Property::max('price');
         $minPrice = Property::min('price');
+        $minBuilt = PropertySurfaceArea::min('built');
+        $maxBuilt = PropertySurfaceArea::max('built');
+        $minPlot = PropertySurfaceArea::min('plot');
+        $maxPlot = PropertySurfaceArea::max('plot');
+        $minAreaSqFt = round(min($minBuilt, $minPlot) / 0.092903, 2);
+        $maxAreaSqFt = round(max($maxBuilt, $maxPlot) / 0.092903, 2);
 
-        return view('property.list', compact('properties', 'types', 'location_detail', 'maxPrice', 'minPrice'));
+        return view('property.list', get_defined_vars());
     }
 
     public function show(Property $property)
@@ -65,7 +86,7 @@ class PropertyController extends Controller
 
     public function add()
     {
-        return view('property.add',get_defined_vars());
+        return view('property.add', get_defined_vars());
     }
 
     public function oldsave(Request $request, $id = null)
@@ -188,7 +209,6 @@ class PropertyController extends Controller
     public function save(Request $request, $id = null)
     {
 
-
         // $this->validate($request, [
         //     'ref' => 'required|string',
         //     'type' => 'required|string',
@@ -220,8 +240,8 @@ class PropertyController extends Controller
             if ($id) {
                 $property = Property::findOrFail($id);
                 $thumbnail = $property->thumbnail;
-                if($request->has('thumbnail') && !empty($request->thumbnail)){
-                    $thumbnail = uploadFile($request->thumbnail,'uploads/properties/thumbnails',  'thumbnail-'.login_id().'-'.time());
+                if ($request->has('thumbnail') && !empty($request->thumbnail)) {
+                    $thumbnail = uploadFile($request->thumbnail, 'uploads/properties/thumbnails', 'thumbnail-' . login_id() . '-' . time());
                 }
                 $property->update([
                     'ref' => (string) $request->ref,
@@ -237,7 +257,7 @@ class PropertyController extends Controller
                     'beds' => (int) $request->beds,
                     'baths' => (int) $request->baths,
                     'pool' => (bool) $request->pool,
-                    'thumbnail' => $thumbnail
+                    'thumbnail' => $thumbnail,
                 ]);
             } else {
                 $property = Property::create([
@@ -254,7 +274,7 @@ class PropertyController extends Controller
                     'beds' => (int) $request->beds,
                     'baths' => (int) $request->baths,
                     'pool' => (bool) $request->pool,
-                   'thumbnail' => !empty($request->thumbnail) ? uploadFile($request->thumbnail,'/properties/thumbnails',  'thumbnail-'.login_id().'-'.time()) : null
+                    'thumbnail' => !empty($request->thumbnail) ? uploadFile($request->thumbnail, '/properties/thumbnails', 'thumbnail-' . login_id() . '-' . time()) : null,
 
                 ]);
             }
@@ -277,8 +297,8 @@ class PropertyController extends Controller
 
             /* based on the tagify data */
 
-            $features = $request->feature??'';
-            if( !empty($features)){
+            $features = $request->feature ?? '';
+            if (!empty($features)) {
                 $features = convertFeatureData($features);
                 foreach ($features as $feature) {
                     $property->features()->create(['feature' => (string) $feature]);
@@ -354,7 +374,7 @@ class PropertyController extends Controller
         $property = Property::find($id);
         $features = $property->features->pluck('feature')->toArray();
         //  dd($features);
-        $features = convertFeatureData($features,'toJson');
+        $features = convertFeatureData($features, 'toJson');
         return view('property.add', get_defined_vars());
     }
     public function delete($id)
@@ -373,10 +393,6 @@ class PropertyController extends Controller
     }
     public function import(Request $request)
     {
-        //    $request->validate([
-        //         'xmlFile' => 'required|file|mimes:xml|max:10240', // Max 10MB
-        //     ]);
-
         // Store the uploaded file in the storage folder
         $filePath = $request->file('xmlFile')->storeAs('uploads', 'properties' . time() . '.xml');
 
@@ -397,6 +413,81 @@ class PropertyController extends Controller
         // Fetch all properties with their image URLs, longitude, and latitude
 
         return view('property.list', compact('properties'));
+    }
+    public function importLeads(Request $request)
+    { set_time_limit(3000000);
+        $chunk = $request->input('chunk');
+        $chunkIndex = $request->input('chunkIndex');
+        $totalChunks = $request->input('totalChunks');
+
+        // Decode the chunk data
+        $chunkData = json_decode($chunk, true);
+        // Process the chunk data
+        foreach ($chunkData as $leadData) {
+
+            Opportunity::updateOrCreate(
+                ['ghl_opportunity_id' => isset($leadData['id']) ? $leadData['id'] : null],
+                [
+                    'location_id' => isset($leadData['locationId']) ? $leadData['locationId'] : null,
+                    'assigned_to' => isset($leadData['assignedTo']) ? $leadData['assignedTo'] : null,
+                    'contact_id' => isset($leadData['contactId']) ? $leadData['contactId'] : null,
+                    'monetary_value' => isset($leadData['monetaryValue']) ? $leadData['monetaryValue'] : null,
+                    'name' => isset($leadData['name']) ? $leadData['name'] : null,
+                    'pipeline_id' => isset($leadData['pipelineId']) ? $leadData['pipelineId'] : null,
+                    'pipeline_stage_id' => isset($leadData['pipelineStageId']) ? $leadData['pipelineStageId'] : null,
+                    'source' => isset($leadData['source']) ? $leadData['source'] : null,
+                    'status' => isset($leadData['status']) ? $leadData['status'] : null,
+                    'date_added' => isset($leadData['createdAt']) ? \Carbon\Carbon::createFromTimestampMs($leadData['createdAt']) : null,
+                ]
+            );
+            // Contact::updateOrCreate(
+            //     ['ghl_contact_id' =>isset($leadData['id']) ? $leadData['id'] : null],
+            //     [
+            //         'location_id' => isset($leadData['locationId']) ? $leadData['locationId'] : null,
+            //         'name' => isset($leadData['contactName']) ? $leadData['contactName'] : null,
+            //         'email' => isset($leadData['email']) ? $leadData['email'] : null,
+            //         'phone' => isset($leadData['phone']) ? $leadData['phone'] : null,
+            //         'address' => isset($leadData['address_1']) ? $leadData['address_1'] : null,
+            //         'city' => isset($leadData['city']) ? $leadData['city'] : null,
+            //         'state' => isset($leadData['state']) ? $leadData['state'] : null,
+            //         'country' => isset($leadData['country']) ? $leadData['country'] : null,
+            //         'postal_code' => isset($leadData['postalCode']) ? $leadData['postalCode'] : null,
+            //         'company' => isset($leadData['companyName']) ? $leadData['companyName'] : null,
+            //         'website' => isset($leadData['website']) ? $leadData['website'] : null,
+            //         'source' => isset($leadData['source']) ? $leadData['source'] : null,
+            //         'type' => isset($leadData['type']) ? $leadData['type'] : null,
+            //         'assigned_to' => isset($leadData['assignedTo']) ? $leadData['assignedTo'] : null,
+            //         'tags' => isset($leadData['tags']) ? (is_array($leadData['tags']) ? $leadData['tags'] : explode(', ', $leadData['tags'])) : [],
+            //         'followers' => isset($leadData['followers']) ? (is_array($leadData['followers']) ? $leadData['followers'] : explode(', ', $leadData['followers'])) : [],
+            //         'additional_emails' => isset($leadData['additionalEmails'])
+            //         ? (is_array($leadData['additionalEmails'])
+            //             ? $leadData['additionalEmails']
+            //             : explode(', ', $leadData['additionalEmails']))
+            //         : [],
+
+            //     'attributions' => isset($leadData['attributions'])
+            //         ? (is_array($leadData['attributions'])
+            //             ? $leadData['attributions']
+            //             : explode(', ', $leadData['attributions']))
+            //         : [],
+
+            //     'custom_fields' => isset($leadData['customFields'])
+            //         ? (is_array($leadData['customFields'])
+            //             ? $leadData['customFields']
+            //             : explode(', ', $leadData['customFields']))
+            //         : [],
+            //         'dnd' => isset($leadData['dnd']) ? $leadData['dnd'] : false,
+            //         'dnd_settings_email' => isset($leadData['dndSettings']['email']) ? $leadData['dndSettings']['email'] : null,
+            //         'dnd_settings_sms' => isset($leadData['dndSettings']['sms']) ? $leadData['dndSettings']['sms'] : null,
+            //         'dnd_settings_call' => isset($leadData['dndSettings']['call']) ? $leadData['dndSettings']['call'] : null,
+            //         'date_added' => isset($leadData['dateAdded']) ? \Carbon\Carbon::createFromTimestampMs($leadData['dateAdded']) : null,
+            //         'date_updated' => isset($leadData['dateUpdated']) ? \Carbon\Carbon::createFromTimestampMs($leadData['dateUpdated']) : null,
+            //         'date_of_birth' => isset($leadData['dateOfBirth']) ? $leadData['dateOfBirth'] : null,
+            //     ],
+            // );
+        }
+
+        return response()->json(['message' => 'Chunk processed successfully']);
     }
 
 }

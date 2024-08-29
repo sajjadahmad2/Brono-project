@@ -1,5 +1,5 @@
 <?php
-
+use App\Models\Contact;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,15 +21,15 @@ Route::middleware('auth')->group(function () {
         Route::post('/profile-save', 'general')->name('profile.save');
         Route::post('/password-save', 'password')->name('password.save');
         Route::get('/', 'dashboard')->name('dashboard');
-
         Route::get('/settings', 'setting')->name('setting')->middleware('permission:manage settings');
         Route::post('/setting-save', 'settingSave')->name('setting.save');
         Route::post('/users-setting-save', 'userSettingSave')->name('users.setting.save');
 
         //filter the contacts
         Route::get('/filter-contacts', 'filterContacts')->name('filter.contacts');
+        Route::get('/filter-locations', 'filterLocations')->name('filter.by.location');
     });
-
+    Route::get('/companies/dashboards', 'DashboardController@companyDashboard')->name('view.company.dashboard');
     Route::prefix('user')->name('user.')->controller(UserController::class)->group(function () {
         Route::get('/list', 'list')->name('list')->middleware('permission:view user');
         Route::get('/add', 'add')->name('add')->middleware('permission:add user');
@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('permission')->name('permission.')->controller(PermissionController::class)->group(function () {
         Route::get('/manage', 'manage')->name('manage')->middleware('permission:manage permissions');
     });
+    Route::post('/import-leads', 'PropertyController@importLeads')->name('uploadChunks');
 
     //dashboard styles
     Route::prefix('designer')->name('style.')->controller(DashboardStyleController::class)->group(function () {
@@ -85,7 +86,27 @@ Route::get('/not-allowed', function(){
     return view('not_allowed');
 })->name('not_allowed');
 
+Route::get('/update-contact-tags', function () {
+    set_time_limit(3000000);
+    // Fetch all contacts
+    $contacts = Contact::all();
 
+    foreach ($contacts as $contact) {
+        // Check if 'tags' is an array
+        if (is_array($contact->tags)) {
+            // Convert the array to a comma-separated string
+            $tagsString = implode(',', $contact->tags);
+
+            // Update the 'tags' attribute with the new string value
+            $contact->tags = $tagsString;
+
+            // Save the updated contact
+            $contact->save();
+        }
+    }
+
+    return response()->json(['message' => 'Contact tags updated successfully.']);
+});
 // use App\Http\Controllers\BaserowController;
 
 // Route::get('/baserow', [BaserowController::class, 'index']);

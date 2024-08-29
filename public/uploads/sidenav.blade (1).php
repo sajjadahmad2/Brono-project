@@ -1,6 +1,5 @@
 
 <!--begin:Menu item-->
-
 <div class="text-center text-gray-800 text-hover-primary bg-hover-light rounded  me-0 ml-10 me-lg-2">
     <a class="menu-link" href="{{ route('dashboard') }}">
 
@@ -46,15 +45,6 @@
                 <div class="mh-450px scroll-y me-n5 pe-5">
                     <!--begin::Row-->
                     <div class="row g-2">
-                        @can('view user')
-                        <div class="col-4">
-                            <a href="{{ route('view.company.dashboard') }}"
-                                class="d-flex flex-column flex-center text-center text-gray-800 text-hover-primary bg-hover-light rounded py-4 px-3 mb-3">
-                                <img src="{{ asset('uploads/dashboard.png') }}" class="w-25px h-25px mb-2" alt="" />
-                                <span class="fw-semibold">Gold Estate</span>
-                            </a>
-                        </div>
-                        @endcan
                         <!--begin::Col-->
                         <div class="col-4">
                             <a href="{{ route('property.list') }}"

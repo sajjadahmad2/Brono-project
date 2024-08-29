@@ -250,7 +250,7 @@ class PropertyImporter
                     preg_match('/\b[A-Z\s]+\b/', $desc, $matches);
                     $title = isset($matches[0]) ? trim($matches[0]) : '';
                     if ($title) {
-                        $property->title = $title;
+                        $property->property_title = $title;
                     }
                     $property->descriptions()->create([
                         'language' => $language,
@@ -263,7 +263,6 @@ class PropertyImporter
 
 
 
-            // dd("fine till here");
 
             // Process energy rating if any
             if (isset($propertyData->energy_rating)) {

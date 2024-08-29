@@ -12,499 +12,1087 @@
         .total_opportunities {
             display: none !important;
         }
+
+        .apexcharts-legend-text {
+            display: flex;
+            gap: 10px;
+        }
+
+        .apexcharts-legend-marker {
+            height: 8px !important;
+            width: 13px !important;
+            left: -3px !important;
+            top: 0px !important;
+        }
     </style>
 @endsection
 @section('content')
+    <div class='contacts_charts_container'>
+        <div class="row gx-5 gx-xl-10">
 
-
-    {{-- main stats --}}
-    <div class="row gx-5 gx-xl-10 mb-xl-10">
-        <!--begin::Col-->
-        <div class="col-md-4 col-lg-6 col-xl-6 col-xxl-4 mb-10">
-
-            <!--begin::Card widget 4-->
-            <div class="card card-flush h-md-50 mb-5 mb-xl-10">
-                <!--begin::Header-->
-                <div class="card-header pt-5">
-                    <!--begin::Title-->
-                    <div class="card-title d-flex flex-column">
-                        <!--begin::Info-->
-                        <div class="d-flex align-items-center">
-                            <!--begin::Currency-->
-                            <span class="fs-4 fw-semibold text-gray-500 me-1 align-self-start">#</span>
-                            <!--end::Currency-->
-
-                            <!--begin::Amount-->
-                            <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2 top_total_contact">0</span>
-                            <!--end::Amount-->
-                        </div>
-                        <!--end::Info-->
-
-                        <!--begin::Subtitle-->
-                        <span class="text-gray-500 pt-1 fw-semibold fs-6">Total Contacts</span>
-                        <!--end::Subtitle-->
-                    </div>
-                    <!--end::Title-->
-                </div>
-                <!--end::Header-->
-
-                <!--begin::Card body-->
-                <div id="top_contacts_chart" style="min-width: 70px; min-height: 70px" data-kt-size="70" data-kt-line="11">
-
-                </div>
-                <!--end::Card body-->
-            </div>
-            <!--end::Card widget 4-->
-
-            <!--begin::Card widget 4-->
-            <div class="card card-flush h-md-50 mb-5 mb-xl-10">
-                <!--begin::Header-->
-                <div class="card-header pt-5">
-                    <!--begin::Title-->
-                    <div class="card-title d-flex flex-column">
-                        <!--begin::Info-->
-                        <div class="d-flex align-items-center">
-                            <!--begin::Currency-->
-                            <span class="fs-4 fw-semibold text-gray-500 me-1 align-self-start">#</span>
-                            <!--end::Currency-->
-
-                            <!--begin::Amount-->
-                            <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2 top_total_opportunity">0</span>
-                            <!--end::Amount-->
-                        </div>
-                        <!--end::Info-->
-
-                        <!--begin::Subtitle-->
-                        <span class="text-gray-500 pt-1 fw-semibold fs-6">Total Opportunities</span>
-                        <!--end::Subtitle-->
-                    </div>
-                    <!--end::Title-->
-                </div>
-                <!--end::Header-->
-
-                <!--begin::Card body-->
-                <div id="top_opportunities_chart" style="min-width: 70px; min-height: 70px" data-kt-size="70"
-                    data-kt-line="11">
-
-                </div>
-                <!--end::Card body-->
-            </div>
-            <!--end::Card widget 4-->
-
-        </div>
-        <!--end::Col-->
-
-        <div class="col-md-4 col-lg-6 col-xl-6 col-xxl-4 mb-10">
-
-            <!--begin::Card widget 4-->
-            <div class="card card-flush h-md-50 mb-5 mb-xl-10">
-                <!--begin::Header-->
-                <div class="card-header pt-5">
-                    <!--begin::Title-->
-                    <div class="card-title d-flex flex-column">
-                        <!--begin::Info-->
-                        <div class="d-flex align-items-center">
-                            <!--begin::Currency-->
-                            <span class="fs-4 fw-semibold text-gray-500 me-1 align-self-start">#</span>
-                            <!--end::Currency-->
-
-                            <!--begin::Amount-->
-                            <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2 top_total_oppointments">69,700</span>
-                            <!--end::Amount-->
-
-                            <!--begin::Badge-->
-
-                            <!--end::Badge-->
-                        </div>
-                        <!--end::Info-->
-
-                        <!--begin::Subtitle-->
-                        <span class="text-gray-500 pt-1 fw-semibold fs-6">Total Appointments</span>
-                        <!--end::Subtitle-->
-                    </div>
-                    <!--end::Title-->
-                </div>
-                <!--end::Header-->
-
-                <!--begin::Card body-->
-                <div class="card-body pt-2 pb-4 d-flex align-items-center">
-                    <!--begin::Chart-->
-                    <div class="d-flex flex-center me-5 pt-2">
-                        <div id="top_total_appointments" style="min-width: 70px; min-height: 70px" data-kt-size="70"
-                            data-kt-line="11">
-
-                        </div>
-                    </div>
-                    <!--end::Chart-->
-
-                </div>
-                <!--end::Card body-->
-            </div>
-            <!--end::Card widget 4-->
-
-            <!--begin::Card widget 5-->
-            <div class="card card-flush h-md-50 mb-xl-10">
-                <!--begin::Header-->
-                <div class="card-header pt-5">
-                    <!--begin::Title-->
-                    <div class="card-title d-flex flex-column">
-                        <!--begin::Info-->
-                        <div class="d-flex align-items-center">
-                            <!--begin::Amount-->
-                            <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2 top_total_calls">1,836</span>
-                            <!--end::Amount-->
-
-                        </div>
-                        <!--end::Info-->
-
-                        <!--begin::Subtitle-->
-                        <span class="text-gray-500 pt-1 fw-semibold fs-6">Total Calls</span>
-                        <!--end::Subtitle-->
-                    </div>
-                    <!--end::Title-->
-                </div>
-                <!--end::Header-->
-                <!--begin::Card body-->
-                <div class="card-body pt-2 pb-4 d-flex align-items-center">
-                    <!--begin::Chart-->
-                    <div class="d-flex flex-center me-5 pt-2">
-                        <div id="top_total_calls" style="min-width: 70px; min-height: 70px" data-kt-size="70"
-                            data-kt-line="11">
-
-                        </div>
-                    </div>
-                    <!--end::Chart-->
-
-                </div>
-                <!--end::Card body-->
-            </div>
-            <!--end::Card widget 5-->
-
-        </div>
-
-        <!--begin::Col-->
-        <div class="col-md-4 col-lg-4 col-xl-4 col-xxl-4 mb-md-5 mb-xl-10">
-            <!--begin::Card widget 7-->
-            <div class="card card-flush h-md-70 mb-5 mb-xl-10">
-                <!--begin::Header-->
-                <div class="card-header pt-5">
-                    <!--begin::Title-->
-                    <div class="card-title d-flex flex-column">
-                        <!--begin::Amount-->
-                        <span
-                            class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">{{ isset($cov_stats) && is_array($cov_stats) && array_key_exists('users', $cov_stats) ? $cov_stats['users'] : 345 }}
-                        </span>
-                        <!--end::Amount-->
-                        <!--begin::Subtitle-->
-                        <span class="text-gray-500 pt-1 fw-semibold fs-6">Assigned Users</span>
-                        <!--end::Subtitle-->
-                    </div>
-                    <!--end::Title-->
-                </div>
-                <!--end::Header-->
-                <!--begin::Card body-->
-                <div class="card-body d-flex flex-column justify-content-end pe-0">
-                    <!--begin::Title-->
-                    <span class="fs-6 fw-bolder text-gray-800 d-block mb-2">Today’s Heroes</span>
-                    <!--end::Title-->
-                    <!--begin::Users group-->
-                    <div class="symbol-group symbol-hover flex-nowrap"style="margin-left: 0" ;>
-                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Alan Warden">
-                            <span class="symbol-label bg-warning text-inverse-warning fw-bold">A</span>
-                        </div>
-                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Michael Eberon">
-                            <img alt="Pic" src="{{ image('avatars/300-11.jpg') }}" />
-                        </div>
-                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Susan Redwood">
-                            <span class="symbol-label bg-primary text-inverse-primary fw-bold">S</span>
-                        </div>
-                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Melody Macy">
-                            <img alt="Pic" src="{{ image('avatars/300-2.jpg') }}" />
-                        </div>
-                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Perry Matthew">
-                            <span class="symbol-label bg-danger text-inverse-danger fw-bold">P</span>
-                        </div>
-                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Barry Walter">
-                            <img alt="Pic" src="{{ image('avatars/300-12.jpg') }}" />
-                        </div>
-                        <a href="#" class="symbol symbol-35px symbol-circle" data-bs-toggle="modal"
-                            data-bs-target="#kt_modal_view_users">
-                            <span class="symbol-label bg-dark text-gray-300 fs-8 fw-bold">+42</span>
-                        </a>
-                    </div>
-                    <!--end::Users group-->
-                </div>
-                <!--end::Card body-->
-            </div>
-            <!--end::Card widget 7-->
-            <div class="card card-flush h-xl-70">
-                <!--begin::Header-->
-                <div class="card-header py-7">
-
-                    <!--begin::Statistics-->
-                    <div class="m-0">
-                        <!--begin::Heading-->
-                        <div class="d-flex align-items-center mb-2">
-                            <!--begin::Title-->
-                            <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">5,037</span>
-                            <!--end::Title-->
-
-                            <!--begin::Label-->
-                            <span class="badge badge-light-success fs-base">
-                                <i class="ki-outline ki-arrow-up fs-5 text-success ms-n1"></i>
-                                2.2%
-                            </span>
-                            <!--end::Label-->
-
-                        </div>
-                        <!--end::Heading-->
-
-                        <!--begin::Description-->
-                        <span class="fs-6 fw-semibold text-gray-500">Conversion Rates</span>
-                        <!--end::Description-->
-                    </div>
-                    <!--end::Statistics-->
-
-                    <!--begin::Toolbar-->
-                    <div class="card-toolbar d-none">
-                        <!--begin::Menu-->
-                        <button class="btn btn-icon btn-color-gray-500 btn-active-color-primary justify-content-end"
-                            data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end"
-                            data-kt-menu-overflow="true">
-                            <i class="ki-outline ki-dots-square fs-1 text-gray-500 me-n1"></i>
-                        </button>
-                        <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px"
-                            data-kt-menu="true" style="">
-                            <!--begin::Menu item-->
-                            <div class="menu-item px-3">
-                                <div class="menu-content fs-6 text-gray-900 fw-bold px-3 py-4">Quick Actions</div>
-                            </div>
-                            <!--end::Menu item-->
-
-                            <!--begin::Menu separator-->
-                            <div class="separator mb-3 opacity-75"></div>
-                            <!--end::Menu separator-->
-
-                            <!--begin::Menu item-->
-                            <div class="menu-item px-3">
-                                <a href="#" class="menu-link px-3">
-                                    New Ticket
-                                </a>
-                            </div>
-                            <!--end::Menu item-->
-
-                            <!--begin::Menu item-->
-                            <div class="menu-item px-3">
-                                <a href="#" class="menu-link px-3">
-                                    New Customer
-                                </a>
-                            </div>
-                            <!--end::Menu item-->
-
-                            <!--begin::Menu item-->
-                            <div class="menu-item px-3" data-kt-menu-trigger="hover"
-                                data-kt-menu-placement="right-start">
-                                <!--begin::Menu item-->
-                                <a href="#" class="menu-link px-3">
-                                    <span class="menu-title">New Group</span>
-                                    <span class="menu-arrow"></span>
-                                </a>
-                                <!--end::Menu item-->
-
-                                <!--begin::Menu sub-->
-                                <div class="menu-sub menu-sub-dropdown w-175px py-4">
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="#" class="menu-link px-3">
-                                            Admin Group
-                                        </a>
-                                    </div>
-                                    <!--end::Menu item-->
-
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="#" class="menu-link px-3">
-                                            Staff Group
-                                        </a>
-                                    </div>
-                                    <!--end::Menu item-->
-
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="#" class="menu-link px-3">
-                                            Member Group
-                                        </a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                </div>
-                                <!--end::Menu sub-->
-                            </div>
-                            <!--end::Menu item-->
-
-                            <!--begin::Menu item-->
-                            <div class="menu-item px-3">
-                                <a href="#" class="menu-link px-3">
-                                    New Contact
-                                </a>
-                            </div>
-                            <!--end::Menu item-->
-
-                            <!--begin::Menu separator-->
-                            <div class="separator mt-3 opacity-75"></div>
-                            <!--end::Menu separator-->
-
-                            <!--begin::Menu item-->
-                            <div class="menu-item px-3">
-                                <div class="menu-content px-3 py-3">
-                                    <a class="btn btn-primary  btn-sm px-4" href="#">
-                                        Generate Reports
-                                    </a>
-                                </div>
-                            </div>
-                            <!--end::Menu item-->
-                        </div>
-
-
-                        <!--begin::Menu 2-->
-
-                        <!--end::Menu 2-->
-
-                        <!--end::Menu-->
-                    </div>
-                    <!--end::Toolbar-->
-
-                </div>
-                <!--end::Header-->
-
-                <!--begin::Body-->
-                <div class="card-body card-body d-flex justify-content-between flex-column pt-3">
-                    @if (isset($cov_stats) && is_array($cov_stats))
-                        @foreach ($cov_stats as $key => $cov)
-                            @if ($key != 'users')
-                                <!--begin::Item-->
-                                <div class="d-flex flex-stack">
-                                    <!--begin::Flag-->
-                                    <img src="/metronic8/demo30/assets/media/svg/brand-logos/slack-icon.svg"
-                                        class="me-4 w-30px" style="border-radius: 4px" alt="">
-                                    <!--end::Flag-->
-
-                                    <!--begin::Section-->
-                                    <div
-                                        class="d-flex align-items-center flex-stack flex-wrap flex-row-fluid d-grid gap-2">
-                                        <!--begin::Content-->
-                                        <div class="me-5">
-                                            <!--begin::Title-->
-                                            <a href="#"
-                                                class="text-gray-800 fw-bold text-hover-primary fs-6">{{ $key }}</a>
-                                            <!--end::Title-->
-
-                                            <!--begin::Desc-->
-                                            <span
-                                                class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">{{ array_key_exists('Message', $cov) ? $cov['Message'] : 'Message' }}</span>
-                                            <!--end::Desc-->
-                                        </div>
-                                        <!--end::Content-->
-
-                                        <!--begin::Wrapper-->
-                                        <div class="d-flex align-items-center">
-                                            <!--begin::Number-->
-                                            <span
-                                                class="text-gray-800 fw-bold fs-4 me-3">{{ array_key_exists('Total', $cov) ? $cov['Total'] : 0 }}</span>
-
-                                            <!--end::Number-->
-
-                                            <!--begin::Info-->
-                                            <div class="m-0">
-                                                <!--begin::Label-->
-                                                <span class="badge badge-light-success fs-base">
-                                                    <i class="ki-outline ki-arrow- {{$cov['Percent']< 50 ? 'down' : 'up'}} fs-5 text-{{$cov['Percent']< 50 ? 'danger' : 'success'}} ms-n1"></i>
-                                                    {{ array_key_exists('Percent', $cov) ? $cov['Percent'] : 0 }}%
-                                                </span>
-                                                <!--end::Label-->
-
-                                            </div>
-                                            <!--end::Info-->
-                                        </div>
-                                        <!--end::Wrapper-->
-                                    </div>
-                                    <!--end::Section-->
-                                </div>
-                                <!--end::Item-->
-                                <!--begin::Separator-->
-                                <div class="separator separator-dashed my-3"></div>
-                                <!--end::Separator-->
-                            @endif
+            {{-- Contacts filters row --}}
+            <div class="col-xxl-4 offset-xxl-8 d-flex justify-content-end align-items-center" style="gap: 20px;">
+                <!--begin::Col for user dropdown-->
+                <div class="col-md-3 mb-3" style="
+                width: 34%;
+            "id="user-filter">
+                    <select id="user-select" class="form-select">
+                        <option value="">Select User</option>
+                        @foreach ($users as $user)
+                            <option value="{{ $user['id'] }}">{{ $user['name'] }}</option>
                         @endforeach
-                    @endif
+                    </select>
+                </div>
+                <!--end::Col-->
 
+                <!--begin::Col for tags dropdown-->
+                <div class="col-md-3 mb-3" style="
+                width: 20%;
+            " id="tags-filter" hidden>
+                    <select id="tags-select" class="form-select">
+                        <option value="">Select Tag</option>
+
+                    </select>
+                </div>
+                <!--end::Col-->
+
+                <!--begin::Col for date range picker-->
+                <div class="col mb-3" style="
+                width: 20%;
+            "id="date-range-filter">
+                    <div id="date-range-picker" date-rangepicker class="flex items-center">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                </svg>
+                            </div>
+                            <input id="datepicker-range-start" name="start" type="text"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Select date start">
+                        </div>
+                        <span class="mx-4 text-gray-500">to</span>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                </svg>
+                            </div>
+                            <input id="datepicker-range-end" name="end" type="text"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Select date end">
+                        </div>
+                    </div>
 
                 </div>
-                <!--end::Body-->
+
             </div>
+
+
+
         </div>
-        <!--end::Col-->
-        <div class="row gx-5 gx-xl-10 mt-xl-10">
+
+        {{-- main stats --}}
+        <div class="row gx-5 gx-xl-10 mb-xl-10">
             <!--begin::Col-->
-            <div class="col-lg-12 col-xl-12 col-xxl-6 mb-5 mb-xl-0">
-                <!--begin::Chart widget 3-->
-                <div class="card card-flush overflow-hidden h-md-70">
+            <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-3 mb-md-5 mb-xl-10">
+
+                <!--begin::Card widget 4-->
+                <div class="card card-flush h-md-50  mb-5 mb-xl-10">
                     <!--begin::Header-->
-                    <div class="card-header py-5">
+                    <div class="card-header pt-5">
                         <!--begin::Title-->
-                        <h3 class="card-title align-items-start flex-column">
-                            <span class="card-label fw-bold text-gray-900">Sales This Months</span>
-                            <span class="text-gray-500 mt-1 fw-semibold fs-6">All Won Opportunities</span>
-                        </h3>
-                        <!--end::Title-->
+                        <div class="card-title d-flex flex-column">
+                            <!--begin::Info-->
+                            <div class="d-flex align-items-center">
+                                <!--begin::Currency-->
+                                <span class="fs-4 fw-semibold text-gray-500 me-1 align-self-start"></span>
+                                <!--end::Currency-->
 
-                        <!--begin::Toolbar-->
-                        <div class="card-toolbar">
-                            <!--begin::Menu-->
-                            <button class="btn btn-icon btn-color-gray-500 btn-active-color-primary justify-content-end"
-                                data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end"
-                                data-kt-menu-overflow="true">
+                                <!--begin::Amount-->
+                                <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2 top_total_contact">LEADS</span>
+                                <!--end::Amount-->
+                            </div>
+                            <!--end::Info-->
 
-                                <i class="ki-duotone ki-dots-square fs-1"><span class="path1"></span><span
-                                        class="path2"></span><span class="path3"></span><span
-                                        class="path4"></span></i>
-                            </button>
-
-
-                            <!--end::Menu-->
+                            <!--begin::Subtitle-->
+                            <span class="text-gray-500 pt-1 fw-semibold fs-6">Total leads by TAG</span>
+                            <!--end::Subtitle-->
                         </div>
-                        <!--end::Toolbar-->
+                        <!--end::Title-->
                     </div>
                     <!--end::Header-->
 
                     <!--begin::Card body-->
-                    <div class="card-body d-flex justify-content-between flex-column pb-1 px-0">
-                        <!--begin::Statistics-->
-                        <div class="px-9 mb-5">
-                            <!--begin::Statistics-->
-                            <div class="d-flex mb-2">
-                                <span class="fs-4 fw-semibold text-gray-500 me-1">$</span>
-                                <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2 top_total_sales"></span>
-                            </div>
-                            <!--end::Statistics-->
+                    <div id="top_contacts_chart" style="min-width: 70px; " data-kt-size="70" data-kt-line="11"
+                        class="p-5">
 
-
-                            <!--end::Description-->
-                        </div>
-                        <!--end::Statistics-->
-
-                        <!--begin::Chart-->
-                        <div id="top_sales_chart" class="min-h-auto ps-4 pe-6" style="height: 300px; min-height: 315px;">
-
-                        </div>
-                        <!--end::Chart-->
                     </div>
                     <!--end::Card body-->
                 </div>
+                <!--end::Card widget 4-->
+
+                <div class="conversiondiv h-60">
+                    @include('components.conversion_card')
+                </div>
             </div>
             <!--end::Col-->
-        </div>
 
+            <!--begin::Col-->
+            <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-3 mb-md-5 mb-xl-10">
+
+                <!--begin::Card widget 4-->
+                <div class="card card-flush h-md-50  mb-5 mb-xl-10">
+                    <!--begin::Header-->
+                    <div class="card-header pt-5">
+                        <!--begin::Title-->
+                        <div class="card-title d-flex flex-column">
+                            <!--begin::Info-->
+                            <div class="d-flex align-items-center">
+                                <!--begin::Currency-->
+                                <span class="fs-4 fw-semibold text-gray-500 me-1 align-self-start"></span>
+                                <!--end::Currency-->
+
+                                <!--begin::Amount-->
+                                <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2 AverageYearlySales"></span>
+                                <!--end::Amount-->
+                            </div>
+                            <!--end::Info-->
+
+                            <!--begin::Subtitle-->
+                            <span class="text-gray-500 pt-1 fw-semibold fs-6">Average Yearly Sales</span>
+                            <!--end::Subtitle-->
+                        </div>
+                        <!--end::Title-->
+                    </div>
+                    <!--end::Header-->
+
+                    <!--begin::Card body-->
+                    <div id="top_avg_daily_sales_chart" style="min-width: 70px; " data-kt-size="70" data-kt-line="11"
+                        class="p-5">
+
+                    </div>
+                    <!--end::Card body-->
+                </div>
+                <!--end::Card widget 4-->
+
+                <div class="card card-flush h-60 mb-xl-10">
+                    <!--begin::Header-->
+                    <div class="card-header pt-5">
+                        <!--begin::Title-->
+                        <div class="card-title d-flex flex-column">
+                            <!--begin::Amount-->
+                            <span
+                                class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">{{ count($assigned_per_user) }}</span>
+                            <!--end::Amount-->
+
+                            <!--begin::Subtitle-->
+                            <span class="text-gray-500 pt-1 fw-semibold fs-6">Total Users</span>
+                            <!--end::Subtitle-->
+                        </div>
+                        <!--end::Title-->
+                    </div>
+                    <!--end::Header-->
+
+                    @php
+                        $visibleUsers = array_slice($users, 0, 12);
+                        $remainingCount = count($users) - 12;
+                    @endphp
+                    <div class="card-body d-flex flex-column justify-content-end pe-0">
+                        <!--begin::Title-->
+                        <span class="fs-6 fw-bolder text-gray-800 d-block mb-2">Today’s Heroes</span>
+                        <!--end::Title-->
+
+                        <!--begin::Users group-->
+                        <div class="symbol-group symbol-hover flex-nowrap">
+                            <?php foreach ($visibleUsers as $user):
+            $initials = strtoupper($user['firstName'][0] . $user['lastName'][0]);
+            $bgColor = getRandomColor();
+        ?>
+                            <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip"
+                                title="<?= $user['firstName'] . ' ' . $user['lastName'] ?>">
+                                <span class="symbol-label" style="background-color: <?= $bgColor ?>; color: #fff;">
+                                    <?= $initials ?>
+                                </span>
+                            </div>
+                            <?php endforeach; ?>
+
+                            <?php if ($remainingCount > 0): ?>
+                            <a href="#" class="symbol symbol-35px symbol-circle" data-bs-toggle="modal"
+                                data-bs-target="#kt_modal_view_users">
+                                <span class="symbol-label bg-light text-gray-400 fs-8 fw-bold">+
+                                    <?= $remainingCount ?>
+                                </span>
+                            </a>
+                            <?php endif; ?>
+                        </div>
+                        <!--end::Users group-->
+                    </div>
+                </div>
+
+            </div>
+            <!--end::Col-->
+
+            <!--begin::Col-->
+            <div class="col-xxl-6">
+
+                <div class="card card-flush  mb-5 mb-xl-10 h-5/6">
+                    <!--begin::Card body-->
+                    <div id="group_by_countries" style="min-width: 70px; min-height:95%" data-kt-size="340"
+                        data-kt-line="22">
+                    </div>
+                    <!--end::Card body-->
+                </div>
+                <!--end::Card widget 4-->
+
+            </div>
+            <!--end::Col-->
+
+        </div>
     </div>
+
+
+    <!--end::Col-->
+    <div class="row gx-5 gx-xl-10 mt-xl-10">
+        <!--begin::Col-->
+        <div class="col-lg-8 col-xl-8 col-xxl-8 mb-5 mb-xl-0">
+            <!--begin::Chart widget 3-->
+            <div class="card card-flush overflow-hidden h-md-70">
+                <!--begin::Header-->
+                <div class="card-header py-5">
+                    <!--begin::Title-->
+                    <h3 class="card-title align-items-start flex-column">
+                        <span class="card-label fw-bold text-gray-900">Sales This Months</span>
+                        <span class="text-gray-500 mt-1 fw-semibold fs-6">All Won Opportunities</span>
+                    </h3>
+                    <!--end::Title-->
+
+                    <!--begin::Toolbar-->
+                    <div class="card-toolbar">
+                        <!--begin::Menu-->
+                        <button class="btn btn-icon btn-color-gray-500 btn-active-color-primary justify-content-end"
+                            data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end"
+                            data-kt-menu-overflow="true">
+
+                            <i class="ki-duotone ki-dots-square fs-1"><span class="path1"></span><span
+                                    class="path2"></span><span class="path3"></span><span class="path4"></span></i>
+                        </button>
+
+
+                        <!--end::Menu-->
+                    </div>
+                    <!--end::Toolbar-->
+                </div>
+                <!--end::Header-->
+
+                <!--begin::Card body-->
+                <div class="card-body d-flex justify-content-between flex-column pb-1 px-0">
+                    <!--begin::Statistics-->
+                    <div class="px-9 mb-5">
+                        <!--begin::Statistics-->
+                        <div class="d-flex mb-2">
+                            <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2 top_total_sales"></span>
+                        </div>
+                        <!--end::Statistics-->
+
+
+                        <!--end::Description-->
+                    </div>
+                    <!--end::Statistics-->
+
+                    <!--begin::Chart-->
+                    <div id="top_sales_chart" class="min-h-auto ps-4 pe-6" style="height: 300px; min-height: 315px;">
+
+                    </div>
+                    <!--end::Chart-->
+                </div>
+                <!--end::Card body-->
+            </div>
+        </div>
+        <!--end::Col-->
+
+        <div class="col-lg-4 col-xl-4 col-xxl-4 col-xxl- mb-5 mb-xl-10">
+            <!--begin::List widget 9-->
+            <div class="card card-flush h-xl-100">
+                <!--begin::Header-->
+                <div class="card-header pt-7">
+                    <!--begin::Title-->
+                    <h3 class="card-title align-items-start flex-column">
+                        <span class="card-label fw-bold text-gray-900">CHANNELS</span>
+                        <span class="text-gray-500 mt-1 fw-semibold fs-6">SALES BY CHANNEL</span>
+                    </h3>
+                    <!--end::Title-->
+
+                    <!--begin::Toolbar-->
+                    <div class="card-toolbar">
+                        <a href="/metronic8/demo39/apps/ecommerce/sales/details.html" class="btn btn-sm btn-light">Order
+                            Details</a>
+                    </div>
+                    <!--end::Toolbar-->
+                </div>
+                <!--end::Header-->
+
+                <!--begin::Body-->
+                <div class="card-body">
+                    <!--begin::Scroll-->
+                    <div class="hover-scroll-overlay-y pe-6 me-n6" style="height: 415px">
+                        <!--begin::Item-->
+                        <div class="border border-dashed border-gray-300 rounded px-7 py-3 mb-6">
+                            <!--begin::Info-->
+                            <div class="d-flex flex-stack mb-3">
+                                <!--begin::Wrapper-->
+                                <div class="d-flex flex-stack">
+                                    <!--begin::Icon-->
+                                    <img src="	https://upload.wikimedia.org/wikipedia/commons/b/b9/2023_Facebook_icon.svg"
+                                        class="w-50px ms-n1 me-10" alt="">
+                                    <!--end::Icon-->
+
+                                    <!--begin::Title-->
+                                    <a href="/metronic8/demo39/apps/ecommerce/catalog/edit-product.html"
+                                        class="text-gray-800 text-4xl text-hover-primary fw-bold">25.896</a>
+                                    <!--end::Title-->
+                                </div>
+                                <!--end::Wrapper-->
+
+                                <!--begin::Action-->
+                                <div class="m-0">
+                                    <!--begin::Menu-->
+                                    <button
+                                        class="btn btn-icon btn-color-gray-500 btn-active-color-primary justify-content-end"
+                                        data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end"
+                                        data-kt-menu-overflow="true">
+
+                                        <i class="ki-duotone ki-dots-square fs-1"><span class="path1"></span><span
+                                                class="path2"></span><span class="path3"></span><span
+                                                class="path4"></span></i>
+                                    </button>
+
+                                    <!--begin::Menu 2-->
+                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px"
+                                        data-kt-menu="true">
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <div class="menu-content fs-6 text-gray-900 fw-bold px-3 py-4">Quick
+                                                Actions</div>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu separator-->
+                                        <div class="separator mb-3 opacity-75"></div>
+                                        <!--end::Menu separator-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3">
+                                                New Ticket
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3">
+                                                New Customer
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3" data-kt-menu-trigger="hover"
+                                            data-kt-menu-placement="right-start">
+                                            <!--begin::Menu item-->
+                                            <a href="#" class="menu-link px-3">
+                                                <span class="menu-title">New Group</span>
+                                                <span class="menu-arrow"></span>
+                                            </a>
+                                            <!--end::Menu item-->
+
+                                            <!--begin::Menu sub-->
+                                            <div class="menu-sub menu-sub-dropdown w-175px py-4">
+                                                <!--begin::Menu item-->
+                                                <div class="menu-item px-3">
+                                                    <a href="#" class="menu-link px-3">
+                                                        Admin Group
+                                                    </a>
+                                                </div>
+                                                <!--end::Menu item-->
+
+                                                <!--begin::Menu item-->
+                                                <div class="menu-item px-3">
+                                                    <a href="#" class="menu-link px-3">
+                                                        Staff Group
+                                                    </a>
+                                                </div>
+                                                <!--end::Menu item-->
+
+                                                <!--begin::Menu item-->
+                                                <div class="menu-item px-3">
+                                                    <a href="#" class="menu-link px-3">
+                                                        Member Group
+                                                    </a>
+                                                </div>
+                                                <!--end::Menu item-->
+                                            </div>
+                                            <!--end::Menu sub-->
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3">
+                                                New Contact
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu separator-->
+                                        <div class="separator mt-3 opacity-75"></div>
+                                        <!--end::Menu separator-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <div class="menu-content px-3 py-3">
+                                                <a class="btn btn-primary  btn-sm px-4" href="#">
+                                                    Generate Reports
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <!--end::Menu item-->
+                                    </div>
+                                    <!--end::Menu 2-->
+
+                                    <!--end::Menu-->
+                                </div>
+                                <!--end::Action-->
+                            </div>
+                            <!--end::Info-->
+
+                            <!--begin::Customer-->
+                            <div class="d-flex flex-stack">
+                                <!--begin::Name-->
+                                <span class="text-gray-500 text-1xl fw-bold">SALES Amount:
+                                    <a href="/metronic8/demo39/apps/ecommerce/sales/details.html"
+                                        class="text-gray-800  text-hover-primary fw-bold">
+                                        € 109.272.272 </a>
+                                </span>
+                                <!--end::Name-->
+
+                                <!--begin::Label-->
+                                <span class="badge badge-light-success">Delivered</span>
+                                <!--end::Label-->
+                            </div>
+                            <!--end::Customer-->
+                        </div>
+                        <!--end::Item-->
+                        <!--begin::Item-->
+                        <div class="border border-dashed border-gray-300 rounded px-7 py-3 mb-6">
+                            <!--begin::Info-->
+                            <div class="d-flex flex-stack mb-3">
+                                <!--begin::Wrapper-->
+                                <div class="d-flex flex-stack">
+                                    <!--begin::Icon-->
+                                    <img src="	https://preview.keenthemes.com/metronic8/demo39/assets/media/svg/brand-logos/instagram-2-1.svg"
+                                        class="w-50px ms-n1 me-10" alt="">
+                                    <!--end::Icon-->
+
+                                    <!--begin::Title-->
+                                    <a href="/metronic8/demo39/apps/ecommerce/catalog/edit-product.html"
+                                        class="text-gray-800 text-4xl text-hover-primary fw-bold">3.412</a>
+                                    <!--end::Title-->
+                                </div>
+                                <!--end::Wrapper-->
+
+                                <!--begin::Action-->
+                                <div class="m-0">
+                                    <!--begin::Menu-->
+                                    <button
+                                        class="btn btn-icon btn-color-gray-500 btn-active-color-primary justify-content-end"
+                                        data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end"
+                                        data-kt-menu-overflow="true">
+
+                                        <i class="ki-duotone ki-dots-square fs-1"><span class="path1"></span><span
+                                                class="path2"></span><span class="path3"></span><span
+                                                class="path4"></span></i>
+                                    </button>
+
+                                    <!--begin::Menu 2-->
+                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px"
+                                        data-kt-menu="true">
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <div class="menu-content fs-6 text-gray-900 fw-bold px-3 py-4">Quick
+                                                Actions</div>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu separator-->
+                                        <div class="separator mb-3 opacity-75"></div>
+                                        <!--end::Menu separator-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3">
+                                                New Ticket
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3">
+                                                New Customer
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3" data-kt-menu-trigger="hover"
+                                            data-kt-menu-placement="right-start">
+                                            <!--begin::Menu item-->
+                                            <a href="#" class="menu-link px-3">
+                                                <span class="menu-title">New Group</span>
+                                                <span class="menu-arrow"></span>
+                                            </a>
+                                            <!--end::Menu item-->
+
+                                            <!--begin::Menu sub-->
+                                            <div class="menu-sub menu-sub-dropdown w-175px py-4">
+                                                <!--begin::Menu item-->
+                                                <div class="menu-item px-3">
+                                                    <a href="#" class="menu-link px-3">
+                                                        Admin Group
+                                                    </a>
+                                                </div>
+                                                <!--end::Menu item-->
+
+                                                <!--begin::Menu item-->
+                                                <div class="menu-item px-3">
+                                                    <a href="#" class="menu-link px-3">
+                                                        Staff Group
+                                                    </a>
+                                                </div>
+                                                <!--end::Menu item-->
+
+                                                <!--begin::Menu item-->
+                                                <div class="menu-item px-3">
+                                                    <a href="#" class="menu-link px-3">
+                                                        Member Group
+                                                    </a>
+                                                </div>
+                                                <!--end::Menu item-->
+                                            </div>
+                                            <!--end::Menu sub-->
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3">
+                                                New Contact
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu separator-->
+                                        <div class="separator mt-3 opacity-75"></div>
+                                        <!--end::Menu separator-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <div class="menu-content px-3 py-3">
+                                                <a class="btn btn-primary  btn-sm px-4" href="#">
+                                                    Generate Reports
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <!--end::Menu item-->
+                                    </div>
+                                    <!--end::Menu 2-->
+
+                                    <!--end::Menu-->
+                                </div>
+                                <!--end::Action-->
+                            </div>
+                            <!--end::Info-->
+
+                            <!--begin::Customer-->
+                            <div class="d-flex flex-stack">
+                                <!--begin::Name-->
+                                <span class="text-gray-500 text-1xl fw-bold">SALES Amount:
+                                    <a href="/metronic8/demo39/apps/ecommerce/sales/details.html"
+                                        class="text-gray-800  text-hover-primary fw-bold">
+                                        € 291.752 </a>
+                                </span>
+                                <!--end::Name-->
+
+                                <!--begin::Label-->
+                                <span class="badge badge-light-primary">Shipping</span>
+                                <!--end::Label-->
+                            </div>
+                            <!--end::Customer-->
+                        </div>
+                        <!--end::Item-->
+                        <!--begin::Item-->
+                        <div class="border border-dashed border-gray-300 rounded px-7 py-3 mb-6">
+                            <!--begin::Info-->
+                            <div class="d-flex flex-stack mb-3">
+                                <!--begin::Wrapper-->
+                                <div class="d-flex flex-stack">
+                                    <!--begin::Icon-->
+                                    <img src="	https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png"
+                                        class="w-50px ms-n1 me-10" alt="">
+                                    <!--end::Icon-->
+
+                                    <!--begin::Title-->
+                                    <a href="/metronic8/demo39/apps/ecommerce/catalog/edit-product.html"
+                                        class="text-gray-800 text-4xl text-hover-primary fw-bold">2.855</a>
+                                    <!--end::Title-->
+                                </div>
+                                <!--end::Wrapper-->
+
+                                <!--begin::Action-->
+                                <div class="m-0">
+                                    <!--begin::Menu-->
+                                    <button
+                                        class="btn btn-icon btn-color-gray-500 btn-active-color-primary justify-content-end"
+                                        data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end"
+                                        data-kt-menu-overflow="true">
+
+                                        <i class="ki-duotone ki-dots-square fs-1"><span class="path1"></span><span
+                                                class="path2"></span><span class="path3"></span><span
+                                                class="path4"></span></i>
+                                    </button>
+
+                                    <!--begin::Menu 2-->
+                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px"
+                                        data-kt-menu="true">
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <div class="menu-content fs-6 text-gray-900 fw-bold px-3 py-4">Quick
+                                                Actions</div>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu separator-->
+                                        <div class="separator mb-3 opacity-75"></div>
+                                        <!--end::Menu separator-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3">
+                                                New Ticket
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3">
+                                                New Customer
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3" data-kt-menu-trigger="hover"
+                                            data-kt-menu-placement="right-start">
+                                            <!--begin::Menu item-->
+                                            <a href="#" class="menu-link px-3">
+                                                <span class="menu-title">New Group</span>
+                                                <span class="menu-arrow"></span>
+                                            </a>
+                                            <!--end::Menu item-->
+
+                                            <!--begin::Menu sub-->
+                                            <div class="menu-sub menu-sub-dropdown w-175px py-4">
+                                                <!--begin::Menu item-->
+                                                <div class="menu-item px-3">
+                                                    <a href="#" class="menu-link px-3">
+                                                        Admin Group
+                                                    </a>
+                                                </div>
+                                                <!--end::Menu item-->
+
+                                                <!--begin::Menu item-->
+                                                <div class="menu-item px-3">
+                                                    <a href="#" class="menu-link px-3">
+                                                        Staff Group
+                                                    </a>
+                                                </div>
+                                                <!--end::Menu item-->
+
+                                                <!--begin::Menu item-->
+                                                <div class="menu-item px-3">
+                                                    <a href="#" class="menu-link px-3">
+                                                        Member Group
+                                                    </a>
+                                                </div>
+                                                <!--end::Menu item-->
+                                            </div>
+                                            <!--end::Menu sub-->
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3">
+                                                New Contact
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu separator-->
+                                        <div class="separator mt-3 opacity-75"></div>
+                                        <!--end::Menu separator-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <div class="menu-content px-3 py-3">
+                                                <a class="btn btn-primary  btn-sm px-4" href="#">
+                                                    Generate Reports
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <!--end::Menu item-->
+                                    </div>
+                                    <!--end::Menu 2-->
+
+                                    <!--end::Menu-->
+                                </div>
+                                <!--end::Action-->
+                            </div>
+                            <!--end::Info-->
+
+                            <!--begin::Customer-->
+                            <div class="d-flex flex-stack">
+                                <!--begin::Name-->
+                                <span class="text-gray-500 text-1xl fw-bold">SALES Amount:
+                                    <a href="/metronic8/demo39/apps/ecommerce/sales/details.html"
+                                        class="text-gray-800  text-hover-primary fw-bold">
+                                        € 52.154 </a>
+                                </span>
+                                <!--end::Name-->
+
+                                <!--begin::Label-->
+                                <span class="badge badge-light-danger">Confirmed</span>
+                                <!--end::Label-->
+                            </div>
+                            <!--end::Customer-->
+                        </div>
+                        <!--end::Item-->
+                        <!--begin::Item-->
+                        <div class="border border-dashed border-gray-300 rounded px-7 py-3 mb-6">
+                            <!--begin::Info-->
+                            <div class="d-flex flex-stack mb-3">
+                                <!--begin::Wrapper-->
+                                <div class="d-flex flex-stack">
+                                    <!--begin::Icon-->
+                                    <img src="	https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png"
+                                        class="w-50px ms-n1 me-10" alt="">
+                                    <!--end::Icon-->
+
+                                    <!--begin::Title-->
+                                    <a href="/metronic8/demo39/apps/ecommerce/catalog/edit-product.html"
+                                        class="text-gray-800 text-4xl text-hover-primary fw-bold">3.212</a>
+                                    <!--end::Title-->
+                                </div>
+                                <!--end::Wrapper-->
+
+                                <!--begin::Action-->
+                                <div class="m-0">
+                                    <!--begin::Menu-->
+                                    <button
+                                        class="btn btn-icon btn-color-gray-500 btn-active-color-primary justify-content-end"
+                                        data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end"
+                                        data-kt-menu-overflow="true">
+
+                                        <i class="ki-duotone ki-dots-square fs-1"><span class="path1"></span><span
+                                                class="path2"></span><span class="path3"></span><span
+                                                class="path4"></span></i>
+                                    </button>
+
+                                    <!--begin::Menu 2-->
+                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px"
+                                        data-kt-menu="true">
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <div class="menu-content fs-6 text-gray-900 fw-bold px-3 py-4">Quick
+                                                Actions</div>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu separator-->
+                                        <div class="separator mb-3 opacity-75"></div>
+                                        <!--end::Menu separator-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3">
+                                                New Ticket
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3">
+                                                New Customer
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3" data-kt-menu-trigger="hover"
+                                            data-kt-menu-placement="right-start">
+                                            <!--begin::Menu item-->
+                                            <a href="#" class="menu-link px-3">
+                                                <span class="menu-title">New Group</span>
+                                                <span class="menu-arrow"></span>
+                                            </a>
+                                            <!--end::Menu item-->
+
+                                            <!--begin::Menu sub-->
+                                            <div class="menu-sub menu-sub-dropdown w-175px py-4">
+                                                <!--begin::Menu item-->
+                                                <div class="menu-item px-3">
+                                                    <a href="#" class="menu-link px-3">
+                                                        Admin Group
+                                                    </a>
+                                                </div>
+                                                <!--end::Menu item-->
+
+                                                <!--begin::Menu item-->
+                                                <div class="menu-item px-3">
+                                                    <a href="#" class="menu-link px-3">
+                                                        Staff Group
+                                                    </a>
+                                                </div>
+                                                <!--end::Menu item-->
+
+                                                <!--begin::Menu item-->
+                                                <div class="menu-item px-3">
+                                                    <a href="#" class="menu-link px-3">
+                                                        Member Group
+                                                    </a>
+                                                </div>
+                                                <!--end::Menu item-->
+                                            </div>
+                                            <!--end::Menu sub-->
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3">
+                                                New Contact
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu separator-->
+                                        <div class="separator mt-3 opacity-75"></div>
+                                        <!--end::Menu separator-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <div class="menu-content px-3 py-3">
+                                                <a class="btn btn-primary  btn-sm px-4" href="#">
+                                                    Generate Reports
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <!--end::Menu item-->
+                                    </div>
+                                    <!--end::Menu 2-->
+
+                                    <!--end::Menu-->
+                                </div>
+                                <!--end::Action-->
+                            </div>
+                            <!--end::Info-->
+
+                            <!--begin::Customer-->
+                            <div class="d-flex flex-stack">
+                                <!--begin::Name-->
+                                <span class="text-gray-500 text-1xl fw-bold">SALES Amount:
+                                    <a href="/metronic8/demo39/apps/ecommerce/sales/details.html"
+                                        class="text-gray-800  text-hover-primary fw-bold">
+                                        € 52.154 </a>
+                                </span>
+                                <!--end::Name-->
+
+                                <!--begin::Label-->
+                                <span class="badge badge-light-success">Delivered</span>
+                                <!--end::Label-->
+                            </div>
+                            <!--end::Customer-->
+                        </div>
+                        <!--end::Item-->
+                        <!--begin::Item-->
+                        <div class="border border-dashed border-gray-300 rounded px-7 py-3 mb-6">
+                            <!--begin::Info-->
+                            <div class="d-flex flex-stack mb-3">
+                                <!--begin::Wrapper-->
+                                <div class="d-flex flex-stack">
+                                    <!--begin::Icon-->
+                                    <img src="	https://seeklogo.com/images/G/gmail-new-2020-logo-32DBE11BB4-seeklogo.com.png"
+                                        class="w-50px ms-n1 me-10" alt="">
+                                    <!--end::Icon-->
+
+                                    <!--begin::Title-->
+                                    <a href="/metronic8/demo39/apps/ecommerce/catalog/edit-product.html"
+                                        class="text-gray-800 text-4xl text-hover-primary fw-bold">25.896</a>
+                                    <!--end::Title-->
+                                </div>
+                                <!--end::Wrapper-->
+
+                                <!--begin::Action-->
+                                <div class="m-0">
+                                    <!--begin::Menu-->
+                                    <button
+                                        class="btn btn-icon btn-color-gray-500 btn-active-color-primary justify-content-end"
+                                        data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end"
+                                        data-kt-menu-overflow="true">
+
+                                        <i class="ki-duotone ki-dots-square fs-1"><span class="path1"></span><span
+                                                class="path2"></span><span class="path3"></span><span
+                                                class="path4"></span></i>
+                                    </button>
+
+                                    <!--begin::Menu 2-->
+                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px"
+                                        data-kt-menu="true">
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <div class="menu-content fs-6 text-gray-900 fw-bold px-3 py-4">Quick
+                                                Actions</div>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu separator-->
+                                        <div class="separator mb-3 opacity-75"></div>
+                                        <!--end::Menu separator-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3">
+                                                New Ticket
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3">
+                                                New Customer
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3" data-kt-menu-trigger="hover"
+                                            data-kt-menu-placement="right-start">
+                                            <!--begin::Menu item-->
+                                            <a href="#" class="menu-link px-3">
+                                                <span class="menu-title">New Group</span>
+                                                <span class="menu-arrow"></span>
+                                            </a>
+                                            <!--end::Menu item-->
+
+                                            <!--begin::Menu sub-->
+                                            <div class="menu-sub menu-sub-dropdown w-175px py-4">
+                                                <!--begin::Menu item-->
+                                                <div class="menu-item px-3">
+                                                    <a href="#" class="menu-link px-3">
+                                                        Admin Group
+                                                    </a>
+                                                </div>
+                                                <!--end::Menu item-->
+
+                                                <!--begin::Menu item-->
+                                                <div class="menu-item px-3">
+                                                    <a href="#" class="menu-link px-3">
+                                                        Staff Group
+                                                    </a>
+                                                </div>
+                                                <!--end::Menu item-->
+
+                                                <!--begin::Menu item-->
+                                                <div class="menu-item px-3">
+                                                    <a href="#" class="menu-link px-3">
+                                                        Member Group
+                                                    </a>
+                                                </div>
+                                                <!--end::Menu item-->
+                                            </div>
+                                            <!--end::Menu sub-->
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3">
+                                                New Contact
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+
+                                        <!--begin::Menu separator-->
+                                        <div class="separator mt-3 opacity-75"></div>
+                                        <!--end::Menu separator-->
+
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <div class="menu-content px-3 py-3">
+                                                <a class="btn btn-primary  btn-sm px-4" href="#">
+                                                    Generate Reports
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <!--end::Menu item-->
+                                    </div>
+                                    <!--end::Menu 2-->
+
+                                    <!--end::Menu-->
+                                </div>
+                                <!--end::Action-->
+                            </div>
+                            <!--end::Info-->
+
+
+                            <!--begin::Customer-->
+                            <div class="d-flex flex-stack">
+                                <!--begin::Name-->
+                                <span class="text-gray-500 text-1xl fw-bold">SALES Amount:
+                                    <a href="/metronic8/demo39/apps/ecommerce/sales/details.html"
+                                        class="text-gray-800  text-hover-primary fw-bold">
+                                        € 52.154 </a>
+                                </span>
+                                <!--end::Name-->
+
+                                <!--begin::Label-->
+                                <span class="badge badge-light-primary">Shipping</span>
+                                <!--end::Label-->
+                            </div>
+                            <!--end::Customer-->
+                        </div>
+                        <!--end::Item-->
+                        <!--begin::Item-->
+
+                        <!--end::Item-->
+                    </div>
+                    <!--end::Scroll-->
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::List widget 9-->
+        </div>
+    </div>
+
     <!--begin::Modal - View Users-->
     <div class="modal fade" id="kt_modal_view_users" tabindex="-1" aria-hidden="true">
         <!--begin::Modal dialog-->
@@ -534,484 +1122,63 @@
                     </div>
                     <!--end::Heading-->
                     <!--begin::Users-->
+
                     <div class="mb-15">
                         <!--begin::List-->
                         <div class="mh-375px scroll-y me-n7 pe-7">
                             <!--begin::User-->
-                            <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
-                                <!--begin::Details-->
-                                <div class="d-flex align-items-center">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-35px symbol-circle">
-                                        <img alt="Pic" src="{{ image('avatars/300-6.jpg') }}" />
-                                    </div>
-                                    <!--end::Avatar-->
+                            @foreach ($assigned_per_user as $key => $asu)
+                                @php
+                                    $key_split = explode('-', trim($key)); // Explode the name and email
+                                    $name = $key_split[0] ?? 'X';
+                                    $email = $key_split[1] ?? '';
+                                    $initials = strtoupper(substr($name, 0, 1));
+                                    $bgColor = getRandomColor();
+                                    $total_sales = count($asu);
+                                @endphp
+                                <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
                                     <!--begin::Details-->
-                                    <div class="ms-6">
-                                        <!--begin::Name-->
-                                        <a href="#"
-                                            class="d-flex align-items-center fs-5 fw-bold text-gray-900 text-hover-primary">Emma
-                                            Smith
-                                            <span class="badge badge-light fs-8 fw-semibold ms-2">Art Director</span></a>
-                                        <!--end::Name-->
-                                        <!--begin::Email-->
-                                        <div class="fw-semibold text-muted">smith@kpmg.com</div>
-                                        <!--end::Email-->
+                                    <div class="d-flex align-items-center">
+                                        <!--begin::Avatar-->
+                                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip"
+                                            title="{{ $name }}">
+                                            <span class="symbol-label"
+                                                style="background-color: {{ $bgColor }}; color: #fff;">{{ $initials }}</span>
+                                        </div>
+                                        <!--end::Avatar-->
+                                        <!--begin::Details-->
+                                        <div class="ms-6">
+                                            <!--begin::Name-->
+                                            <a href="#"
+                                                class="d-flex align-items-center fs-5 fw-bold text-gray-900 text-hover-primary">{{ $name }}</a>
+                                            <!--end::Name-->
+                                            <!--begin::Email-->
+                                            <div class="fw-semibold text-muted">{{ $email }}</div>
+                                            <!--end::Email-->
+                                        </div>
+                                        <!--end::Details-->
                                     </div>
                                     <!--end::Details-->
+                                    <!--begin::Stats-->
+                                    <div class="d-flex">
+                                        <!--begin::Sales-->
+                                        <div class="text-end">
+                                            @php
+                                                $amount = 0;
+                                                foreach ($asu as $key => $value) {
+                                                    if ($value && ($value['status'] = 'won')) {
+                                                        $amount += $value['monetary_value'] ?? 0;
+                                                    }
+                                                }
+                                            @endphp
+                                            <div class="fs-5 fw-bold text-gray-900">$ {{ $amount }}</div>
+                                            <div class="fs-7 text-muted">Sales</div>
+                                        </div>
+                                        <!--end::Sales-->
+                                    </div>
+                                    <!--end::Stats-->
                                 </div>
-                                <!--end::Details-->
-                                <!--begin::Stats-->
-                                <div class="d-flex">
-                                    <!--begin::Sales-->
-                                    <div class="text-end">
-                                        <div class="fs-5 fw-bold text-gray-900">$23,000</div>
-                                        <div class="fs-7 text-muted">Sales</div>
-                                    </div>
-                                    <!--end::Sales-->
-                                </div>
-                                <!--end::Stats-->
-                            </div>
-                            <!--end::User-->
-                            <!--begin::User-->
-                            <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
-                                <!--begin::Details-->
-                                <div class="d-flex align-items-center">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-35px symbol-circle">
-                                        <span class="symbol-label bg-light-danger text-danger fw-semibold">M</span>
-                                    </div>
-                                    <!--end::Avatar-->
-                                    <!--begin::Details-->
-                                    <div class="ms-6">
-                                        <!--begin::Name-->
-                                        <a href="#"
-                                            class="d-flex align-items-center fs-5 fw-bold text-gray-900 text-hover-primary">Melody
-                                            Macy
-                                            <span class="badge badge-light fs-8 fw-semibold ms-2">Marketing
-                                                Analytic</span></a>
-                                        <!--end::Name-->
-                                        <!--begin::Email-->
-                                        <div class="fw-semibold text-muted">melody@altbox.com</div>
-                                        <!--end::Email-->
-                                    </div>
-                                    <!--end::Details-->
-                                </div>
-                                <!--end::Details-->
-                                <!--begin::Stats-->
-                                <div class="d-flex">
-                                    <!--begin::Sales-->
-                                    <div class="text-end">
-                                        <div class="fs-5 fw-bold text-gray-900">$50,500</div>
-                                        <div class="fs-7 text-muted">Sales</div>
-                                    </div>
-                                    <!--end::Sales-->
-                                </div>
-                                <!--end::Stats-->
-                            </div>
-                            <!--end::User-->
-                            <!--begin::User-->
-                            <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
-                                <!--begin::Details-->
-                                <div class="d-flex align-items-center">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-35px symbol-circle">
-                                        <img alt="Pic" src="{{ image('avatars/300-1.jpg') }}" />
-                                    </div>
-                                    <!--end::Avatar-->
-                                    <!--begin::Details-->
-                                    <div class="ms-6">
-                                        <!--begin::Name-->
-                                        <a href="#"
-                                            class="d-flex align-items-center fs-5 fw-bold text-gray-900 text-hover-primary">Max
-                                            Smith
-                                            <span class="badge badge-light fs-8 fw-semibold ms-2">Software
-                                                Enginer</span></a>
-                                        <!--end::Name-->
-                                        <!--begin::Email-->
-                                        <div class="fw-semibold text-muted">max@kt.com</div>
-                                        <!--end::Email-->
-                                    </div>
-                                    <!--end::Details-->
-                                </div>
-                                <!--end::Details-->
-                                <!--begin::Stats-->
-                                <div class="d-flex">
-                                    <!--begin::Sales-->
-                                    <div class="text-end">
-                                        <div class="fs-5 fw-bold text-gray-900">$75,900</div>
-                                        <div class="fs-7 text-muted">Sales</div>
-                                    </div>
-                                    <!--end::Sales-->
-                                </div>
-                                <!--end::Stats-->
-                            </div>
-                            <!--end::User-->
-                            <!--begin::User-->
-                            <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
-                                <!--begin::Details-->
-                                <div class="d-flex align-items-center">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-35px symbol-circle">
-                                        <img alt="Pic" src="{{ image('avatars/300-5.jpg') }}" />
-                                    </div>
-                                    <!--end::Avatar-->
-                                    <!--begin::Details-->
-                                    <div class="ms-6">
-                                        <!--begin::Name-->
-                                        <a href="#"
-                                            class="d-flex align-items-center fs-5 fw-bold text-gray-900 text-hover-primary">Sean
-                                            Bean
-                                            <span class="badge badge-light fs-8 fw-semibold ms-2">Web Developer</span></a>
-                                        <!--end::Name-->
-                                        <!--begin::Email-->
-                                        <div class="fw-semibold text-muted">sean@dellito.com</div>
-                                        <!--end::Email-->
-                                    </div>
-                                    <!--end::Details-->
-                                </div>
-                                <!--end::Details-->
-                                <!--begin::Stats-->
-                                <div class="d-flex">
-                                    <!--begin::Sales-->
-                                    <div class="text-end">
-                                        <div class="fs-5 fw-bold text-gray-900">$10,500</div>
-                                        <div class="fs-7 text-muted">Sales</div>
-                                    </div>
-                                    <!--end::Sales-->
-                                </div>
-                                <!--end::Stats-->
-                            </div>
-                            <!--end::User-->
-                            <!--begin::User-->
-                            <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
-                                <!--begin::Details-->
-                                <div class="d-flex align-items-center">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-35px symbol-circle">
-                                        <img alt="Pic" src="{{ image('avatars/300-25.jpg') }}" />
-                                    </div>
-                                    <!--end::Avatar-->
-                                    <!--begin::Details-->
-                                    <div class="ms-6">
-                                        <!--begin::Name-->
-                                        <a href="#"
-                                            class="d-flex align-items-center fs-5 fw-bold text-gray-900 text-hover-primary">Brian
-                                            Cox
-                                            <span class="badge badge-light fs-8 fw-semibold ms-2">UI/UX Designer</span></a>
-                                        <!--end::Name-->
-                                        <!--begin::Email-->
-                                        <div class="fw-semibold text-muted">brian@exchange.com</div>
-                                        <!--end::Email-->
-                                    </div>
-                                    <!--end::Details-->
-                                </div>
-                                <!--end::Details-->
-                                <!--begin::Stats-->
-                                <div class="d-flex">
-                                    <!--begin::Sales-->
-                                    <div class="text-end">
-                                        <div class="fs-5 fw-bold text-gray-900">$20,000</div>
-                                        <div class="fs-7 text-muted">Sales</div>
-                                    </div>
-                                    <!--end::Sales-->
-                                </div>
-                                <!--end::Stats-->
-                            </div>
-                            <!--end::User-->
-                            <!--begin::User-->
-                            <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
-                                <!--begin::Details-->
-                                <div class="d-flex align-items-center">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-35px symbol-circle">
-                                        <span class="symbol-label bg-light-warning text-warning fw-semibold">C</span>
-                                    </div>
-                                    <!--end::Avatar-->
-                                    <!--begin::Details-->
-                                    <div class="ms-6">
-                                        <!--begin::Name-->
-                                        <a href="#"
-                                            class="d-flex align-items-center fs-5 fw-bold text-gray-900 text-hover-primary">Mikaela
-                                            Collins
-                                            <span class="badge badge-light fs-8 fw-semibold ms-2">Head Of
-                                                Marketing</span></a>
-                                        <!--end::Name-->
-                                        <!--begin::Email-->
-                                        <div class="fw-semibold text-muted">mik@pex.com</div>
-                                        <!--end::Email-->
-                                    </div>
-                                    <!--end::Details-->
-                                </div>
-                                <!--end::Details-->
-                                <!--begin::Stats-->
-                                <div class="d-flex">
-                                    <!--begin::Sales-->
-                                    <div class="text-end">
-                                        <div class="fs-5 fw-bold text-gray-900">$9,300</div>
-                                        <div class="fs-7 text-muted">Sales</div>
-                                    </div>
-                                    <!--end::Sales-->
-                                </div>
-                                <!--end::Stats-->
-                            </div>
-                            <!--end::User-->
-                            <!--begin::User-->
-                            <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
-                                <!--begin::Details-->
-                                <div class="d-flex align-items-center">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-35px symbol-circle">
-                                        <img alt="Pic" src="{{ image('avatars/300-9.jpg') }}" />
-                                    </div>
-                                    <!--end::Avatar-->
-                                    <!--begin::Details-->
-                                    <div class="ms-6">
-                                        <!--begin::Name-->
-                                        <a href="#"
-                                            class="d-flex align-items-center fs-5 fw-bold text-gray-900 text-hover-primary">Francis
-                                            Mitcham
-                                            <span class="badge badge-light fs-8 fw-semibold ms-2">Software
-                                                Arcitect</span></a>
-                                        <!--end::Name-->
-                                        <!--begin::Email-->
-                                        <div class="fw-semibold text-muted">f.mit@kpmg.com</div>
-                                        <!--end::Email-->
-                                    </div>
-                                    <!--end::Details-->
-                                </div>
-                                <!--end::Details-->
-                                <!--begin::Stats-->
-                                <div class="d-flex">
-                                    <!--begin::Sales-->
-                                    <div class="text-end">
-                                        <div class="fs-5 fw-bold text-gray-900">$15,000</div>
-                                        <div class="fs-7 text-muted">Sales</div>
-                                    </div>
-                                    <!--end::Sales-->
-                                </div>
-                                <!--end::Stats-->
-                            </div>
-                            <!--end::User-->
-                            <!--begin::User-->
-                            <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
-                                <!--begin::Details-->
-                                <div class="d-flex align-items-center">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-35px symbol-circle">
-                                        <span class="symbol-label bg-light-danger text-danger fw-semibold">O</span>
-                                    </div>
-                                    <!--end::Avatar-->
-                                    <!--begin::Details-->
-                                    <div class="ms-6">
-                                        <!--begin::Name-->
-                                        <a href="#"
-                                            class="d-flex align-items-center fs-5 fw-bold text-gray-900 text-hover-primary">Olivia
-                                            Wild
-                                            <span class="badge badge-light fs-8 fw-semibold ms-2">System Admin</span></a>
-                                        <!--end::Name-->
-                                        <!--begin::Email-->
-                                        <div class="fw-semibold text-muted">olivia@corpmail.com</div>
-                                        <!--end::Email-->
-                                    </div>
-                                    <!--end::Details-->
-                                </div>
-                                <!--end::Details-->
-                                <!--begin::Stats-->
-                                <div class="d-flex">
-                                    <!--begin::Sales-->
-                                    <div class="text-end">
-                                        <div class="fs-5 fw-bold text-gray-900">$23,000</div>
-                                        <div class="fs-7 text-muted">Sales</div>
-                                    </div>
-                                    <!--end::Sales-->
-                                </div>
-                                <!--end::Stats-->
-                            </div>
-                            <!--end::User-->
-                            <!--begin::User-->
-                            <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
-                                <!--begin::Details-->
-                                <div class="d-flex align-items-center">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-35px symbol-circle">
-                                        <span class="symbol-label bg-light-primary text-primary fw-semibold">N</span>
-                                    </div>
-                                    <!--end::Avatar-->
-                                    <!--begin::Details-->
-                                    <div class="ms-6">
-                                        <!--begin::Name-->
-                                        <a href="#"
-                                            class="d-flex align-items-center fs-5 fw-bold text-gray-900 text-hover-primary">Neil
-                                            Owen
-                                            <span class="badge badge-light fs-8 fw-semibold ms-2">Account
-                                                Manager</span></a>
-                                        <!--end::Name-->
-                                        <!--begin::Email-->
-                                        <div class="fw-semibold text-muted">owen.neil@gmail.com</div>
-                                        <!--end::Email-->
-                                    </div>
-                                    <!--end::Details-->
-                                </div>
-                                <!--end::Details-->
-                                <!--begin::Stats-->
-                                <div class="d-flex">
-                                    <!--begin::Sales-->
-                                    <div class="text-end">
-                                        <div class="fs-5 fw-bold text-gray-900">$45,800</div>
-                                        <div class="fs-7 text-muted">Sales</div>
-                                    </div>
-                                    <!--end::Sales-->
-                                </div>
-                                <!--end::Stats-->
-                            </div>
-                            <!--end::User-->
-                            <!--begin::User-->
-                            <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
-                                <!--begin::Details-->
-                                <div class="d-flex align-items-center">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-35px symbol-circle">
-                                        <img alt="Pic" src="{{ image('avatars/300-23.jpg') }}" />
-                                    </div>
-                                    <!--end::Avatar-->
-                                    <!--begin::Details-->
-                                    <div class="ms-6">
-                                        <!--begin::Name-->
-                                        <a href="#"
-                                            class="d-flex align-items-center fs-5 fw-bold text-gray-900 text-hover-primary">Dan
-                                            Wilson
-                                            <span class="badge badge-light fs-8 fw-semibold ms-2">Web Desinger</span></a>
-                                        <!--end::Name-->
-                                        <!--begin::Email-->
-                                        <div class="fw-semibold text-muted">dam@consilting.com</div>
-                                        <!--end::Email-->
-                                    </div>
-                                    <!--end::Details-->
-                                </div>
-                                <!--end::Details-->
-                                <!--begin::Stats-->
-                                <div class="d-flex">
-                                    <!--begin::Sales-->
-                                    <div class="text-end">
-                                        <div class="fs-5 fw-bold text-gray-900">$90,500</div>
-                                        <div class="fs-7 text-muted">Sales</div>
-                                    </div>
-                                    <!--end::Sales-->
-                                </div>
-                                <!--end::Stats-->
-                            </div>
-                            <!--end::User-->
-                            <!--begin::User-->
-                            <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
-                                <!--begin::Details-->
-                                <div class="d-flex align-items-center">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-35px symbol-circle">
-                                        <span class="symbol-label bg-light-danger text-danger fw-semibold">E</span>
-                                    </div>
-                                    <!--end::Avatar-->
-                                    <!--begin::Details-->
-                                    <div class="ms-6">
-                                        <!--begin::Name-->
-                                        <a href="#"
-                                            class="d-flex align-items-center fs-5 fw-bold text-gray-900 text-hover-primary">Emma
-                                            Bold
-                                            <span class="badge badge-light fs-8 fw-semibold ms-2">Corporate
-                                                Finance</span></a>
-                                        <!--end::Name-->
-                                        <!--begin::Email-->
-                                        <div class="fw-semibold text-muted">emma@intenso.com</div>
-                                        <!--end::Email-->
-                                    </div>
-                                    <!--end::Details-->
-                                </div>
-                                <!--end::Details-->
-                                <!--begin::Stats-->
-                                <div class="d-flex">
-                                    <!--begin::Sales-->
-                                    <div class="text-end">
-                                        <div class="fs-5 fw-bold text-gray-900">$5,000</div>
-                                        <div class="fs-7 text-muted">Sales</div>
-                                    </div>
-                                    <!--end::Sales-->
-                                </div>
-                                <!--end::Stats-->
-                            </div>
-                            <!--end::User-->
-                            <!--begin::User-->
-                            <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
-                                <!--begin::Details-->
-                                <div class="d-flex align-items-center">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-35px symbol-circle">
-                                        <img alt="Pic" src="{{ image('avatars/300-12.jpg') }}" />
-                                    </div>
-                                    <!--end::Avatar-->
-                                    <!--begin::Details-->
-                                    <div class="ms-6">
-                                        <!--begin::Name-->
-                                        <a href="#"
-                                            class="d-flex align-items-center fs-5 fw-bold text-gray-900 text-hover-primary">Ana
-                                            Crown
-                                            <span class="badge badge-light fs-8 fw-semibold ms-2">Customer
-                                                Relationship</span></a>
-                                        <!--end::Name-->
-                                        <!--begin::Email-->
-                                        <div class="fw-semibold text-muted">ana.cf@limtel.com</div>
-                                        <!--end::Email-->
-                                    </div>
-                                    <!--end::Details-->
-                                </div>
-                                <!--end::Details-->
-                                <!--begin::Stats-->
-                                <div class="d-flex">
-                                    <!--begin::Sales-->
-                                    <div class="text-end">
-                                        <div class="fs-5 fw-bold text-gray-900">$70,000</div>
-                                        <div class="fs-7 text-muted">Sales</div>
-                                    </div>
-                                    <!--end::Sales-->
-                                </div>
-                                <!--end::Stats-->
-                            </div>
-                            <!--end::User-->
-                            <!--begin::User-->
-                            <div class="d-flex flex-stack py-5">
-                                <!--begin::Details-->
-                                <div class="d-flex align-items-center">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-35px symbol-circle">
-                                        <span class="symbol-label bg-light-info text-info fw-semibold">A</span>
-                                    </div>
-                                    <!--end::Avatar-->
-                                    <!--begin::Details-->
-                                    <div class="ms-6">
-                                        <!--begin::Name-->
-                                        <a href="#"
-                                            class="d-flex align-items-center fs-5 fw-bold text-gray-900 text-hover-primary">Robert
-                                            Doe
-                                            <span class="badge badge-light fs-8 fw-semibold ms-2">Marketing
-                                                Executive</span></a>
-                                        <!--end::Name-->
-                                        <!--begin::Email-->
-                                        <div class="fw-semibold text-muted">robert@benko.com</div>
-                                        <!--end::Email-->
-                                    </div>
-                                    <!--end::Details-->
-                                </div>
-                                <!--end::Details-->
-                                <!--begin::Stats-->
-                                <div class="d-flex">
-                                    <!--begin::Sales-->
-                                    <div class="text-end">
-                                        <div class="fs-5 fw-bold text-gray-900">$45,500</div>
-                                        <div class="fs-7 text-muted">Sales</div>
-                                    </div>
-                                    <!--end::Sales-->
-                                </div>
-                                <!--end::Stats-->
-                            </div>
+                            @endforeach
                             <!--end::User-->
                         </div>
                         <!--end::List-->
@@ -1043,434 +1210,7 @@
     <!--end::Modal - View Users-->
 
 
-    <div class="row gx-5 gx-xl-10 mb-xl-10">
 
-        {{-- Contacts filters row --}}
-        <div class="col-xxl-12 mb-5 mb-xl-12">
-            <!--begin::Card-->
-            <div class="card card-flush">
-                <!--begin::Card header-->
-                <div class="card-header mt-6">
-                    <!--begin::Card title-->
-                    <div class="card-title">
-                        <h2 class="fs-2hx fw-bolder mb-0"> Filters</h2>
-                    </div>
-                    <!--end::Card title-->
-                </div>
-                <!--end::Card header-->
-                <!--begin::Card body-->
-                <div class="card-body pt-0">
-                    <div class="col-md-8 mx-auto">
-                        <div class="row">
-                            <!--begin::Col for user dropdown-->
-                            <div class="col-md-6 mb-3" id="user-filter">
-                                <label for="user-select" class="form-label">User</label>
-                                <select id="user-select" class="form-select">
-                                    <option value="">Select User</option>
-                                    @foreach ($users as $user)
-                                        <option value="{{ $user['id'] }}">{{ $user['name'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <!--end::Col-->
-
-                            <!--begin::Col for tags dropdown-->
-                            <div class="col-md-3 mb-3" id="tags-filter" hidden>
-                                <label for="tags-select" class="form-label">Tags</label>
-                                <select id="tags-select" class="form-select">
-                                    <option value="">Select Tag</option>
-
-                                </select>
-                            </div>
-                            <!--end::Col-->
-
-                            <!--begin::Col for date range picker-->
-                            <div class="col-md-6 mb-3" id="date-range-filter">
-                                <label for="date-range-picker" class="form-label">Date Range</label>
-                                <input type="text" id="date-range-picker" class="form-control date-range-picker"
-                                    placeholder="Select date range" />
-                            </div>
-                            <!--end::Col-->
-
-                            <!--begin::More Filters button-->
-                            <div class="col-md-12 text-end mb-3">
-                                <button class="btn btn-secondary" id="filter-results">
-                                    <i class="fas fa-filter"></i>Filter Contacts Results
-                                </button>
-                            </div>
-                            <!--end::More Filters button-->
-                        </div>
-                        <!--end::Row-->
-
-                    </div>
-                </div>
-                <!--end::Card body-->
-            </div>
-            <!--end::Card-->
-        </div>
-
-        {{-- Contacts Charts row --}}
-        <div class="row  gx-xl-12 mb-xl-12 contacts_charts_container">
-
-            <div class="row">
-                <div class="col-xxl-4 mb-5 mb-xl-10">
-                    <!--begin::Chart widget 28-->
-                    <div class="card card-flush h-xl-100">
-                        <!--begin::Header-->
-                        <div class="card-header py-7">
-                            <!--begin::Statistics-->
-                            <div class="m-0">
-                                <!--begin::Heading-->
-                                <div class="d-flex align-items-center mb-2">
-                                    <!--begin::Title-->
-                                    <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2 total_contacts"
-                                        id="total_contacts">0</span>
-                                    <!--end::Title-->
-                                </div>
-                                <!--end::Heading-->
-                                <!--begin::Description-->
-                                <span class="fs-6 fw-semibold text-gray-500">Total Contacts</span>
-                                <!--end::Description-->
-                            </div>
-                            <!--end::Statistics-->
-                            <!--begin::Toolbar-->
-                            <div class="card-toolbar">
-                                <!--begin::Menu-->
-                                <button
-                                    class="btn btn-icon btn-color-gray-500 btn-active-color-primary justify-content-end"
-                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end"
-                                    data-kt-menu-overflow="true">
-                                    <i class="fas fa-ellipsis-h fs-1 text-gray-500 me-n1"></i>
-                                </button>
-                                <!--end::Menu-->
-                            </div>
-                            <!--end::Toolbar-->
-                        </div>
-                        <!--end::Header-->
-                    </div>
-                    <!--end::Chart widget 28-->
-                </div>
-
-                <div class="col-xxl-4 mb-5 mb-xl-10">
-                    <!--begin::Chart widget 28-->
-                    <div class="card card-flush h-xl-100">
-                        <!--begin::Header-->
-                        <div class="card-header py-7">
-                            <!--begin::Statistics-->
-                            <div class="m-0">
-                                <!--begin::Heading-->
-                                <div class="d-flex align-items-center mb-2">
-                                    <!--begin::Title-->
-                                    <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2 total_contacts"
-                                        id="total_tags">0</span>
-                                    <!--end::Title-->
-                                </div>
-                                <!--end::Heading-->
-                                <!--begin::Description-->
-                                <span class="fs-6 fw-semibold text-gray-500">Contacts By Assigned User</span>
-                                <!--end::Description-->
-                            </div>
-                            <!--end::Statistics-->
-                            <!--begin::Toolbar-->
-                            <div class="card-toolbar" hidden>
-                                <!--begin::Menu-->
-                                <button
-                                    class="btn btn-icon btn-color-gray-500 btn-active-color-primary justify-content-end"
-                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end"
-                                    data-kt-menu-overflow="true">
-                                    <i class="fas fa-ellipsis-h fs-1 text-gray-500 me-n1"></i>
-                                </button>
-                                <!--end::Menu-->
-                            </div>
-                            <!--end::Toolbar-->
-                        </div>
-                        <!--end::Header-->
-                    </div>
-                    <!--end::Chart widget 28-->
-                </div>
-
-                <div class="col-xxl-4 mb-5 mb-xl-10">
-                    <!--begin::Chart widget 28-->
-                    <div class="card card-flush h-xl-100">
-                        <!--begin::Header-->
-                        <div class="card-header py-7">
-                            <!--begin::Statistics-->
-                            <div class="m-0">
-                                <!--begin::Heading-->
-                                <div class="d-flex align-items-center mb-2">
-                                    <!--begin::Title-->
-                                    <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2 total_contacts">0</span>
-                                    <!--end::Title-->
-                                </div>
-                                <!--end::Heading-->
-                                <!--begin::Description-->
-                                <span class="fs-6 fw-semibold text-gray-500">Contacts By Tags</span>
-                                <!--end::Description-->
-                            </div>
-                            <!--end::Statistics-->
-                            <!--begin::Toolbar-->
-                            <div class="card-toolbar">
-                                <!--begin::Menu-->
-                                <button
-                                    class="btn btn-icon btn-color-gray-500 btn-active-color-primary justify-content-end"
-                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end"
-                                    data-kt-menu-overflow="true">
-                                    <i class="fas fa-ellipsis-h fs-1 text-gray-500 me-n1"></i>
-                                </button>
-                                <!--end::Menu-->
-                            </div>
-                            <!--end::Toolbar-->
-                        </div>
-                        <!--end::Header-->
-                    </div>
-                    <!--end::Chart widget 28-->
-                </div>
-            </div>
-            <div class="row  gx-xl-12 mb-xl-12 opportunities_charts_container">
-                <div class="col-xxl-4 mb-5 mb-xl-10">
-                    <!-- Total Opportunities -->
-                    <div class="card card-flush h-xl-100">
-                        <div class="card-header py-7">
-                            <div class="m-0">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2 "
-                                        id="total_opportunities">0</span>
-                                </div>
-                                <span class="fs-6 fw-semibold text-gray-500">Total Opportunities</span>
-                            </div>
-                        </div>
-                        <div class="card-body d-flex align-items-end ps-4 pe-0 pb-4">
-                            <div id="daywise_count_chart" class="h-300px w-100 min-h-auto" style="min-height: 315px;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-4 mb-5 mb-xl-10">
-                    <!-- Total Opportunities -->
-                    <div class="card card-flush h-xl-100">
-                        <div class="card-header py-7">
-                            <div class="m-0">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2 "
-                                        id="total_opportunities_conversion">0</span>
-                                </div>
-                                <span class="fs-6 fw-semibold text-gray-500">Total Conversions</span>
-                            </div>
-                        </div>
-                        <div class="card-body d-flex align-items-end ps-4 pe-0 pb-4">
-                            <div id="lead_to_sale_count_chart" class="h-300px w-100 min-h-auto"
-                                style="min-height: 315px;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-4 mb-5 mb-xl-10">
-                    <!-- Pipelines Wise -->
-                    <div class="card card-flush h-xl-100">
-                        <div class="card-header py-7">
-                            <div class="m-0">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2 total_opportunities"
-                                        id="pipelines_wise">0</span>
-                                </div>
-                                <span class="fs-6 fw-semibold text-gray-500">Pipelines Wise Opportunities</span>
-                            </div>
-                        </div>
-                        <div class="card-body d-flex align-items-end ps-4 pe-0 pb-4">
-                            <div id="pipelines_wise_chart" class=" w-100 min-h-auto" style="min-height: 315px;"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-4 mb-5 mb-xl-10">
-                    <!-- Opportunities by Status -->
-                    <div class="card card-flush h-xl-100">
-                        <div class="card-header py-7">
-                            <div class="m-0">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2 total_opportunities"
-                                        id="opportunities_by_status">0</span>
-                                </div>
-                                <span class="fs-6 fw-semibold text-gray-500">Opportunities by Status</span>
-                            </div>
-                        </div>
-                        <div class="card-body d-flex align-items-end ps-4 pe-0 pb-4">
-                            <div id="opportunities_by_status_chart" class=" w-100 min-h-auto" style="min-height: 315px;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-4 mb-5 mb-xl-10">
-                    <!-- Monetary Value Distribution -->
-                    <div class="card card-flush h-xl-100">
-                        <div class="card-header py-7">
-                            <div class="m-0">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2 total_opportunities"
-                                        id="monetary_value_distribution">0</span>
-                                </div>
-                                <span class="fs-6 fw-semibold text-gray-500">Monetary Value Distribution</span>
-                            </div>
-                        </div>
-                        <div class="card-body d-flex align-items-end ps-4 pe-0 pb-4">
-                            <div id="monetary_value_distribution_chart" class="w-100 min-h-auto"
-                                style="min-height: 315px;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-                <div class="col-xxl-4 mb-5 mb-xl-10">
-                    <!-- Opportunities Assigned Per User -->
-                    <div class="card card-flush h-xl-100">
-                        <div class="card-header py-7">
-                            <div class="m-0">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2 total_opportunities"
-                                        id="opportunities_assigned_per_user">0</span>
-                                </div>
-                                <span class="fs-6 fw-semibold text-gray-500">Opportunities Assigned Per User</span>
-                            </div>
-                        </div>
-                        <div class="card-body d-flex align-items-end ps-4 pe-0 pb-4">
-                            <div id="opportunities_assigned_per_user_chart" class=" w-100 min-h-auto"
-                                style="min-height: 315px;"></div>
-                        </div>
-                    </div>
-                </div>
-
-
-                {{-- Appointments Charts --}}
-                <div class="col-xxl-4 mb-5 mb-xl-10">
-                    <!-- Appointments by Source -->
-                    <div class="card card-flush h-xl-100">
-                        <div class="card-header py-7">
-                            <div class="m-0">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2 total_opportunities"
-                                        id="total_appointments">0</span>
-                                </div>
-                                <span class="fs-6 fw-semibold text-gray-500">Total Appointments </span>
-                            </div>
-                        </div>
-                        <div class="card-body d-flex align-items-end ps-4 pe-0 pb-4">
-                            <div id="appointment_by_daywise" class=" w-100 min-h-auto" style="min-height: 315px;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-4 mb-5 mb-xl-10">
-                    <!-- Appointments by Source -->
-                    <div class="card card-flush h-xl-100">
-                        <div class="card-header py-7">
-                            <div class="m-0">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2 total_opportunities"
-                                        id="appointments_by_source">0</span>
-                                </div>
-                                <span class="fs-6 fw-semibold text-gray-500">Appointments By Source</span>
-                            </div>
-                        </div>
-                        <div class="card-body d-flex align-items-end ps-4 pe-0 pb-4">
-                            <div id="appointments_by_source_chart" class=" w-100 min-h-auto" style="min-height: 315px;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-4 mb-5 mb-xl-10">
-                    <!-- Appointments by Status -->
-                    <div class="card card-flush h-xl-100">
-                        <div class="card-header py-7">
-                            <div class="m-0">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2 total_opportunities"
-                                        id="appointments_by_status">0</span>
-                                </div>
-                                <span class="fs-6 fw-semibold text-gray-500">Appointments By Status</span>
-                            </div>
-                        </div>
-                        <div class="card-body d-flex align-items-end ps-4 pe-0 pb-4">
-                            <div id="appointments_by_status_chart" class=" w-100 min-h-auto" style="min-height: 315px;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-4 mb-5 mb-xl-10">
-                    <!-- Appointments Assigned Per User -->
-                    <div class="card card-flush h-xl-100">
-                        <div class="card-header py-7">
-                            <div class="m-0">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2 total_opportunities"
-                                        id="appointments_assigned_per_user">0</span>
-                                </div>
-                                <span class="fs-6 fw-semibold text-gray-500">Appointments Assigned Per User</span>
-                            </div>
-                        </div>
-                        <div class="card-body d-flex align-items-end ps-4 pe-0 pb-4">
-                            <div id="appointments_assigned_per_user_chart" class=" w-100 min-h-auto"
-                                style="min-height: 315px;"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-4 mb-5 mb-xl-10">
-                    <!-- Appointments Assigned Per User -->
-                    <div class="card card-flush h-xl-100">
-                        <div class="card-header py-7">
-                            <div class="m-0">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2 total_opportunities"
-                                        id="appointments_assigned_per_user">0</span>
-                                </div>
-                                <span class="fs-6 fw-semibold text-gray-500"> Appointments Calendar Wise </span>
-                            </div>
-                        </div>
-                        <div class="card-body d-flex align-items-end ps-4 pe-0 pb-4">
-                            <div id="appointments_calendar_wise_chart" class=" w-100 min-h-auto"
-                                style="min-height: 315px;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- calls chart --}}
-                <div class="col-xxl-4 mb-5 mb-xl-10">
-                    <!-- Calls by Source -->
-                    <div class="card card-flush h-xl-100">
-                        <div class="card-header py-7">
-                            <div class="m-0">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2 " id="total_calls">0</span>
-                                </div>
-                                <span class="fs-6 fw-semibold text-gray-500">Total Calls </span>
-                            </div>
-                        </div>
-                        <div class="card-body d-flex align-items-end ps-4 pe-0 pb-4">
-                            <div id="calls_by_daywise" class=" w-100 min-h-auto" style="min-height: 315px;"></div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-
-
-            </div>
-        </div>
-
-        {{-- Opportunities Charts row --}}
-
-    </div>
 
 @endsection
 
@@ -1511,28 +1251,36 @@
 
         <script>
             /*
-                                                                                                                                                                                                        document.querySelector('.copy-script').addEventListener('click', function(e) {
-                                                                                                                                                                                                            e.preventDefault();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                document.querySelector('.copy-script').addEventListener('click', function(e) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    e.preventDefault();
 
-                                                                                                                                                                                                            const domain = window.location.origin;
-                                                                                                                                                                                                            const scriptContent = `<script src="${domain}/dashboard_css.js"><\/script>`;
-                                                                                                                                                                                                            const tempTextArea = document.createElement('textarea');
-                                                                                                                                                                                                            tempTextArea.value = scriptContent;
-                                                                                                                                                                                                            document.body.appendChild(tempTextArea);
-                                                                                                                                                                                                            tempTextArea.select();
-                                                                                                                                                                                                            document.execCommand('copy');
-                                                                                                                                                                                                            document.body.removeChild(tempTextArea);
-                                                                                                                                                                                                            toastr.success("script copied successfully!")
-                                                                                                                                                                                                        }); */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    const domain = window.location.origin;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    const scriptContent = `<script src="${domain}/dashboard_css.js"><\/script>`;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    const tempTextArea = document.createElement('textarea');
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    tempTextArea.value = scriptContent;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    document.body.appendChild(tempTextArea);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    tempTextArea.select();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    document.execCommand('copy');
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    document.body.removeChild(tempTextArea);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    toastr.success("script copied successfully!")
+                                                                                                                                                                                                                                                                                                                                                                                                                                                }); */
 
 
             //ajax call to filter contacts
-            document.getElementById('filter-results').addEventListener('click', function() {
+            // Function to handle the filtering logic
+            function filterContacts() {
                 const user = document.getElementById('user-select').value;
                 const tag = document.getElementById('tags-select').value;
-                const dateRange = document.getElementById('date-range-picker').value;
+                const startDate = document.getElementById('datepicker-range-start').value;
+                const endDate = document.getElementById('datepicker-range-end').value;
 
-                //ajax call to filter contacts
+                // Combine the start and end dates into a single dateRange string if both are selected
+                const dateRange = startDate && endDate ? `${startDate} - ${endDate}` : '';
+
+                // Log values to check
+                console.log(`User: ${user}, Tag: ${tag}, Date Range: ${dateRange}`);
+
+                // Ajax call to filter contacts
                 filterLoader(true);
                 $.ajax({
                     url: "{{ route('filter.contacts') }}",
@@ -1544,9 +1292,18 @@
                     },
                     success: function(response) {
                         if (response.status === 'success') {
-                            let contactDiv = document.querySelector('.contacts_charts_container');
-                            contactDiv.innerHTML = response.html;
-                            allChartsRender(response);
+                            let tcc = response.top_stats;
+                            console.log('Ye wala', tcc);
+                            topContactsChart(tcc.contacts);
+                            topSalesByMonths(tcc.sales);
+                            topAverageYearlySales(tcc.sales.year_wise_sale_count);
+                            countryWiseCharts(tcc.countrywise);
+                            if (response.html) {
+                                document.querySelector('.conversiondiv').innerHTML =
+                                    ''; // Clear the existing content
+                                document.querySelector('.conversiondiv').innerHTML = response
+                                    .html; // Set the new HTML content
+                            }
                         }
                     },
                     error: function(error) {
@@ -1556,15 +1313,23 @@
                         filterLoader(false);
                     }
                 });
-            });
+            }
+
+            // Attach the change event listeners to the inputs
+            document.getElementById('user-select').addEventListener('change', filterContacts);
+            document.getElementById('tags-select').addEventListener('change', filterContacts);
+            // document.getElementById('datepicker-range-start').addEventListener('changeDate', filterContacts);
+            document.getElementById('datepicker-range-end').addEventListener('changeDate', filterContacts);
 
 
-            //empty the date range picker on load
+            // Document ready function to reset date range picker and trigger filter on load
             $(document).ready(function() {
-                $('#date-range-picker').val('');
-                //click on filter results button
-                $('#filter-results').click();
+                // Empty the date range picker fields on page load
+                $('#datepicker-range-start').val('');
+                $('#datepicker-range-end').val('');
 
+                // Automatically trigger the filter-results button click on page load
+                //$('#filter-results').click();
             });
         </script>
 
@@ -1742,31 +1507,102 @@
             }
 
             //total contacts count
-            function totalContacts(total_contacts) {
-                $('.total_contacts').text(total_contacts);
-            }
+            // function totalContacts(total_contacts) {
+            //     $('.total_contacts').text(total_contacts);
+            // }
+
+            // function countryWiseChartsss(countryWiseContacts) {
+
+            //     am5.ready(function() {
+
+            //         console.log(countryWiseContacts);
+
+            //         // Data for leads by country
+            //         var leadData = countryWiseContacts;
+
+            //         // Create root and chart
+            //         var root = am5.Root.new("group_by_countries");
+
+            //         // Set themes
+            //         root.setThemes([am5themes_Animated.new(root)]);
+
+            //         // Create chart
+            //         var chart = root.container.children.push(am5map.MapChart.new(root, {
+            //             homeZoomLevel: 0.5,
+            //             homeGeoPoint: {
+            //                 longitude: 10,
+            //                 latitude: 52
+            //             }
+            //         }));
+
+            //         // Create world polygon series
+            //         var worldSeries = chart.series.push(am5map.MapPolygonSeries.new(root, {
+            //             geoJSON: am5geodata_worldLow,
+            //             exclude: ["AQ"]
+            //         }));
+
+            //         // Set up map polygons template
+            //         worldSeries.mapPolygons.template.setAll({
+            //             tooltipText: "{name}: {leads} leads",
+            //             fill: am5.color(0xCCCCCC),
+            //             nonScalingStroke: true,
+            //             strokeOpacity: 0.5,
+            //             strokeWidth: 0.5,
+            //             label: 50
+            //         });
+
+            //         // Define color based on leads
+            //         worldSeries.mapPolygons.template.adapters.add("fill", function(fill, target) {
+            //             var dataItem = target.dataItem.dataContext;
+            //             if (dataItem.leads > 0) {
+            //                 return am5.color(0x00CC00); // Green color for countries with leads
+            //             } else {
+            //                 return am5.color(0xCCCCCC); // Grey color for countries with 0 or no leads
+            //             }
+            //         });
+
+            //         // Add data to map
+            //         worldSeries.data.setAll(leadData);
+
+            //         worldSeries.events.on("datavalidated", () => {
+            //             chart.goHome();
+            //         });
+
+            //     }); // end am5.ready()
+
+            // }
 
             function countryWiseCharts(countryWiseContacts) {
+                console.log("initialized map");
+                console.log(countryWiseContacts);
+
+                // Check if the root instance exists and dispose of it
+                if (window.countryMapRoot) {
+                    window.countryMapRoot.dispose();
+                }
 
                 am5.ready(function() {
-
-                    console.log(countryWiseContacts);
-
-                    // Data for leads by country
-                    var leadData = countryWiseContacts;
-
                     // Create root and chart
                     var root = am5.Root.new("group_by_countries");
+
+                    // Store the root instance in a global variable
+                    window.countryMapRoot = root;
+
+                    // Increase the size of the root container
+                    root.container.setAll({
+                        width: am5.percent(100),
+                        height: am5.percent(100)
+                    });
 
                     // Set themes
                     root.setThemes([am5themes_Animated.new(root)]);
 
                     // Create chart
                     var chart = root.container.children.push(am5map.MapChart.new(root, {
-                        homeZoomLevel: 0.5,
+                        homeZoomLevel: 1.3, // Increase zoom level for a closer view
                         homeGeoPoint: {
-                            longitude: 10,
-                            latitude: 52
+                            longitude: 10, // Adjust longitude to center the map as desired
+                            latitude: 52 // Adjust latitude to center the map as desired
                         }
                     }));
 
@@ -1782,29 +1618,26 @@
                         fill: am5.color(0xCCCCCC),
                         nonScalingStroke: true,
                         strokeOpacity: 0.5,
-                        strokeWidth: 0.5,
-                        label: 50
+                        strokeWidth: 0.5
                     });
 
                     // Define color based on leads
                     worldSeries.mapPolygons.template.adapters.add("fill", function(fill, target) {
                         var dataItem = target.dataItem.dataContext;
                         if (dataItem.leads > 0) {
-                            return am5.color(0x00CC00); // Green color for countries with leads
+                            return am5.color("#1b84ff"); // Green color for countries with leads
                         } else {
                             return am5.color(0xCCCCCC); // Grey color for countries with 0 or no leads
                         }
                     });
 
                     // Add data to map
-                    worldSeries.data.setAll(leadData);
+                    worldSeries.data.setAll(countryWiseContacts);
 
                     worldSeries.events.on("datavalidated", () => {
                         chart.goHome();
                     });
-
                 }); // end am5.ready()
-
             }
 
             function filterLoader(showLoader = false) {
@@ -2166,8 +1999,8 @@
         {{-- Appointments Stats Charts --}}
         <script>
             /*
-                                                                                                              {"total_appointments":2,"appointments_by_status":{"confirmed":2},"appointments_by_source":{"booking_widget":1,"calendar_page":1},"appointments_assigned_per_user":{"Zulkifal Hassan":[],"Pervaiz Malik":[],"Usman Zaheer ":[],"Awais Saleem":[],"Muhammad Orhan":[],"Shoaib Sultan":[],"Abraham Peter":[],"Sabir Shah":[],"M Safian ":[],"Ali Hassan":[],"Ayaz Khan":[],"Awais Qarni":[],"Saqib Ali":[],"M Waseem":[],"Faiza Bibi":[],"Anwar Hussain":{"1":{"id":2,"ghl_appointment_id":"4ngL3x1hQ6HCmZ2P7c6T","location_id":"vcLxBfw01Nmv2VnlhtND","address":"https:\/\/us05web.zoom.us\/j\/85875585824?pwd=aJwbFon5VxBME9Za9NNox0xa0qpGyC.1","title":"Test Oppointment","calendar_id":"wmquOnn9rm2Su0KI16IO","contact_id":"btDRSwAYUrxjTwHx6hul","group_id":null,"appointment_status":"confirmed","assigned_user_id":"tAeeuUTKOCuOwo4jjzlo","users":null,"notes":null,"source":"calendar_page","start_time":"2024-08-20 10:00:00","end_time":"2024-08-20 10:30:00","date_added":"2024-08-19 18:40:30","date_updated":null,"deleted_at":null,"created_at":"2024-08-19T18:40:33.000000Z","updated_at":"2024-08-19T18:40:33.000000Z"}},"M Usman Ali":[],"Rehmat Faizan":[]},"daywise_count":{"2023-09-25":1,"2024-08-19":1},"appointments_by_calendars":{"faiza test neww":[],"appointment book 1":[],"robin calendar":[],"Robin calendar Safian":[],"haider":[],"Waseem training Pract-1":[],"Beard":[],"safian test":[],"faiza-new":[],"Practice-2":[],"faiza":[],"High Medium Low":[],"test anwar":[],"appointment book":[],"Book An Appointment":[],"book appointment":[],"Select Date And Time":[],"Sabir Roof Replacement Booking Calendar":[],"Simple calender":[],"SAA Delivery":[],"calander":[],"Sabir Free Roof Inspection Calendar":[],"simple calendar":[],"anwar multi members":[],"Faiza-simple calendar":[],"Cutting":[],"Collective":[],"Anwar calendar Test":[],"Neat Feat Podiatry Calender ":[],"Free Roof Inspection Calendar":[],"Bingo":[],"Unlock Your Business Potential with Expert Consultation!":[],"ali calander":[],"collective calendar":[],"test Anwar":[],"Appointment With Saqib":[],"Team Calendar":[],"class calendar":[],"faiza- practice":[],"appointment booking":[],"Cutting and Beard":[],"Anwaar 1st calender":[],"haider calander":[],"Bingo 2":[],"Faiza- round robin":[],"roof maintenance":[],"faiza-practice":[],"Round Robin":[],"Testing calendar":[],"anwar work":[{"id":1,"ghl_appointment_id":"0007BWpSzSwfiuSl0tR2","location_id":"vcLxBfw01Nmv2VnlhtND","address":"https:\/\/example.com\/meeting","title":"Appointment with GHL Dev team","calendar_id":"wmquOnn9rm2Su0KI16IO","contact_id":"vcLxBfw01Nmv2VnlhtND","group_id":"9NkT25Vor1v4aQatFsv2","appointment_status":"confirmed","assigned_user_id":"YlWd2wuCAZQzh2cH1fVZ","users":"[\"YlWd2wuCAZQzh2cH1fVZ\",\"9NkT25Vor1v4aQatFsv2\"]","notes":"Some dummy note","source":"booking_widget","start_time":"2023-09-25 16:00:00","end_time":"2023-09-25 16:00:00","date_added":"2023-09-25 16:00:00","date_updated":null,"deleted_at":null,"created_at":"2024-08-19T18:36:30.000000Z","updated_at":"2024-08-19T18:36:30.000000Z"},{"id":2,"ghl_appointment_id":"4ngL3x1hQ6HCmZ2P7c6T","location_id":"vcLxBfw01Nmv2VnlhtND","address":"https:\/\/us05web.zoom.us\/j\/85875585824?pwd=aJwbFon5VxBME9Za9NNox0xa0qpGyC.1","title":"Test Oppointment","calendar_id":"wmquOnn9rm2Su0KI16IO","contact_id":"btDRSwAYUrxjTwHx6hul","group_id":null,"appointment_status":"confirmed","assigned_user_id":"tAeeuUTKOCuOwo4jjzlo","users":null,"notes":null,"source":"calendar_page","start_time":"2024-08-20 10:00:00","end_time":"2024-08-20 10:30:00","date_added":"2024-08-19 18:40:30","date_updated":null,"deleted_at":null,"created_at":"2024-08-19T18:40:33.000000Z","updated_at":"2024-08-19T18:40:33.000000Z"}],"OutBound Calender":[]}}
-                                                                                                            */
+                                                                                                                                                                                                                                                                                                                                                      {"total_appointments":2,"appointments_by_status":{"confirmed":2},"appointments_by_source":{"booking_widget":1,"calendar_page":1},"appointments_assigned_per_user":{"Zulkifal Hassan":[],"Pervaiz Malik":[],"Usman Zaheer ":[],"Awais Saleem":[],"Muhammad Orhan":[],"Shoaib Sultan":[],"Abraham Peter":[],"Sabir Shah":[],"M Safian ":[],"Ali Hassan":[],"Ayaz Khan":[],"Awais Qarni":[],"Saqib Ali":[],"M Waseem":[],"Faiza Bibi":[],"Anwar Hussain":{"1":{"id":2,"ghl_appointment_id":"4ngL3x1hQ6HCmZ2P7c6T","location_id":"vcLxBfw01Nmv2VnlhtND","address":"https:\/\/us05web.zoom.us\/j\/85875585824?pwd=aJwbFon5VxBME9Za9NNox0xa0qpGyC.1","title":"Test Oppointment","calendar_id":"wmquOnn9rm2Su0KI16IO","contact_id":"btDRSwAYUrxjTwHx6hul","group_id":null,"appointment_status":"confirmed","assigned_user_id":"tAeeuUTKOCuOwo4jjzlo","users":null,"notes":null,"source":"calendar_page","start_time":"2024-08-20 10:00:00","end_time":"2024-08-20 10:30:00","date_added":"2024-08-19 18:40:30","date_updated":null,"deleted_at":null,"created_at":"2024-08-19T18:40:33.000000Z","updated_at":"2024-08-19T18:40:33.000000Z"}},"M Usman Ali":[],"Rehmat Faizan":[]},"daywise_count":{"2023-09-25":1,"2024-08-19":1},"appointments_by_calendars":{"faiza test neww":[],"appointment book 1":[],"robin calendar":[],"Robin calendar Safian":[],"haider":[],"Waseem training Pract-1":[],"Beard":[],"safian test":[],"faiza-new":[],"Practice-2":[],"faiza":[],"High Medium Low":[],"test anwar":[],"appointment book":[],"Book An Appointment":[],"book appointment":[],"Select Date And Time":[],"Sabir Roof Replacement Booking Calendar":[],"Simple calender":[],"SAA Delivery":[],"calander":[],"Sabir Free Roof Inspection Calendar":[],"simple calendar":[],"anwar multi members":[],"Faiza-simple calendar":[],"Cutting":[],"Collective":[],"Anwar calendar Test":[],"Neat Feat Podiatry Calender ":[],"Free Roof Inspection Calendar":[],"Bingo":[],"Unlock Your Business Potential with Expert Consultation!":[],"ali calander":[],"collective calendar":[],"test Anwar":[],"Appointment With Saqib":[],"Team Calendar":[],"class calendar":[],"faiza- practice":[],"appointment booking":[],"Cutting and Beard":[],"Anwaar 1st calender":[],"haider calander":[],"Bingo 2":[],"Faiza- round robin":[],"roof maintenance":[],"faiza-practice":[],"Round Robin":[],"Testing calendar":[],"anwar work":[{"id":1,"ghl_appointment_id":"0007BWpSzSwfiuSl0tR2","location_id":"vcLxBfw01Nmv2VnlhtND","address":"https:\/\/example.com\/meeting","title":"Appointment with GHL Dev team","calendar_id":"wmquOnn9rm2Su0KI16IO","contact_id":"vcLxBfw01Nmv2VnlhtND","group_id":"9NkT25Vor1v4aQatFsv2","appointment_status":"confirmed","assigned_user_id":"YlWd2wuCAZQzh2cH1fVZ","users":"[\"YlWd2wuCAZQzh2cH1fVZ\",\"9NkT25Vor1v4aQatFsv2\"]","notes":"Some dummy note","source":"booking_widget","start_time":"2023-09-25 16:00:00","end_time":"2023-09-25 16:00:00","date_added":"2023-09-25 16:00:00","date_updated":null,"deleted_at":null,"created_at":"2024-08-19T18:36:30.000000Z","updated_at":"2024-08-19T18:36:30.000000Z"},{"id":2,"ghl_appointment_id":"4ngL3x1hQ6HCmZ2P7c6T","location_id":"vcLxBfw01Nmv2VnlhtND","address":"https:\/\/us05web.zoom.us\/j\/85875585824?pwd=aJwbFon5VxBME9Za9NNox0xa0qpGyC.1","title":"Test Oppointment","calendar_id":"wmquOnn9rm2Su0KI16IO","contact_id":"btDRSwAYUrxjTwHx6hul","group_id":null,"appointment_status":"confirmed","assigned_user_id":"tAeeuUTKOCuOwo4jjzlo","users":null,"notes":null,"source":"calendar_page","start_time":"2024-08-20 10:00:00","end_time":"2024-08-20 10:30:00","date_added":"2024-08-19 18:40:30","date_updated":null,"deleted_at":null,"created_at":"2024-08-19T18:40:33.000000Z","updated_at":"2024-08-19T18:40:33.000000Z"}],"OutBound Calender":[]}}
+                                                                                                                                                                                                                                                                                                                                                    */
 
             function appointments_by_status(appointments_by_status) {
                 var labels = Object.keys(appointments_by_status);
@@ -2511,29 +2344,105 @@
 
         <script>
             function topContactsChart(topStats) {
+                // Update the total contacts display
                 document.querySelector('.top_total_contact').innerHTML = topStats.total_contacts;
+
+
+
+                // Define the options for the new chart
                 var options = {
+                    dataLabels: {
+                        enabled: false,
+                        formatter: function(val) {
+                            return val + "%"
+                        },
+
+                    },
                     chart: {
                         type: 'donut',
-                        height: 180
+                        height: 120, // Keep the height as is to fit within the card
+                        width: '100%',
+                        events: {
+                            mounted: function(chartContext, config) {
+                                // After the chart is rendered, replace the class
+                                var legendTexts = document.querySelectorAll('.apexcharts-legend-text');
+                                legendTexts.forEach(function(legendText) {
+                                    legendText.classList.remove('apexcharts-legend-text');
+                                    legendText.classList.add('text-gray-500', 'flex-grow-1', 'me-4', "fs-6",
+                                        "gap-4", "d-flex", "align-item-center", "justify-between");
+                                });
+
+                            }
+                        } // Ensure the chart fits within the card's width
                     },
-                    series: [topStats.total_contacts, topStats.agencies, topStats.leads, topStats.recruitment, topStats
-                        .no_tags, topStats.sollicitants
+                    series: [
+                        topStats.total_contacts,
+                        topStats.agencies,
+                        topStats.leads,
+                        topStats.recruitment,
+                        topStats.no_tags,
+                        topStats.sollicitants
                     ],
-                    labels: ['Total Contacts', 'Agencies', 'Leads', 'Recruitment', 'No Tags', 'Sollicitants'],
+                    labels: [
+                        'Total Contacts',
+                        'Agencies',
+                        'Leads',
+                        'Recruitment',
+                        'No Tags',
+                        'Sollicitants'
+                    ],
+                    colors: ["#f8285a", "#1b84ff", "#e4e6ef"],
+                    plotOptions: {
+                        pie: {
+                            donut: {
+                                size: '60%'
+                            }
+                        }
+                    },
+                    legend: {
+                        position: 'right', // Position the legend to the right of the chart
+                        fontSize: '10px', // Adjust the font size to fit the legend within the small card
+                        offsetY: 0, // Ensure the legend is vertically centered
+                        itemMargin: {
+                            horizontal: 0,
+                            vertical: 10
+                        },
+                        formatter: function(seriesName, opts) {
+                            return `
+                                 <div style="font-weight:600">${seriesName}</div>
+                                 <div class="fw-bolder text-gray-700 text-xxl-end fs-6">${opts.w.globals.series[opts.seriesIndex]}</div>
+                                `;
+                        }
+                    },
                     responsive: [{
-                        breakpoint: 180,
+                        breakpoint: 480,
                         options: {
+                            chart: {
+                                height: 150 // Reduce the height on smaller screens
+                            },
                             legend: {
-                                position: 'bottom'
+                                position: 'bottom', // Move legend below on smaller screens
+                                offsetY: 0,
+                                itemMargin: {
+                                    horizontal: 5,
+                                    vertical: 5
+                                }
                             }
                         }
                     }]
+                };
+                if (window.topContactsChartInstance) {
+                    window.topContactsChartInstance.destroy();
                 }
-
-                var chart = new ApexCharts(document.querySelector("#top_contacts_chart"), options);
-                chart.render();
+                // Create and render the new chart, storing the instance globally
+                window.topContactsChartInstance = new ApexCharts(document.querySelector("#top_contacts_chart"), options);
+                window.topContactsChartInstance.render();
             }
+
+
+
+
+
 
             function top_opportunities_by_status(total = 0, opportunities_by_status) {
                 document.querySelector('.top_total_opportunity').innerHTML = total;
@@ -2615,12 +2524,19 @@
             }
 
             function topSalesByMonths(saleByMonth) {
-
+                // Update the total sales display
                 document.querySelector('.top_total_sales').innerText = saleByMonth.total;
 
+                // Extract dates and counts from the saleByMonth object
                 var dates = Object.keys(saleByMonth.won_opportunities);
                 var counts = Object.values(saleByMonth.won_opportunities);
 
+                // Destroy the existing chart if it exists
+                if (window.topSalesChart) {
+                    window.topSalesChart.destroy();
+                }
+
+                // Define the options for the new chart
                 var options = {
                     chart: {
                         type: 'line',
@@ -2628,8 +2544,9 @@
                         zoom: {
                             enabled: true,
                             type: 'x',
-                            autoScaleYaxis: true
+                            autoScaleYaxis: false
                         },
+
                         toolbar: {
                             autoSelected: 'zoom',
                             show: false
@@ -2639,6 +2556,7 @@
                         name: 'Total Sales',
                         data: counts
                     }],
+                    colors: ['#17c653'],
                     xaxis: {
                         categories: dates,
                         tickAmount: 5,
@@ -2660,14 +2578,18 @@
                         enabled: false
                     },
                     stroke: {
-                        curve: 'smooth'
+                        curve: 'smooth',
                     },
                     markers: {
-                        size: 5
+                        size: 0, // This removes the markers from the chart
+                        hover: {
+                            size: 0 // This ensures no markers appear on hover
+                        }
                     },
+
                     grid: {
                         row: {
-                            colors: ['#f3f3f3', 'transparent'], // alternate row color
+                            colors: ['transparent', 'transparent'], // Alternate row color
                             opacity: 0.5
                         }
                     },
@@ -2681,9 +2603,11 @@
                     }
                 };
 
-                var chart = new ApexCharts(document.querySelector("#top_sales_chart"), options);
-                chart.render();
+                // Create and render the new chart, storing the instance globally
+                window.topSalesChart = new ApexCharts(document.querySelector("#top_sales_chart"), options);
+                window.topSalesChart.render();
             }
+
 
             function top_calls_by_status(total = 0, calls_by_status) {
                 document.querySelector('.top_total_calls').innerHTML = total;
@@ -2725,6 +2649,79 @@
                 chart.render();
             }
 
+            function topAverageYearlySales(dailySalesPercentages) {
+                // Calculate the total sum of the percentages
+                const total = Object.values(dailySalesPercentages).reduce((sum, value) => sum + value, 0);
+                document.querySelector('.AverageYearlySales').innerText = '$ ' + total;
+
+                // Extract labels and data from the dailySalesPercentages object
+                const labels = Object.keys(dailySalesPercentages);
+                const data = Object.values(dailySalesPercentages);
+
+                // Destroy the existing chart if it exists
+                if (window.topAvgDailySalesChart) {
+                    window.topAvgDailySalesChart.destroy();
+                }
+
+                // Define the options for the new chart
+                const options = {
+                    chart: {
+                        type: 'bar',
+                        height: 220,
+                    },
+                    series: [{
+                        name: 'Yearly Sales Percentages',
+                        data: data
+                    }],
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 10, // Rounded bars for a "bullet" look
+                            columnWidth: '10%', // Thin bars
+                            distributed: false // Colors for each bar
+                        }
+                    },
+                    xaxis: {
+                        categories: labels,
+                        labels: {
+                            rotate: -45, // Rotate labels for readability
+                            style: {
+                                colors: '#333' // Label color
+                            }
+                        },
+                        axisBorder: {
+                            show: false // Hide x-axis border
+                        },
+                        axisTicks: {
+                            show: false // Hide x-axis ticks
+                        },
+                    },
+                    yaxis: {
+                        labels: {
+                            show: false, // Hide y-axis labels
+                            style: {
+                                colors: '#333' // Label color
+                            }
+                        }
+                    },
+                    grid: {
+                        show: false // Hide grid lines
+                    },
+                    dataLabels: {
+                        enabled: false // Hide data labels
+                    },
+                    legend: {
+                        show: false // Hide legend
+                    }
+                };
+
+                // Create and render the new chart, storing the instance globally
+                window.topAvgDailySalesChart = new ApexCharts(document.querySelector("#top_avg_daily_sales_chart"), options);
+                window.topAvgDailySalesChart.render();
+            }
+
+
+            // top_opps_by_assign_user_chart
+
 
 
 
@@ -2735,8 +2732,10 @@
 
             topContactsChart(tcc.contacts);
             topSalesByMonths(tcc.sales);
-            top_opportunities_by_status(tcc.totaloppor, tcc.opportunities);
-            top_appointments_by_status(tcc.totaloppo, tcc.appointments);
+            topAverageYearlySales(tcc.sales.year_wise_sale_count);
+            countryWiseCharts(tcc.countrywise);
+            // top_opportunities_by_status(tcc.totaloppor, tcc.opportunities);
+            // top_appointments_by_status(tcc.totaloppo, tcc.appointments);
             top_calls_by_status(tcc.totalcalls, tcc.calls);
         </script>
     @endif

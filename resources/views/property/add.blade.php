@@ -107,7 +107,7 @@
 
 
             <!--begin::Aside column-->
-            <div class="d-flex flex-column gap-7 gap-lg-10 w-100 w-lg-300px mb-7 me-lg-10"
+            <div class="d-flex flex-column gap-7 gap-lg-10 w-100 w-lg-200px mb-7 me-lg-10"
                 data-select2-id="select2-data-160-3u1x">
                 <!--begin::Thumbnail settings-->
                 <div class="card card-flush py-4">
@@ -127,11 +127,11 @@
                         <!--begin::Image input placeholder-->
                         <style>
                             .image-input-placeholder {
-                                background-image: url("{{ asset(isset($property) ? $property->thumbnail: ' ') }}");
+                                background-image: url("{{ asset($property && $property->thumbnail ? $property->thumbnail : ($property && $property->images->isNotEmpty() ? $property->images[0]->url : 'default-image.jpg')) }}");
                             }
 
                             [data-bs-theme="dark"] .image-input-placeholder {
-                                background-image: url('{{ asset(isset($property) ? $property->thumbnail: ' ') }}');
+                                background-image: url("{{ asset($property && $property->thumbnail ? $property->thumbnail : ($property && $property->images->isNotEmpty() ? $property->images[0]->url : 'default-image.jpg')) }}");
                             }
                         </style>
                         <!--end::Image input placeholder-->
@@ -204,8 +204,7 @@
                             <option value="1"
                                 {{ old('new_build', $property->new_build ?? '') == '1' ? 'selected' : '' }}>Sale
                             </option>
-                            {{-- <option value="scheduled">Scheduled</option>
-                        <option value="inactive">Inactive</option> --}}
+
                         </select>
 
                         <!--end::Select2-->
@@ -341,7 +340,13 @@
             <!--end::Aside column-->
 
             <!--begin::Main column-->
+
+
+            {{--  new  --}}
+
             <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10" data-select2-id="select2-data-142-usbz">
+
+
                 <!--begin:::Tabs-->
                 <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-semibold mb-n2"
                     role="tablist">
@@ -370,6 +375,70 @@
 
                 </ul>
                 <!--end:::Tabs-->
+                <div class="d-flex flex-column gap-7 gap-lg-10">
+                    <!-- Your HTML code -->
+                    <div class="card card-flush py-4">
+                        <!--begin::Card header-->
+                        <div class="card-header">
+                            <!--begin::Card title-->
+                            <div class="card-title">
+                                <h2>Main Images</h2>
+                            </div>
+                            <!--end::Card title-->
+                        </div>
+                        <!--end::Card header-->
+
+                        <!--begin::Card body-->
+                        <div class="card-body text-center pt-0">
+                            <!--begin::Image input-->
+                            <!--begin::Image input placeholder-->
+                            @if (isset($property) && $property->images->isNotEmpty())
+                                <div id="carousel-{{ $property->id }}" class="carousel slide" data-bs-interval="false">
+                                    <div class="carousel-inner">
+                                        @foreach ($property->images as $index => $image)
+                                            <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                                <img src="{{ asset($image->url) }}" alt="Property Image"
+                                                    class="d-block w-100 carousel-image" loading="lazy">
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <!-- Controls -->
+                                    <a class="carousel-control-prev" href="#carousel-{{ $property->id }}" role="button"
+                                        data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon bg-white rounded-circle"
+                                            aria-hidden="true">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#carousel-{{ $property->id }}" role="button"
+                                        data-bs-slide="next">
+                                        <span class="carousel-control-next-icon bg-white rounded-circle"
+                                            aria-hidden="true">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </span>
+                                        <span class="visually-hidden">Next</span>
+                                    </a>
+                                </div>
+                            @endif
+                            <!--end::Image input placeholder-->
+                        </div>
+                        <!--end::Card body-->
+                    </div>
+
+                    <!-- CSS styling -->
+                    <style>
+                        .carousel-image {
+                            width: 100%;
+                            height: 300px;
+                            /* Set desired height */
+                            object-fit: cover;
+                            /* Ensures the image covers the area without distortion */
+                        }
+                    </style>
+
+                    <!--end::Card body-->
+                </div>
                 <!--begin::Tab content-->
                 <div class="tab-content">
                     <!--begin::Tab pane-->
@@ -397,7 +466,8 @@
 
                                         <!--begin::Input-->
                                         <input type="text" name="property_title" class="form-control mb-2"
-                                            placeholder="Property title" value="">
+                                            placeholder="Property title" value="{{ old('ref', $property->property_title ?? '') }}"
+                                            required>
                                         <!--end::Input-->
 
                                         <!--begin::Description-->
@@ -410,7 +480,7 @@
                                     </div>
                                     <!--end::Input group-->
 
-                                       <div class="mb-10 fv-row fv-plugins-icon-container">
+                                    <div class="mb-10 fv-row fv-plugins-icon-container">
                                         <!--begin::Label-->
                                         <label class="required form-label">Reference</label>
                                         <!--end::Label-->
@@ -473,7 +543,7 @@
                                             <div class="upload__img-wrap">
 
                                                 <div class="upload__img-wrap">
-                                                    @foreach ($property->images??[] as $index => $image)
+                                                    @foreach ($property->images ?? [] as $index => $image)
                                                         <div class='row'>
                                                             <div class='col-md-3'>
                                                                 <div class='upload__img-box'>
@@ -542,27 +612,7 @@
                                 <!--end::Card header-->
 
                             </div>
-                            <div class="d-flex justify-content-end">
-                                <!--begin::Button-->
-                                <a href="{{route('property.list')}}"
-                                    id="kt_ecommerce_add_product_cancel" class="btn btn-light me-5">
-                                    Cancel
-                                </a>
-                                <!--end::Button-->
 
-                                {{--
-                            <!--begin::Button-->
-                            <button type="submit" id="kt_ecommerce_add_product_submit" class="btn btn-primary">
-                                <span class="indicator-label">
-                                    Save Changes
-                                </span>
-                                <span class="indicator-progress">
-                                    Please wait... <span
-                                        class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                                </span>
-                            </button>
-                            <!--end::Button--> --}}
-                            </div>
                             <!--end::Pricing-->
                         </div>
                     </div>
@@ -599,10 +649,7 @@
                                             value="{{ old('location_detail', $property->location_detail ?? '') }}"
                                             required>
 
-                                        {{--
-                                    <!--begin::Description-->
-                                    <div class="text-muted fs-7">Enter the product SKU.</div>
-                                    <!--end::Description--> --}}
+
                                         <div
                                             class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
                                         </div>
@@ -616,10 +663,7 @@
                                         <!--begin::Input-->
                                         <input type="text" placeholder="Town" class="form-control" id="town"
                                             name="town" value="{{ old('town', $property->town ?? '') }}" required>
-                                        {{--
-                                    <!--begin::Description-->
-                                    <div class="text-muted fs-7">Enter the product SKU.</div>
-                                    <!--end::Description--> --}}
+
                                     </div>
                                     <!--end::Input group-->
 
@@ -633,10 +677,7 @@
                                             name="province" value="{{ old('province', $property->province ?? '') }}">
                                         <!--end::Input-->
 
-                                        {{--
-                                    <!--begin::Description-->
-                                    <div class="text-muted fs-7">Enter the product SKU.</div>
-                                    <!--end::Description--> --}}
+
                                     </div>
                                     <!--begin::Input group-->
                                     <div class="mb-10 fv-row fv-plugins-icon-container">
@@ -652,10 +693,7 @@
 
                                         <!--end::Input-->
 
-                                        {{--
-                                    <!--begin::Description-->
-                                    <div class="text-muted fs-7">Enter the product SKU.</div>
-                                    <!--end::Description--> --}}
+
                                     </div>
                                     <!--end::Input group-->
                                     <!--begin::Input group-->
@@ -673,33 +711,11 @@
 
                                         <!--end::Input-->
 
-                                        {{--
-                                    <!--begin::Description-->
-                                    <div class="text-muted fs-7">Enter the product SKU.</div>
-                                    <!--end::Description--> --}}
+
                                     </div>
 
 
-                                    {{--
-                                <!--begin::Input group-->
-                                <div class="mb-10 fv-row fv-plugins-icon-container">
-                                    <!--begin::Label-->
-                                    <label class="required form-label">Barcode</label>
-                                    <!--end::Label-->
 
-                                    <!--begin::Input-->
-                                    <input type="text" name="barcode" class="form-control mb-2"
-                                        placeholder="Barcode Number" value="">
-                                    <!--end::Input-->
-
-                                    <!--begin::Description-->
-                                    <div class="text-muted fs-7">Enter the product barcode number.</div>
-                                    <!--end::Description-->
-                                    <div
-                                        class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
-                                    </div>
-                                </div>
-                                <!--end::Input group--> --}}
 
 
                                 </div>
@@ -709,48 +725,7 @@
 
                             <!--begin::Variations-->
                             {{-- <div class="card card-flush py-4" data-select2-id="select2-data-139-scwy">
-                            <!--begin::Card header-->
-                            <div class="card-header">
-                                <div class="card-title">
-                                    <h2>Variations</h2>
-                                </div>
-                            </div>
-                            <!--end::Card header-->
 
-                            <!--begin::Card body-->
-                            <div class="card-body pt-0" data-select2-id="select2-data-138-rqr2">
-                                <!--begin::Input group-->
-                                <div class="" data-kt-ecommerce-catalog-add-product="auto-options"
-                                    data-select2-id="select2-data-137-rs36">
-                                    <!--begin::Label-->
-                                    <label class="form-label">Add Product Variations</label>
-                                    <!--end::Label-->
-
-                                    <!--begin::Repeater-->
-                                    <div id="kt_ecommerce_add_product_options"
-                                        data-select2-id="select2-data-kt_ecommerce_add_product_options">
-                                        <!--begin::Form group-->
-                                        <div class="form-group" data-select2-id="select2-data-136-41qz">
-                                            <div data-repeater-list="kt_ecommerce_add_product_options"
-                                                class="d-flex flex-column gap-3"
-                                                data-select2-id="select2-data-135-d23o">
-
-                                            </div>
-                                        </div>
-                                        <!--end::Form group-->
-
-                                        <!--begin::Form group-->
-                                        <div class="form-group mt-5">
-                                            <button type="button" data-repeater-create=""
-                                                class="btn btn-sm btn-light-primary">
-                                                <i class="ki-duotone ki-plus fs-2"></i> Add another variation
-                                            </button>
-                                        </div>
-                                        <!--end::Form group-->
-                                    </div>
-                                    <!--end::Repeater-->
-                                </div>
-                                <!--end::Input group-->
                             </div>
                             <!--end::Card header-->
                         </div> --}}
@@ -1080,8 +1055,7 @@
 
     <div class="d-flex justify-content-end">
         <!--begin::Button-->
-        <a href="{{route('property.list')}}" id="kt_ecommerce_add_product_cancel"
-            class="btn btn-light me-5">
+        <a href="{{ route('property.list') }}" id="kt_ecommerce_add_product_cancel" class="btn btn-light me-5">
             Cancel
         </a>
         <!--end::Button-->
