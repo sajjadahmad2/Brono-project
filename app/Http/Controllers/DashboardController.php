@@ -204,7 +204,7 @@ class DashboardController extends Controller
 
         $groupByPipes = array_group_by($opportunities, 'pipeline_id');
         $pipelines = $pipelines['pipelines'];
-        dd($pipelines);
+        // dd($pipelines);
         $pipelineswise = [];
         $pipelines = array_column($pipelines, 'name', 'id');
         foreach ($groupByPipes as $pipe_id => $pipe_opps) {
@@ -212,7 +212,7 @@ class DashboardController extends Controller
             $pipelineswise[$pipe_name] = $pipe_opps;
         }
 
-        dd($pipelineswise);
+        // dd($pipelineswise);
     }
 
     public function groupByPipelinesAndStages($opportunities, $pipelines)
@@ -422,7 +422,7 @@ class DashboardController extends Controller
         }
         $cacheKey = 'ghl_calendars_' . $location_id;
         $user = User::where('location_id', $location_id)->first();
-        dd(Cache::get('ghl_calendars_' . $location_id));
+        // dd(Cache::get('ghl_calendars_' . $location_id));
         if (!Cache::has($cacheKey)) {
             $calendars = ghl_api_call('calendars', $user->id);
             $calendars = json_decode($calendars, true);
@@ -616,7 +616,7 @@ class DashboardController extends Controller
             'sollicitants' => $sollicitants,
         ];
 
-        $contacts=arsort($contacts);
+        arsort($contacts);
         // Filter opportunities for the current month
         if ($opportunities == null) {
             $opportunities = $this->opportunities($req)->toArray();
@@ -720,7 +720,8 @@ class DashboardController extends Controller
 
         $locations = $this->locations();
 
-        // $users = $this->users();
+        $users = $this->users('0fu8c2Te17KqLDYyr8RE');
+
         // $tags = $this->tags();
 
         // $opportunities_stats = null;
@@ -753,7 +754,7 @@ class DashboardController extends Controller
 
     }
     public function dashboard(Request $req)
-    {set_time_limit(3000000);
+    {set_time_limit(0);
         if (Auth::user()->hasRole('admin')) {
             $current_year = Carbon::now()->year;
             $permissions = Permission::all();
@@ -762,9 +763,9 @@ class DashboardController extends Controller
 
             return view('dashboard-backup', get_defined_vars());
         } elseif (Auth::user()->hasRole('company')) {
-           //dd(Cache::get('ghl_tags_0fu8c2Te17KqLDYyr8RE'),Cache::get('ghl_users_0fu8c2Te17KqLDYyr8RE'));
-            $users = Cache::get('ghl_users_0fu8c2Te17KqLDYyr8RE');//$this->users();
-           $tags = Cache::get('ghl_tags_0fu8c2Te17KqLDYyr8RE'); //$this->tags();
+            //dd(Cache::get('ghl_tags_0fu8c2Te17KqLDYyr8RE'),Cache::get('ghl_users_0fu8c2Te17KqLDYyr8RE'));
+            $users = $this->users();
+            $tags = $this->tags();
 
             $opportunities_stats = null;
             $contact_stats = null;
@@ -794,8 +795,7 @@ class DashboardController extends Controller
             $cov_stats = $this->conversionStats($users, $req);
             //dd($top_stats, $cov_stats);
         }
-        return view('dashboard', get_defined_vars());
-    }
+        return view('dashboard', get_defined_vars());}
 
     public function calendarsGroups($req)
     {
@@ -863,16 +863,87 @@ class DashboardController extends Controller
         return $result;}
     public function conversionStats($users, $req, $contacts = null)
     {
+        $leads = ['total' => 0, 'conversion_rate' => 0, 'direction' => 'up', 'direction_value' => 0];
+        $calls = ['total' => 0, 'conversion_rate' => 0, 'direction' => 'up', 'direction_value' => 0];
+        $online_meet = ['total' => 0, 'conversion_rate' => 0, 'direction' => 'up', 'direction_value' => 0];
+        $in_person_meet = ['total' => 0, 'conversion_rate' => 0, 'direction' => 'down', 'direction_value' => 0];
+        $viewing = ['total' => 0, 'conversion_rate' => 0, 'direction' => 'up', 'direction_value' => 0];
+        $sale = ['total' => 0, 'conversion_rate' => 0, 'direction' => 'down', 'direction_value' => 0];
+        if ($req->has('location_id') && !empty($req->location_id)) {
+            $location_id = $req->location_id;
+        } else {
+            $location_id = auth()->user()->location_id;
+        }
+        //contacts
+        $contactsCount = Contact::where('location_id',  $location_id)->count();
+        $leads['total'] = $contactsCount;
+
+        //calls
+        $callsCount = Call::where('location_id',  $location_id)->count();
+        $calls['total'] = $callsCount;
+        $calls['conversion_rate'] = ($callsCount / $contactsCount) * 100;
+
+        //appointments
+        $appointments = Appointment::where('location_id',  $location_id)->get()->toArray();
+
+        $groupId = '6rpl3KNEcQL36RHY2qag';
+        $calendars = $this->calendars($req);
+
+        //all calendars with group id
+        $meetingCalendars = array_filter($calendars['calendars'], function ($calendar) use ($groupId) {
+            if (isset($calendar['groupId']) && $calendar['groupId'] == $groupId) {
+                return $calendar;
+            }
+
+        });
+
+        //only exact names of the calendars
+        $meetingCalendars = array_column($meetingCalendars, 'name', 'id');
+
+        //get all appointments where calendar id is in the meetingCalendars
+        $online_meetings = array_filter($appointments, function ($appointment) use ($meetingCalendars) {
+            $calendarIds = array_keys($meetingCalendars);
+            if (in_array($appointment['calendar_id'], $calendarIds)) {
+                return $appointment;
+            }
+
+        });
+
+        $online_meet['total'] = count($online_meetings);
+        $online_meet['conversion_rate'] = ($online_meet['total'] / $contactsCount) * 100;
+
+        //sale
+        $opportunityCounts = Opportunity::where('location_id',  $location_id)
+            ->selectRaw('COUNT(*) as total, SUM(status = "won") as won')
+            ->first();
+
+        $sale['total'] = $opportunityCounts->total;
+        $sale['conversion_rate'] = ($opportunityCounts->won / $contactsCount) * 100;
+
+        //in person meetings
+
+        //viewing
+
+        $cov_stats = [
+            'leads' => $leads,
+            'calls' => $calls,
+            'online_meet' => $online_meet,
+            'in_person_meet' => $in_person_meet,
+            'viewing' => $viewing,
+            'sale' => $sale,
+        ];
+
+        return $cov_stats;
+    }
+    public function conversionStats_old($users, $req, $contacts = null)
+    {
         if (is_null($contacts)) {
             $contacts = $this->contacts()->toArray();
         }
-        dd($contacts);
         $opportunities = $this->opportunities($req)->toArray();
         $appointments = $this->appointments($req)->toArray();
         $calls = $this->calls($req);
-dd($contacts);
         $calendars = $this->calendars($req);
-        dd($calenders);
         $groups = $this->calendarsGroups($req);
 
         $meetingcalenders = $this->meetingCalenders($calendars, $groups);
@@ -907,7 +978,7 @@ dd($contacts);
         //Lead to sale Conversion
         $callsConversionRate = [
             'Total' => count($calls),
-            'Percent'=> $totalContacts > 0 ? round(($callscount / $totalContacts) * 100, 2): 0,
+            'Percent' => $totalContacts > 0 ? round(($callscount / $totalContacts) * 100, 2) : 0,
             // 'Percent' => $totalContacts > 0 ? round(($callscount / $totalContacts) * 100, 2) : 0,
             'Message' => 'CALLS',
         ];
@@ -915,7 +986,7 @@ dd($contacts);
         $appointmentsConversionRate = [
             'Total' => count($appointments),
             'Percent' => $totalContacts > 0 ? round(($appointmentCount / $totalContacts) * 100, 2) : 0,
-            'Conversion'=> $totalContacts > 0 ? $callscount> 0 ? round(($appointmentCount / $callscount) * 100, 2): 0: 0,
+            'Conversion' => $totalContacts > 0 ? $callscount > 0 ? round(($appointmentCount / $callscount) * 100, 2) : 0 : 0,
             'Message' => 'ONlINE MEET',
         ];
 
@@ -923,7 +994,7 @@ dd($contacts);
         $opportunitiesConversionRate = [
             'Total' => count($opportunities),
             'Percent' => $totalContacts > 0 ? round(($opportunitiesCount / $totalContacts) * 100, 2) : 0,
-            'Conversion'=> $totalContacts > 0 ? $appointmentCount > 0 ? round(($opportunitiesCount / $appointmentCount) * 100, 2) : 0: 0,
+            'Conversion' => $totalContacts > 0 ? $appointmentCount > 0 ? round(($opportunitiesCount / $appointmentCount) * 100, 2) : 0 : 0,
             'Message' => 'IN PERSON MEET',
         ];
 
@@ -931,15 +1002,15 @@ dd($contacts);
         $leadsSaleConversionRate = [
             'Total' => count($opportunities),
             'Percent' => $totalContacts > 0 ? round(($opportunitiessold / $totalContacts) * 100, 2) : 0,
-            'Conversion'=> $totalContacts > 0 ? $opportunitiesCount > 0 ? round(($opportunitiessold /$opportunitiesCount) * 100, 2): 0: 0,
+            'Conversion' => $totalContacts > 0 ? $opportunitiesCount > 0 ? round(($opportunitiessold / $opportunitiesCount) * 100, 2) : 0 : 0,
             'Message' => 'SALE',
         ];
 
         // Return stats
         $response = [
-            'LEAD'=>[
-            'Total' => count($contacts),
-            'Message' => 'LEAD',
+            'LEAD' => [
+                'Total' => count($contacts),
+                'Message' => 'LEAD',
             ],
             'CALLS' => $callsConversionRate,
             'ONlINE MEET' => $appointmentsConversionRate,
@@ -1063,7 +1134,7 @@ dd($contacts);
 
     }
     public function filterLocations(Request $request)
-    {set_time_limit(300000000);
+    {set_time_limit(0);
         $locationid = $request->location_id;
         $all_contacts = $this->contacts($locationid);
 
@@ -1125,9 +1196,7 @@ dd($contacts);
             'status' => 'success',
             'top_stats' => $top_stats,
             'html' => $wholehtml,
-        ]);
-
-    }
+        ]);}
     public function parseDateRange($date_range)
     {
         [$start_date, $end_date] = explode('-', $date_range);
@@ -1237,6 +1306,89 @@ dd($contacts);
         $user->save();
 
         return redirect()->back()->with('success', 'Password updated Successfully!');
+    }
+    public function importAppointments(Request $request)
+    {
+
+        set_time_limit(3000000);
+        $chunk = $request->input('chunk');
+        $chunkIndex = $request->input('chunkIndex');
+        $totalChunks = $request->input('totalChunks');
+
+        // Decode the chunk data
+        $chunkData = json_decode($chunk, true);
+
+        // dd($chunkData);
+        $users = ghl_api_call('users/', 4);
+        $users = json_decode($users, true);
+        //$users = $this->users(true);
+        //$calendars = $this->calendars(true);
+        $calendars = ghl_api_call('calendars', 4);
+        $calendars = json_decode($calendars, true);
+        $calendars = $calendars['calendars'];
+        $users = $users['users'];
+
+        // Process the chunk data
+        foreach ($chunkData as $data) {
+            $calendar = array_filter($calendars, function ($calendar) use ($data) {
+                return $calendar['name'] == $data['calendarName'];
+            });
+
+            //the first one only
+            $calendar = array_values($calendar);
+
+            // user
+            $user = array_filter($users, function ($user) use ($data) {
+                return $user['name'] == $data['assignedTo'];
+            });
+
+            //the first one only
+            $user = array_values($user);
+
+            $location_id = auth()->user()->location_id;
+            $where = ['location_id' => $location_id, 'ghl_appointment_id' => $data['id']];
+            $appointment = Appointment::where($where)->first();
+
+            $dateAdded = isset($data['dateAdded']) ? $data['dateAdded'] : null;
+            $dateAdded = !is_null($dateAdded) ? Carbon::parse($dateAdded)->format('Y-m-d H:i:s') : null;
+            $startTime = isset($data['startTime']) ? $data['startTime'] : null;
+            $startTime = !is_null($startTime) ? Carbon::parse($startTime)->format('Y-m-d H:i:s') : null;
+            $endTime = isset($data['endTime']) ? $data['endTime'] : null;
+            $endTime = !is_null($endTime) ? Carbon::parse($endTime)->format('Y-m-d H:i:s') : null;
+            // Data to update or create the appointment
+            $appointmentData = [
+                'ghl_appointment_id' => $data['id'],
+                'location_id' => $location_id,
+                'address' => isset($data['address']) ? $data['address'] : null,
+                'title' => isset($data['title']) ? $data['title'] : null,
+                'calendar_id' => isset($calendar[0]['id']) ? $calendar[0]['id'] : null,
+                'contact_id' => isset($data['contactId']) ? $data['contactId'] : null,
+                'group_id' => isset($calendar[0]['groupId']) ? $calendar[0]['groupId'] : null,
+                'appointment_status' => isset($data['appointmentStatus']) ? $data['appointmentStatus'] : null,
+                'assigned_user_id' => isset($user[0]['id']) ? $user[0]['id'] : null,
+                'users' => isset($data['users']) ? json_encode($data['users']) : null,
+                'notes' => isset($data['notes']) ? $data['notes'] : null,
+                'source' => isset($data['source']) ? $data['source'] : null,
+                'start_time' => $startTime,
+                'end_time' => $endTime,
+                'date_added' => $dateAdded,
+            ];
+
+            // dd($appointmentData, $calendar, $user);
+
+            // Update the existing appointment or create a new one
+            if ($appointment) {
+                $appointment->update($appointmentData);
+                \Log::info("Appointment with GHL Appointment ID: {$data['id']} updated successfully.");
+            } else {
+                $appointment = Appointment::create($appointmentData);
+                \Log::info("Appointment with GHL Appointment ID: {$data['id']} created successfully.");
+            }
+
+        }
+
+        return response()->json(['message' => 'Chunk processed successfully']);
+
     }
 
 }

@@ -444,6 +444,19 @@
                     </a>
                 </div>
                 @endcan
+                @can('view permission')
+                <!--begin::Menu item-->
+                <div class="menu-item px-3">
+                    <a class="menu-link px-5" href="{{ route('propertypermission.manage') }}">
+                        <span class="menu-icon">
+                            <img width="25" height="25"
+                                src="https://img.icons8.com/external-tanah-basah-basic-outline-tanah-basah/24/000000/external-key-user-tanah-basah-basic-outline-tanah-basah.png"
+                                alt="external-key-user-tanah-basah-basic-outline-tanah-basah" />
+                        </span>
+                        <span class="menu-title">Property Permissions</span>
+                    </a>
+                </div>
+                @endcan
                 <!--end::Menu item-->
                 <!--begin::Menu item-->
                 @can('view user')

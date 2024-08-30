@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Console\\Commands\\ImportLeads' => $baseDir . '/app/Console/Commands/ImportLeads.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Core\\Bootstrap\\BootstrapAuth' => $baseDir . '/app/Core/Bootstrap/BootstrapAuth.php',
     'App\\Core\\Bootstrap\\BootstrapDefault' => $baseDir . '/app/Core/Bootstrap/BootstrapDefault.php',
@@ -41,6 +42,7 @@ return array(
     'App\\Http\\Middleware\\TrustProxies' => $baseDir . '/app/Http/Middleware/TrustProxies.php',
     'App\\Http\\Middleware\\VerifyCsrfToken' => $baseDir . '/app/Http/Middleware/VerifyCsrfToken.php',
     'App\\Http\\Requests\\Auth\\LoginRequest' => $baseDir . '/app/Http/Requests/Auth/LoginRequest.php',
+    'App\\Imports\\ContactsImport' => $baseDir . '/app/Imports/ContactsImport.php',
     'App\\Models\\Appointment' => $baseDir . '/app/Models/Appointment.php',
     'App\\Models\\Call' => $baseDir . '/app/Models/Call.php',
     'App\\Models\\Contact' => $baseDir . '/app/Models/Contact.php',

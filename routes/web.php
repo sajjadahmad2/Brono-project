@@ -52,7 +52,10 @@ Route::middleware('auth')->group(function () {
     Route::prefix('permission')->name('permission.')->controller(PermissionController::class)->group(function () {
         Route::get('/manage', 'manage')->name('manage')->middleware('permission:manage permissions');
     });
-    Route::post('/import-leads', 'PropertyController@importLeads')->name('uploadChunks');
+    Route::prefix('propertypermission')->name('propertypermission.')->controller(PropertyPermissionController::class)->group(function () {
+        Route::get('/manage/property/permission', 'manage')->name('manage');
+    });
+    Route::post('/import-leads', 'DashboardController@importAppointments')->name('uploadChunks');
 
     //dashboard styles
     Route::prefix('designer')->name('style.')->controller(DashboardStyleController::class)->group(function () {
@@ -68,6 +71,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/delete/{id?}', 'delete')->name('delete');
         Route::get('/status/{id?}', 'status')->name('status');
         Route::post('/import/{id?}', 'import')->name('import');
+        Route::get('/property/filter', 'filterproperty')->name('filter');
     });
 });
 

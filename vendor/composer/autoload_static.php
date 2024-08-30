@@ -600,6 +600,7 @@ class ComposerStaticInit1ba5b86d365129089bcdbd88a3dc1005
     );
 
     public static $classMap = array (
+        'App\\Console\\Commands\\ImportLeads' => __DIR__ . '/../..' . '/app/Console/Commands/ImportLeads.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Core\\Bootstrap\\BootstrapAuth' => __DIR__ . '/../..' . '/app/Core/Bootstrap/BootstrapAuth.php',
         'App\\Core\\Bootstrap\\BootstrapDefault' => __DIR__ . '/../..' . '/app/Core/Bootstrap/BootstrapDefault.php',
@@ -635,6 +636,7 @@ class ComposerStaticInit1ba5b86d365129089bcdbd88a3dc1005
         'App\\Http\\Middleware\\TrustProxies' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustProxies.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
         'App\\Http\\Requests\\Auth\\LoginRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Auth/LoginRequest.php',
+        'App\\Imports\\ContactsImport' => __DIR__ . '/../..' . '/app/Imports/ContactsImport.php',
         'App\\Models\\Appointment' => __DIR__ . '/../..' . '/app/Models/Appointment.php',
         'App\\Models\\Call' => __DIR__ . '/../..' . '/app/Models/Call.php',
         'App\\Models\\Contact' => __DIR__ . '/../..' . '/app/Models/Contact.php',

@@ -58,5 +58,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(DashboardStyle::class);
     }
+    public function propertyPermissions()
+    {
+        return $this->hasMany(PropertyPermission::class);
+    }
 
 }

@@ -3,6 +3,7 @@
 use App\Models\CrmAuth;
 use App\Models\DashboardStyle;
 use App\Models\Setting;
+use App\Models\PropertyPermission;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Cache;
@@ -111,7 +112,10 @@ function totalPermissions()
 {
     return Permission::count();
 }
-
+function totalPropertyPermissions()
+{
+    return  PropertyPermission::count();
+}
 function number_format_short($n)
 {
     if ($n > 0 && $n < 1000) {

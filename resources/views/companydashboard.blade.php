@@ -28,7 +28,37 @@
             left: -3px !important;
             top: 0px !important;
         }
+
+        .main-div {
+            margin-top: -5%;
+        }
+
+
+        .daterangepicker .drp-calendar td.active:not(.inactive) {
+            background-color: #1b84ff !important;
+            color: white !important;
+            border-radius: .475rem;
+        }
+
+        .daterangepicker .drp-calendar td.active.start-date {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .daterangepicker .drp-calendar td.in-range.available:not(.active):not(.off):not(.today) {
+            background-color: #f9f9f9 !important;
+            color: #1b84ff !important
+        }
+
+        .daterangepicker .drp-calendar td.available:hover,
+        .daterangepicker .drp-calendar th.available:hover {
+            border-radius: .475rem;
+            background-color: #f9f9f9 !important;
+            color: #1b84ff !important
+        }
     </style>
+    <link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
+    <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
 @endsection
 @section('content')
     <div class="contacts_charts_container">
@@ -45,7 +75,34 @@
 
             <!-- Other filters or content can be placed here -->
         </div>
+        <div class="col-md-12  mb-3 d-flex justify-content-end align-items-center" style="gap: 20px;">
+            <!-- User Dropdown -->
+            <div class="col-md-3" style="
+            width: 15%;
+        ">
+                <select id="user-select" class="form-select">
+                    <option value="">Select User</option>
+                    @foreach ($users as $user)
+                        <option value="{{ $user['id'] }}">{{ $user['name'] }}</option>
+                    @endforeach
+                </select>
+            </div>
 
+            <!-- Tags Dropdown (Hidden Initially) -->
+            <div class="col-md-3" style="
+            width: 20%;
+        "id="tags-filter" hidden>
+                <select id="tags-select" class="form-select">
+                    <option value="">Select Tag</option>
+                </select>
+            </div>
+
+            <!-- Date Range Picker -->
+            <div class="col-md-3">
+                <input class=" btn btn-secondary w-80" placeholder="Pick date rage" id="kt_daterangepicker_4" />
+
+            </div>
+        </div>
         <!-- Main stats and other content goes here -->
         <div class="row gx-5 gx-xl-10 mb-xl-10">
             <!-- Your other content -->
@@ -68,12 +125,13 @@
         var end = moment();
 
         function cb(start, end) {
-            $(".date-range-picker").html(start.format("MMMM D, YYYY") + " - " + end.format("MMMM D, YYYY"));
+            // $("#kt_daterangepicker_4").val(start.format("MMMM D, YYYY") + " - " + end.format("MMMM D, YYYY"));
         }
 
-        $(".date-range-picker").daterangepicker({
+        $("#kt_daterangepicker_4").daterangepicker({
             startDate: start,
             endDate: end,
+            showDropdowns: true, // Enable month and year dropdowns
             ranges: {
                 "Today": [moment(), moment()],
                 "Yesterday": [moment().subtract(1, "days"), moment().subtract(1, "days")],
@@ -82,21 +140,31 @@
                 "This Month": [moment().startOf("month"), moment().endOf("month")],
                 "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf(
                     "month")]
+            },
+            locale: {
+                format: "MMMM D, YYYY"
             }
         }, cb);
 
         cb(start, end);
     </script>
+
+
     <script>
-        // Attach the change event listener to the select element
+        $(document).ready(function() {
+            // Empty the date range picker fields on page load
+            $('#kt_daterangepicker_4').val('');
+
+            // Automatically trigger the filter-results button click on page load
+            //$('#filter-results').click();
+        });
+
         function getElementValueById(id) {
             const element = document.getElementById(id);
             return element ? element.value : null;
         }
         document.addEventListener('DOMContentLoaded', function() {
-            // Function to handle the AJAX request
-            $('#datepicker-range-start').val('');
-            $('#datepicker-range-end').val('');
+
 
             function loadContent(locid = null) {
                 //var defaultLocationId = locid;
@@ -104,11 +172,10 @@
                 console.log('sajjad');
                 const user = getElementValueById('user-select');
                 const tag = getElementValueById('tags-select');
-                const startDate = getElementValueById('datepicker-range-start');
-                const endDate = getElementValueById('datepicker-range-end');
+               // const dateRange = getElementValueById('kt_daterangepicker_4');
 
                 // Combine the start and end dates into a single dateRange string if both are selected
-                const dateRange = startDate && endDate ? `${startDate} - ${endDate}` : '';
+                //const dateRange = startDate && endDate ? `${startDate} - ${endDate}` : '';
                 if (defaultLocationId) {
                     // Perform the AJAX request
                     filterLoader(true);
@@ -119,7 +186,7 @@
                             location_id: defaultLocationId,
                             user: user,
                             tag: tag,
-                            dateRange: dateRange
+                            //dateRange: dateRange
                         },
                         success: function(response) {
                             if (response.status === 'success') {
@@ -137,8 +204,6 @@
                                 document.getElementById('tags-select').addEventListener('change',
                                     loadContent);
                                 // document.getElementById('datepicker-range-start').addEventListener('changeDate', filterContacts);
-                                document.getElementById('datepicker-range-end').addEventListener(
-                                    'changeDate', loadContent);
                             }
                         },
                         error: function(error) {
@@ -156,6 +221,14 @@
             // Also attach the function to the location select change event
             document.getElementById('location-select').addEventListener('change', function() {
                 const locationId = this.value;
+                loadContent(locationId);
+            });
+            document.getElementById('user-select').addEventListener('change', function() {
+
+                loadContent(locationId);
+            });
+            document.getElementById('kt_daterangepicker_4').addEventListener('changeDate', function() {
+
                 loadContent(locationId);
             });
         });
@@ -294,7 +367,13 @@
             document.querySelector('.top_total_sales').innerText = saleByMonth.total;
 
             // Extract dates and counts from the saleByMonth object
-            var dates = Object.keys(saleByMonth.won_opportunities);
+            var dates = Object.keys(saleByMonth.won_opportunities).map(dateString => {
+                var date = new Date(dateString);
+                return date.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: '2-digit'
+                });
+            });
             var counts = Object.values(saleByMonth.won_opportunities);
 
             // Destroy the existing chart if it exists
@@ -305,18 +384,17 @@
             // Define the options for the new chart
             var options = {
                 chart: {
-                    type: 'line',
+                    type: 'area',
                     height: 350,
                     zoom: {
                         enabled: true,
                         type: 'x',
                         autoScaleYaxis: false
                     },
-
                     toolbar: {
                         autoSelected: 'zoom',
                         show: false
-                    }
+                    },
                 },
                 series: [{
                     name: 'Total Sales',
@@ -331,13 +409,14 @@
                             return value;
                         }
                     },
-                    title: {
-                        text: 'Date'
-                    }
+
                 },
                 yaxis: {
-                    title: {
-                        text: 'Number of Sales'
+
+                    labels: {
+                        formatter: function(value) {
+                            return `$${value} K`; // Format y-axis labels as $count K
+                        }
                     }
                 },
                 dataLabels: {
@@ -345,17 +424,19 @@
                 },
                 stroke: {
                     curve: 'smooth',
+                    width: 3
                 },
                 markers: {
-                    size: 0, // This removes the markers from the chart
+                    size: 0,
                     hover: {
-                        size: 0 // This ensures no markers appear on hover
+                        size: 0
                     }
                 },
-
                 grid: {
+                    borderColor: '#e7e7e7',
+                    strokeDashArray: 5,
                     row: {
-                        colors: ['transparent', 'transparent'], // Alternate row color
+                        colors: ['transparent', 'transparent'],
                         opacity: 0.5
                     }
                 },
@@ -364,8 +445,16 @@
                         format: 'yyyy-MM-dd'
                     }
                 },
-                fill: {
-                    opacity: 0.8
+                plotOptions: {
+                    line: {
+                        dropShadow: {
+                            enabled: true,
+                            top: 3,
+                            left: 3,
+                            blur: 4,
+                            opacity: 0.2
+                        }
+                    }
                 }
             };
 

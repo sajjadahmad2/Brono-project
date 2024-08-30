@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Contact;
 use App\Models\Property;
 use App\Models\PropertySurfaceArea;
 use App\Services\PropertyImporter;
 use Illuminate\Http\Request;
-use App\Models\Opportunity;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,72 +14,151 @@ class PropertyController extends Controller
     public function list(Request $req)
     {
         $perpage = $req->input('perpage', 12);
-
         $query = Property::query();
-
-        // Filtering logic
-        if ($req->ajax()) {
-
-            if ($req->has('keyword') && !empty($req->keyword)) {
-                $keyword = $req->keyword;
-                $query->where(function ($q) use ($keyword) {
-                    $q->where('ref', 'like', "%$keyword%")->orWhere('title', 'like', "%$keyword%");
-
-                });
-            }
-
-            if ($req->has('location') && $req->location != 'all') {
-                $query->where('location_detail', $req->location);
-            }
-
-            if ($req->has('propertyType') && $req->type != 'all') {
-                $query->where('type', $req->propertyType);
-            }
-
-            if ($req->has('category') && $req->category != 'all') {
-                $query->where('new_build', $req->category);
-            }
-
-            if ($req->has('priceRange')) {
-                $priceRange = explode(';', $req->priceRange);
-
-                $query->whereBetween('price', [$priceRange[0], $priceRange[1]]);
-            }
-            // if ($req->filled('areaRange')) {
-            //     $areaRange = explode(';', $req->areaRange);
-            //     $minArea = round($areaRange[0] * 0.092903, 2);
-            //     $maxArea = round($areaRange[1] * 0.092903, 2);
-            //     $query->whereHas('surfaceArea', function($q) use ($minArea, $maxArea) {
-            //         $q->whereBetween('built', [$minArea, $maxArea])
-            //           ->orWhereBetween('plot', [$minArea, $maxArea]);
-            //     });
-            // }
-
-            $properties = $query->orderBy('id', 'DESC')->paginate($perpage);
-            dd($properties);
-            return view('property.partials-list', compact('properties'))->render();
-        }
-
-        // Fetch distinct types, locations, and price range
-        $properties = $query->orderBy('id', 'DESC')->paginate($perpage);
         $types = Property::select('type')->distinct()->pluck('type');
         $location_detail = Property::select('location_detail')->distinct()->pluck('location_detail');
-        $maxPrice = Property::max('price');
-        $minPrice = Property::min('price');
+        $maxPrice = (int) round(Property::max('price'));
+        $minPrice = (int) round(Property::min('price'));
         $minBuilt = PropertySurfaceArea::min('built');
         $maxBuilt = PropertySurfaceArea::max('built');
         $minPlot = PropertySurfaceArea::min('plot');
         $maxPlot = PropertySurfaceArea::max('plot');
-        $minAreaSqFt = round(min($minBuilt, $minPlot) / 0.092903, 2);
-        $maxAreaSqFt = round(max($maxBuilt, $maxPlot) / 0.092903, 2);
+        $minAreaSqFt = min($minBuilt, $minPlot);
+        $maxAreaSqFt = max($maxBuilt, $maxPlot);
+        // Initialize filters with default or request values
+        $selectedKeyword = $req->input('keyword', '');
+        $selectedPriceRange = $req->input('priceRange', '');
+        $selectedAreaRange = $req->input('areaRange', '');
+        $selectedLocations = $req->input('location', []);
+        $selectedPropertyTypes = $req->input('propertyType', []);
+        $selectedCategories = $req->input('category', []);
 
-        return view('property.list', get_defined_vars());
+        if (!empty($selectedKeyword)) {
+            $query->where(function ($q) use ($selectedKeyword) {
+                $q->where('ref', 'like', "%$selectedKeyword%")
+                    ->orWhere('property_title', 'like', "%$selectedKeyword%");
+            });
+        }
+        if (!empty($selectedPriceRange)) {
+            $priceRange = explode(';', $selectedPriceRange);
+            if (count($priceRange) === 2) {
+                if ($minPrice != $priceRange[0] && $priceRange[1] != $maxPrice) {
+                    $priceRange = $priceRange;
+                    $query->where(function ($q) use ($priceRange) {
+                        $q->whereBetween('price', [(int) $priceRange[0], (int) $priceRange[1]]);
+                    });
+                }
+            }
+        }
+        if (!empty($selectedAreaRange)) {
+            $areaRange = explode(';', $selectedAreaRange);
+            if (count($areaRange) === 2) {
+                $minArea = (int) $areaRange[0];
+                $maxArea = (int) $areaRange[1];
+                if ($minBuilt != $minArea && $priceRange[1] != $maxBuilt) {
+                $query->whereHas('surfaceArea', function ($q) use ($minArea, $maxArea) {
+                    $q->whereBetween('built', [$minArea, $maxArea])
+                        ->orWhereBetween('plot', [$minArea, $maxArea]);
+                });
+            }
+            }
+        }
+        if (!empty($selectedLocations)) {
+            $query->where(function ($q) use ($selectedLocations) {
+                foreach ($selectedLocations as $location) {
+                    $q->orWhere('location_detail', 'like', "%$location%");
+                }
+            });
+        }
+        if (!empty($selectedPropertyTypes)) {
+            $query->where(function ($q) use ($selectedPropertyTypes) {
+                foreach ($selectedPropertyTypes as $propertyType) {
+                    $q->orWhere('type', 'like', "%$propertyType%");
+                }
+            });
+        }
+        if ($req->has('category') && !in_array('all', $selectedCategories) && !empty($selectedCategories)) {
+            $query->where(function ($q) use ($selectedCategories) {
+                $q->whereIn('new_build', $selectedCategories);
+            });
+        }
+
+        $properties = $query->orderBy('id', 'DESC')->paginate($perpage);
+        // dd($properties);
+        // return view('property.partials-list', compact('properties'))->render();
+        // Fetch distinct types, locations, and price range
+        $properties = $query->orderBy('id', 'DESC')->paginate($perpage);
+
+        return view('property.list', compact(
+            'properties', 'types', 'location_detail', 'maxPrice', 'minPrice', 'minAreaSqFt', 'maxAreaSqFt',
+            'selectedKeyword', 'selectedPriceRange', 'selectedAreaRange', 'selectedLocations', 'selectedPropertyTypes', 'selectedCategories'
+        ));
     }
 
     public function show(Property $property)
     {
         return view('property.show', compact('property'));
+    }
 
+    public function filterproperty(Request $req)
+    {
+        // dd($req->all());
+        $perpage = $req->input('perpage', 12);
+        $query = Property::query();
+        if ($req->has('keyword') && !empty($req->keyword)) {
+            $keyword = $req->keyword;
+            $query->where(function ($q) use ($keyword) {
+                $q->where('ref', 'like', "%$keyword%")
+                    ->orWhere('property_title', 'like', "%$keyword%");
+            });
+        }
+        if ($req->has('priceRange') && !empty($req->priceRange)) {
+            $priceRange = explode(';', $req->priceRange);
+            if (count($priceRange) === 2) {
+                $priceRange = $priceRange;
+                $query->where(function ($q) use ($priceRange) {
+                    $q->whereBetween('price', [(float) $priceRange[0], (float) $priceRange[1]]);
+                });
+            }
+        }
+        if ($req->has('areaRange') && !empty($req->areaRange)) {
+            $areaRange = explode(';', $req->areaRange);
+            if (count($areaRange) === 2) {
+                $minArea = (float) $areaRange[0];
+                $maxArea = (float) $areaRange[1];
+                $query->whereHas('surfaceArea', function ($q) use ($minArea, $maxArea) {
+                    $q->whereBetween('built', [$minArea, $maxArea])
+                        ->orWhereBetween('plot', [$minArea, $maxArea]);
+                });
+            }
+        }
+        if ($req->has('location') && !empty($req->location)) {
+            $locations = $req->location;
+            $query->where(function ($q) use ($locations) {
+                foreach ($locations as $location) {
+                    $q->orWhere('location_detail', 'like', "%$location%");
+                }
+            });
+        }
+        if ($req->has('propertyType') && !empty($req->propertyType)) {
+            $propertyTypes = $req->propertyType;
+            $query->where(function ($q) use ($propertyTypes) {
+                foreach ($propertyTypes as $propertyType) {
+                    $q->orWhere('type', 'like', "%$propertyType%");
+                }
+            });
+        }
+
+        if ($req->has('category') && !in_array('all', $req->category)) {
+            $categories = $req->category;
+            $query->where(function ($q) use ($categories) {
+                $q->whereIn('new_build', $categories);
+            });
+        }
+        $properties = $query->orderBy('id', 'DESC')->paginate($perpage);
+
+        $html = view('property.partials-list', get_defined_vars())->render();
+        return response()->json(['status' => 'success', 'data' => $html]);
     }
 
     public function add()
@@ -311,8 +388,22 @@ class PropertyController extends Controller
             }
 
             // Process descriptions if any
+            // if ($request->has('description')) {
+            //     $property->descriptions()->updateOrCreate(['language' => 'en'], ['description' => $request->description]);
+            // }
             if ($request->has('description')) {
-                $property->descriptions()->updateOrCreate(['language' => 'en'], ['description' => $request->description]);
+                $newDescription = $request->input('description');
+
+                // Retrieve the current description
+                $currentDescription = $property->descriptions()->where('language', 'en')->value('description');
+
+                // Only update if the new description is different from the current one
+                if ($currentDescription !== $newDescription) {
+                    $property->descriptions()->updateOrCreate(
+                        ['language' => 'en'], // Find the existing record by language
+                        ['description' => $newDescription]// Update with the new description
+                    );
+                }
             }
 
             // Process energy rating if any
@@ -393,6 +484,10 @@ class PropertyController extends Controller
     }
     public function import(Request $request)
     {
+        //    $request->validate([
+        //         'xmlFile' => 'required|file|mimes:xml|max:10240', // Max 10MB
+        //     ]);
+
         // Store the uploaded file in the storage folder
         $filePath = $request->file('xmlFile')->storeAs('uploads', 'properties' . time() . '.xml');
 
@@ -415,7 +510,7 @@ class PropertyController extends Controller
         return view('property.list', compact('properties'));
     }
     public function importLeads(Request $request)
-    { set_time_limit(3000000);
+    {set_time_limit(3000000);
         $chunk = $request->input('chunk');
         $chunkIndex = $request->input('chunkIndex');
         $totalChunks = $request->input('totalChunks');
@@ -425,21 +520,21 @@ class PropertyController extends Controller
         // Process the chunk data
         foreach ($chunkData as $leadData) {
 
-            Opportunity::updateOrCreate(
-                ['ghl_opportunity_id' => isset($leadData['id']) ? $leadData['id'] : null],
-                [
-                    'location_id' => isset($leadData['locationId']) ? $leadData['locationId'] : null,
-                    'assigned_to' => isset($leadData['assignedTo']) ? $leadData['assignedTo'] : null,
-                    'contact_id' => isset($leadData['contactId']) ? $leadData['contactId'] : null,
-                    'monetary_value' => isset($leadData['monetaryValue']) ? $leadData['monetaryValue'] : null,
-                    'name' => isset($leadData['name']) ? $leadData['name'] : null,
-                    'pipeline_id' => isset($leadData['pipelineId']) ? $leadData['pipelineId'] : null,
-                    'pipeline_stage_id' => isset($leadData['pipelineStageId']) ? $leadData['pipelineStageId'] : null,
-                    'source' => isset($leadData['source']) ? $leadData['source'] : null,
-                    'status' => isset($leadData['status']) ? $leadData['status'] : null,
-                    'date_added' => isset($leadData['createdAt']) ? \Carbon\Carbon::createFromTimestampMs($leadData['createdAt']) : null,
-                ]
-            );
+            // Opportunity::updateOrCreate(
+            //     ['ghl_opportunity_id' => isset($leadData['id']) ? $leadData['id'] : null],
+            //     [
+            //         'location_id' => isset($leadData['locationId']) ? $leadData['locationId'] : null,
+            //         'assigned_to' => isset($leadData['assignedTo']) ? $leadData['assignedTo'] : null,
+            //         'contact_id' => isset($leadData['contactId']) ? $leadData['contactId'] : null,
+            //         'monetary_value' => isset($leadData['monetaryValue']) ? $leadData['monetaryValue'] : null,
+            //         'name' => isset($leadData['name']) ? $leadData['name'] : null,
+            //         'pipeline_id' => isset($leadData['pipelineId']) ? $leadData['pipelineId'] : null,
+            //         'pipeline_stage_id' => isset($leadData['pipelineStageId']) ? $leadData['pipelineStageId'] : null,
+            //         'source' => isset($leadData['source']) ? $leadData['source'] : null,
+            //         'status' => isset($leadData['status']) ? $leadData['status'] : null,
+            //         'date_added' => isset($leadData['createdAt']) ? $leadData['createdAt'] : null,
+            //     ]
+            // );
             // Contact::updateOrCreate(
             //     ['ghl_contact_id' =>isset($leadData['id']) ? $leadData['id'] : null],
             //     [
@@ -487,7 +582,34 @@ class PropertyController extends Controller
             // );
         }
 
-        return response()->json(['message' => 'Chunk processed successfully']);
+        return response()->json(['message' => 'Chunk processed successfully']);}
+    public function manage(Request $req)
+    {
+        if ($req->ajax()) {
+            $permission = Permission::find($req->permission);
+            $role = Role::find($req->role);
+
+            //dd($role);
+
+            $check = DB::table('role_has_permissions')->where('role_id', $req->role)->where('permission_id', $req->permission)->first();
+
+            if ($check) {
+                $role->revokePermissionTo($permission->name);
+            } else {
+                $role->givePermissionTo($permission->name);
+            }
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Permissions Updated Successfully!',
+            ]);
+        } else {
+            $permissions = Permission::all();
+            $roles = Role::all();
+
+            return view('permissions.manage', get_defined_vars())->with('success', 'done done done done');
+        }
+
     }
 
 }

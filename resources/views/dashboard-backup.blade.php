@@ -4,7 +4,7 @@
     <div class="row g-5 g-xxl-10">
         <!--begin::Col-->
         <div class="col-xxl-4 mb-xxl-10">
-            <div class="container mt-5">
+            {{-- <div class="container mt-5">
                 <h2>Upload JSON File</h2>
                 <form id="uploadForm" enctype="multipart/form-data">
 
@@ -14,7 +14,7 @@
                     <button type="submit" class="btn btn-primary">Upload</button>
                 </form>
                 <div id="progress" class="mt-3"></div>
-            </div>
+            </div> --}}
             <!--begin::Card Widget 22-->
             <div class="card card-reset mb-5 mb-xl-10">
                 <!--begin::Body-->
@@ -348,7 +348,7 @@
             });
 
             function uploadChunks(data, csrfToken,chunkSize = 1000) {
-                data=data.leadsData;
+                // data=data.leadsData;
                 const totalChunks = Math.ceil(data.length / chunkSize);
                 let currentChunk = 0;
                 function sendChunk() {

@@ -89,9 +89,10 @@
         border-radius: 40px;
     }
 </style>
+
 <div class="card">
     <div class="card-header">
-        <h4 class="card-title">Permissions Management</h4>
+        <h4 class="card-title">Property Permissions Management</h4>
     </div>
     <div class="card-body">
         <div class="container">
@@ -99,22 +100,24 @@
                 <thead>
                     <tr>
                         <th class="fw-bold">Permissions</th>
+                        <th class="fw-bold">Roles</th>
                     </tr>
                     <tr>
                         <th class="fw-bold">Available Permissions</th>
-                        @foreach ($roles as $item)
-                            @if ($item->name == 'admin')
+                        @foreach ($roles as $role)
+                            @if ($role->name == 'admin')
                                 @continue
                             @endif
+                            <th class="fw-bold">{{ $role->name }}</th>
                         @endforeach
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach ($permissions as $perm)
+                {{-- <tbody>
+                    @foreach ($permissions as $permission)
                         <tr>
-                            <td>{{ $perm->name }}</td>
-                            @foreach ($roles as $rol)
-                                @if ($rol->name == 'admin')
+                            <td>{{ $permission->column_name }}</td>
+                            @foreach ($roles as $role)
+                                @if ($role->name == 'admin')
                                     @continue
                                 @endif
                                 <td>
@@ -123,9 +126,10 @@
                                             <div class="holder">
                                                 <div class="checkdiv grey400">
                                                     <input type="checkbox" class="le-checkbox permissions"
-                                                        id="chkbox" value="1" data-role="{{ $rol->id }}"
-                                                        data-permission="{{ $perm->id }}"
-                                                        {{ checkRolePerm($rol->id, $perm->id) }} />
+                                                        id="chkbox-{{ $permission->id }}-{{ $role->id }}"
+                                                        value="1" data-role="{{ $role->id }}"
+                                                        data-permission="{{ $permission->id }}"
+                                                        {{ $permission->editable ? 'checked' : '' }} />
                                                 </div>
                                             </div>
                                         </div>
@@ -134,9 +138,8 @@
                             @endforeach
                         </tr>
                     @endforeach
-                </tbody>
+                </tbody> --}}
             </table>
         </div>
     </div>
-
 </div>
