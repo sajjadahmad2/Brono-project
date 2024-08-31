@@ -149,7 +149,7 @@
                                 <i class="ki-duotone ki-pencil fs-7"><span class="path1"></span><span
                                         class="path2"></span></i>
                                 <!--begin::Inputs-->
-                                <input type="file" name="thumbnail" accept=".png, .jpg, .jpeg">
+                                <input type="file"  @if(isset($permissions['thumbnail']) && !$permissions['thumbnail']->editable) disabled @endif name="thumbnail" accept=".png, .jpg, .jpeg">
                                 <input type="hidden" name="avatar_remove">
                                 <!--end::Inputs-->
                             </label>
@@ -157,7 +157,7 @@
 
                             <!--begin::Cancel-->
                             <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                data-kt-image-input-action="cancel" data-bs-toggle="tooltip" aria-label="Cancel avatar"
+                            @if(isset($permissions['thumbnail']) && !$permissions['thumbnail']->editable) disabled @endif data-kt-image-input-action="cancel" data-bs-toggle="tooltip" aria-label="Cancel avatar"
                                 data-bs-original-title="Cancel avatar" data-kt-initialized="1">
                                 <i class="ki-duotone ki-cross fs-2"><span class="path1"></span><span
                                         class="path2"></span></i> </span>
@@ -165,7 +165,7 @@
 
                             <!--begin::Remove-->
                             <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                data-kt-image-input-action="remove" data-bs-toggle="tooltip" aria-label="Remove avatar"
+                            @if(isset($permissions['thumbnail']) && !$permissions['thumbnail']->editable) disabled @endif data-kt-image-input-action="remove" data-bs-toggle="tooltip" aria-label="Remove avatar"
                                 data-bs-original-title="Remove avatar" data-kt-initialized="1">
                                 <i class="ki-duotone ki-cross fs-2"><span class="path1"></span><span
                                         class="path2"></span></i> </span>
@@ -196,7 +196,7 @@
                     <!--begin::Card body-->
                     <div class="card-body pt-0">
                         <!--begin::Select2-->
-                        <select class="form-select" name="new_build" required>
+                        <select class="form-select" name="new_build" @if(isset($permissions['new_build']) && !$permissions['new_build']->editable) disabled @endif required>
                             <option value="">Please Select</option>
                             <option value="0"
                                 {{ old('new_build', $property->new_build ?? '') == '0' ? 'selected' : '' }}>New Build
@@ -216,7 +216,7 @@
 
 
                         <div class="mt-10">
-                            <select class="form-select" id="type" name="type" required>
+                            <select class="form-select" id="type" name="type" @if(isset($permissions['type']) && !$permissions['type']->editable) disabled @endif required>
                                 <option value="Villa"
                                     {{ old('type', $property->type ?? '') == 'Villa' ? 'selected' : '' }}>Villa</option>
                                 <option value="Apartment"
@@ -267,7 +267,7 @@
                     <div class="card-body pt-0">
                         <div class="mb-3">
                             <label for="currency" class="form-label">Currency</label>
-                            <select class="form-select" id="currency" name="currency" required>
+                            <select class="form-select" id="currency" name="currency" @if(isset($permissions['currency']) && !$permissions['currency']->editable) disabled @endif required>
                                 <option value="EUR"
                                     {{ old('currency', $property->currency ?? '') == 'EUR' ? 'selected' : '' }}>EUR -
                                     Euro</option>
@@ -328,7 +328,7 @@
 
                     <!--begin::Card body-->
                     <div class="card-body pt-0">
-                        <input id="kt_ecommerce_add_property_features" name="feature" class="form-control mb-2 tagify"
+                        <input id="kt_ecommerce_add_property_features" name="feature" @if(isset($permissions['feature']) && !$permissions['feature']->editable) disabled @endif class="form-control mb-2 tagify"
                             value="{{ $features ?? '' }}" tabindex="-1">
                         <div class="text-muted fs-7 mb-7">Hit enter to add multiple features</div>
                     </div>
@@ -375,70 +375,7 @@
 
                 </ul>
                 <!--end:::Tabs-->
-                <div class="d-flex flex-column gap-7 gap-lg-10">
-                    <!-- Your HTML code -->
-                    <div class="card card-flush py-4">
-                        <!--begin::Card header-->
-                        <div class="card-header">
-                            <!--begin::Card title-->
-                            <div class="card-title">
-                                <h2>Main Images</h2>
-                            </div>
-                            <!--end::Card title-->
-                        </div>
-                        <!--end::Card header-->
 
-                        <!--begin::Card body-->
-                        <div class="card-body text-center pt-0">
-                            <!--begin::Image input-->
-                            <!--begin::Image input placeholder-->
-                            @if (isset($property) && $property->images->isNotEmpty())
-                                <div id="carousel-{{ $property->id }}" class="carousel slide" data-bs-interval="false">
-                                    <div class="carousel-inner">
-                                        @foreach ($property->images as $index => $image)
-                                            <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                                                <img src="{{ asset($image->url) }}" alt="Property Image"
-                                                    class="d-block w-100 carousel-image" loading="lazy">
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    <!-- Controls -->
-                                    <a class="carousel-control-prev" href="#carousel-{{ $property->id }}" role="button"
-                                        data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon bg-white rounded-circle"
-                                            aria-hidden="true">
-                                            <i class="fas fa-chevron-left"></i>
-                                        </span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </a>
-                                    <a class="carousel-control-next" href="#carousel-{{ $property->id }}" role="button"
-                                        data-bs-slide="next">
-                                        <span class="carousel-control-next-icon bg-white rounded-circle"
-                                            aria-hidden="true">
-                                            <i class="fas fa-chevron-right"></i>
-                                        </span>
-                                        <span class="visually-hidden">Next</span>
-                                    </a>
-                                </div>
-                            @endif
-                            <!--end::Image input placeholder-->
-                        </div>
-                        <!--end::Card body-->
-                    </div>
-
-                    <!-- CSS styling -->
-                    <style>
-                        .carousel-image {
-                            width: 100%;
-                            height: 300px;
-                            /* Set desired height */
-                            object-fit: cover;
-                            /* Ensures the image covers the area without distortion */
-                        }
-                    </style>
-
-                    <!--end::Card body-->
-                </div>
                 <!--begin::Tab content-->
                 <div class="tab-content">
                     <!--begin::Tab pane-->
@@ -454,7 +391,70 @@
                                     </div>
                                 </div>
                                 <!--end::Card header-->
+                                <div class="d-flex flex-column gap-7 gap-lg-10">
+                                    <!-- Your HTML code -->
+                                    <div class="card card-flush py-4">
+                                        <!--begin::Card header-->
+                                        <div class="card-header">
+                                            <!--begin::Card title-->
+                                            <div class="card-title">
+                                                <h2>Main Images</h2>
+                                            </div>
+                                            <!--end::Card title-->
+                                        </div>
+                                        <!--end::Card header-->
 
+                                        <!--begin::Card body-->
+                                        <div class="card-body text-center pt-0">
+                                            <!--begin::Image input-->
+                                            <!--begin::Image input placeholder-->
+                                            @if (isset($property) && $property->images->isNotEmpty())
+                                                <div id="carousel-{{ $property->id }}" class="carousel slide" data-bs-interval="false">
+                                                    <div class="carousel-inner">
+                                                        @foreach ($property->images as $index => $image)
+                                                            <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                                                <img src="{{ asset($image->url) }}" alt="Property Image"
+                                                                    class="d-block w-100 carousel-image" loading="lazy">
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                    <!-- Controls -->
+                                                    <a class="carousel-control-prev" href="#carousel-{{ $property->id }}" role="button"
+                                                        data-bs-slide="prev">
+                                                        <span class="carousel-control-prev-icon bg-white rounded-circle"
+                                                            aria-hidden="true">
+                                                            <i class="fas fa-chevron-left"></i>
+                                                        </span>
+                                                        <span class="visually-hidden">Previous</span>
+                                                    </a>
+                                                    <a class="carousel-control-next" href="#carousel-{{ $property->id }}" role="button"
+                                                        data-bs-slide="next">
+                                                        <span class="carousel-control-next-icon bg-white rounded-circle"
+                                                            aria-hidden="true">
+                                                            <i class="fas fa-chevron-right"></i>
+                                                        </span>
+                                                        <span class="visually-hidden">Next</span>
+                                                    </a>
+                                                </div>
+                                            @endif
+                                            <!--end::Image input placeholder-->
+                                        </div>
+                                        <!--end::Card body-->
+                                    </div>
+
+                                    <!-- CSS styling -->
+                                    <style>
+                                        .carousel-image {
+                                            width: 100%;
+                                            height: 300px;
+                                            /* Set desired height */
+                                            object-fit: cover;
+                                            /* Ensures the image covers the area without distortion */
+                                        }
+                                    </style>
+
+                                    <!--end::Card body-->
+                                </div>
                                 <!--begin::Card body-->
                                 <div class="card-body pt-0">
                                     {{-- Pending Property Title --}}
@@ -465,8 +465,8 @@
                                         <!--end::Label-->
 
                                         <!--begin::Input-->
-                                        <input type="text" name="property_title" class="form-control mb-2"
-                                            placeholder="Property title" value="{{ old('ref', $property->property_title ?? '') }}"
+                                        <input type="text" name="property_title" @if(isset($permissions['property_title']) && !$permissions['property_title']->editable) disabled @endif class="form-control mb-2"
+                                            placeholder="Property title" value="{{ old('property_title', $property->property_title ?? '') }}"
                                             required>
                                         <!--end::Input-->
 
@@ -487,7 +487,7 @@
 
                                         <!--begin::Input-->
 
-                                        <input type="text" class="form-control" placeholder="Reference"
+                                        <input type="text" class="form-control" @if(isset($permissions['ref']) && !$permissions['ref']->editable) disabled @endif placeholder="Reference"
                                             id="ref" name="ref" value="{{ old('ref', $property->ref ?? '') }}"
                                             required>
                                         <!--end::Input-->
@@ -536,7 +536,7 @@
                                             <div class="upload__btn-box">
                                                 <label class="upload__btn">
                                                     <p>Upload images</p>
-                                                    <input type="file" multiple="" data-max_length="20"
+                                                    <input type="file"  multiple="" data-max_length="20"
                                                         class="upload__inputfile" name="images">
                                                 </label>
                                             </div>
@@ -593,7 +593,7 @@
                                         <!--end::Label-->
 
                                         <!--begin::Input-->
-                                        <input type="number" placeholder="Property Price" class="form-control"
+                                        <input type="number" placeholder="Property Price" @if(isset($permissions['price']) && !$permissions['price']->editable) disabled @endif class="form-control"
                                             id="price" name="price"
                                             value="{{ old('price', $property->price ?? '') }}" required>
 
@@ -644,7 +644,7 @@
                                         <!--end::Label-->
 
                                         <!--begin::Input-->
-                                        <input type="text" class="form-control" placeholder="Location_Detail"
+                                        <input type="text" class="form-control" placeholder="Location_Detail"@if(isset($permissions['location_detail']) && !$permissions['location_detail']->editable) disabled @endif
                                             id="location_detail" name="location_detail"
                                             value="{{ old('location_detail', $property->location_detail ?? '') }}"
                                             required>
@@ -661,7 +661,7 @@
                                         <!--end::Label-->
 
                                         <!--begin::Input-->
-                                        <input type="text" placeholder="Town" class="form-control" id="town"
+                                        <input type="text" placeholder="Town" @if(isset($permissions['Town']) && !$permissions['Town']->editable) disabled @endif class="form-control" id="town"
                                             name="town" value="{{ old('town', $property->town ?? '') }}" required>
 
                                     </div>
@@ -673,7 +673,7 @@
                                         <!--end::Label-->
 
                                         <!--begin::Input-->
-                                        <input type="text" placeholder="Province" class="form-control" id="province"
+                                        <input type="text" placeholder="Province" @if(isset($permissions['province']) && !$permissions['province']->editable) disabled @endif class="form-control" id="province"
                                             name="province" value="{{ old('province', $property->province ?? '') }}">
                                         <!--end::Input-->
 
@@ -1104,14 +1104,15 @@
         cb(start, end);
 
 
-        //tagify
+        // tagify
         var input1 = document.querySelector(".tagify");
         new Tagify(input1);
-
+        var isDescriptionEditable = @json(isset($permissions['description']) && $permissions['description']->editable);
         //textarea editor
         var options = {
             selector: "#kt_docs_tinymce_basic",
-            height: "480"
+            height: "480",
+            readonly: !isDescriptionEditable,
         };
 
         if (KTThemeMode.getMode() === "dark") {

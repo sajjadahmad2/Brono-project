@@ -33,8 +33,8 @@ class PropertyPermissionController extends Controller
             // Merge and filter the columns to exclude unwanted ones
             $allColumns = array_merge($allColumns, array_diff($columns, $ignoreColumns));
         }
-        dd($allColumns);
-        foreach ($columns as $column) {
+
+        foreach ( $allColumns  as $column) {
             $exists = PropertyPermission::where('column_name', $column)
                 ->exists();
 

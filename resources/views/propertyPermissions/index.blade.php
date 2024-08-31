@@ -112,10 +112,10 @@
                         @endforeach
                     </tr>
                 </thead>
-                {{-- <tbody>
+                <tbody>
                     @foreach ($permissions as $permission)
                         <tr>
-                            <td>{{ $permission->column_name }}</td>
+                            <td>{{formatString( $permission->column_name )}}</td>
                             @foreach ($roles as $role)
                                 @if ($role->name == 'admin')
                                     @continue
@@ -138,7 +138,7 @@
                             @endforeach
                         </tr>
                     @endforeach
-                </tbody> --}}
+                </tbody>
             </table>
         </div>
     </div>

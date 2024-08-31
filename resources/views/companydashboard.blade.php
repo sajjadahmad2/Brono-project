@@ -98,8 +98,9 @@
             </div>
 
             <!-- Date Range Picker -->
-            <div class="col-md-3">
-                <input class=" btn btn-secondary w-80" placeholder="Pick date rage" id="kt_daterangepicker_4" />
+            <div class="mb-3">
+                <input type="text" class=" btn btn-secondary w-80" placeholder="Pick date rage"
+                    id="kt_daterangepicker_4s" />
 
             </div>
         </div>
@@ -125,10 +126,10 @@
         var end = moment();
 
         function cb(start, end) {
-            // $("#kt_daterangepicker_4").val(start.format("MMMM D, YYYY") + " - " + end.format("MMMM D, YYYY"));
+            $("#kt_daterangepicker_4s").val(start.format("MMMM D, YYYY") + " - " + end.format("MMMM D, YYYY"));
         }
 
-        $("#kt_daterangepicker_4").daterangepicker({
+        $("#kt_daterangepicker_4s").daterangepicker({
             startDate: start,
             endDate: end,
             showDropdowns: true, // Enable month and year dropdowns
@@ -153,10 +154,43 @@
     <script>
         $(document).ready(function() {
             // Empty the date range picker fields on page load
-            $('#kt_daterangepicker_4').val('');
+            $('#kt_daterangepicker_4s').val('');
+        });
+        var start = moment().subtract(29, "days");
+        var end = moment();
 
-            // Automatically trigger the filter-results button click on page load
-            //$('#filter-results').click();
+        function cb(start, end) {
+            $("#kt_daterangepicker_4s").val(start.format("MMMM D, YYYY") + " - " + end.format("MMMM D, YYYY"));
+        }
+
+        $("#kt_daterangepicker_4s").daterangepicker({
+            startDate: start,
+            endDate: end,
+            showDropdowns: true, // Enable month and year dropdowns
+            ranges: {
+                "Today": [moment(), moment()],
+                "Yesterday": [moment().subtract(1, "days"), moment().subtract(1, "days")],
+                "Last 7 Days": [moment().subtract(6, "days"), moment()],
+                "Last 30 Days": [moment().subtract(29, "days"), moment()],
+                "This Month": [moment().startOf("month"), moment().endOf("month")],
+                "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf(
+                    "month")]
+            },
+            locale: {
+                format: "MMMM D, YYYY"
+            }
+        }, cb);
+
+        cb(start, end);
+
+
+
+        // Event listener for when a date range is applied
+        $("#kt_daterangepicker_4s").on('apply.daterangepicker', function(ev, picker) {
+            var appliedDateRange = picker.startDate.format('MMMM D, YYYY') + " - " + picker.endDate.format(
+                'MMMM D, YYYY');
+            console.log("data applied " + appliedDateRange);
+            filterContacts();
         });
 
         function getElementValueById(id) {
@@ -172,7 +206,7 @@
                 console.log('sajjad');
                 const user = getElementValueById('user-select');
                 const tag = getElementValueById('tags-select');
-               // const dateRange = getElementValueById('kt_daterangepicker_4');
+                //const dateRange = $('#kt_daterangepicker_4s').val();
 
                 // Combine the start and end dates into a single dateRange string if both are selected
                 //const dateRange = startDate && endDate ? `${startDate} - ${endDate}` : '';
@@ -199,10 +233,7 @@
                                 topSalesByMonths(tcc.sales);
                                 topAverageYearlySales(tcc.sales.year_wise_sale_count);
                                 countryWiseCharts(tcc.countrywise);
-                                document.getElementById('user-select').addEventListener('change',
-                                    loadContent);
-                                document.getElementById('tags-select').addEventListener('change',
-                                    loadContent);
+
                                 // document.getElementById('datepicker-range-start').addEventListener('changeDate', filterContacts);
                             }
                         },
@@ -225,12 +256,10 @@
             });
             document.getElementById('user-select').addEventListener('change', function() {
 
-                loadContent(locationId);
+                loadContent();
             });
-            document.getElementById('kt_daterangepicker_4').addEventListener('changeDate', function() {
+            document.getElementById('kt_daterangepicker_4s').addEventListener('change', loadContent);
 
-                loadContent(locationId);
-            });
         });
 
 

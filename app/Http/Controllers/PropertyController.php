@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Property;
 use App\Models\PropertySurfaceArea;
+use App\Models\PropertyPermission;
 use App\Services\PropertyImporter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -462,9 +463,10 @@ class PropertyController extends Controller
     }
     public function edit(Request $property, $id)
     {
+        $companyId=4;
         $property = Property::find($id);
         $features = $property->features->pluck('feature')->toArray();
-        //  dd($features);
+        $permissions = PropertyPermission::where('company_id', $companyId)->get()->keyBy('column_name');
         $features = convertFeatureData($features, 'toJson');
         return view('property.add', get_defined_vars());
     }

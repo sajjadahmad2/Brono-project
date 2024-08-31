@@ -412,7 +412,61 @@ class DashboardController extends Controller
         ];
 
     }
-
+    public function sourceStats($req=null){
+        if($req->has('location_id')&& !empty($req->location_id)){
+            $location_id = $req->location_id;
+        }else{
+            $location_id = auth()->user()->location_id;
+        }
+        $contactsCount = Contact::where('location_id',$location_id)->count();
+        $opportunities = Opportunity::where('location_id', $location_id)
+      ->where('status', 'won')
+      ->selectRaw('source, COUNT(*) as count, SUM(monetary_value) as total_value')
+      ->groupBy('source')
+      ->get();
+          // Convert to array for further processing
+          $opportunities = $opportunities->toArray();
+          // Calculate percentage and categorize into main sources with default values
+          $mainSources = [
+              'Facebook' => ['source' => 'Facebook', 'count' => 0, 'total_value' => 0, 'percentage' => 0, 'details' => []],
+              'Instagram' => ['source' => 'Instagram', 'count' => 0, 'total_value' => 0, 'percentage' => 0, 'details' => []],
+              'Direct Traffic' => ['source' => 'Direct Traffic', 'count' => 0, 'total_value' => 0, 'percentage' => 0, 'details' => []],
+              'Others' => ['source' => 'Others', 'count' => 0, 'total_value' => 0, 'percentage' => 0, 'details' => []],
+          ];
+          $otherSources = [];
+          foreach ($opportunities as $opportunity) {
+              $opportunity['percentage'] = ($contactsCount > 0) ? ($opportunity['count'] / $contactsCount) * 100 : 0;
+              if (stripos($opportunity['source'], 'facebook') !== false || stripos($opportunity['source'], 'fb') !== false) {
+                  $mainSources['Facebook'] = $opportunity;
+              } elseif (stripos($opportunity['source'], 'instagram') !== false) {
+                  $mainSources['Instagram'] = $opportunity;
+              } elseif (stripos($opportunity['source'], 'direct') !== false) {
+                  $mainSources['Direct Traffic'] = $opportunity;
+              } else {
+                  $otherSources[] = $opportunity; // Collect all other sources
+              }
+          }
+          // Calculate the total count and percentage for "Others"
+          $othersTotalCount = array_sum(array_column($otherSources, 'count'));
+          $othersTotalValue = array_sum(array_column($otherSources, 'total_value'));
+          $othersPercentage = ($contactsCount > 0) ? ($othersTotalCount / $contactsCount) * 100 : 0;
+          $mainSources['Others'] = [
+              'source' => 'Others',
+              'count' => $othersTotalCount,
+              'total_value' => $othersTotalValue,
+              'percentage' => $othersPercentage,
+              'details' => $otherSources, // Store the detailed sources within "Others"
+          ];
+          // Sort based on the count (highest to lowest)
+          usort($mainSources, function($a, $b) {
+              $aCount = isset($a['count']) ? $a['count'] : 0;
+              $bCount = isset($b['count']) ? $b['count'] : 0;
+              return $bCount <=> $aCount;
+          });
+          // Reindex the array to remove numeric keys
+          $finalOpportunities = array_values($mainSources);
+          return $finalOpportunities;
+      }
     public function calendars($req)
     {
         if ($req->has('location_id') && !empty($req->location_id)) {
@@ -1186,6 +1240,8 @@ class DashboardController extends Controller
 
         $top_stats = $this->topStats($users, $tags, $request, $all_contacts, $opportunities);
         $cov_stats = $this->conversionStats($users, $request, $all_contacts);
+        $finalOpportunities = $this->sourceStats($request);
+
         $assigned_per_user = $this->opportunityStats($users, true, $request);
         if ($assigned_per_user) {
             $assigned_per_user = $assigned_per_user['opportunities_assigned_per_user'] ?? [];

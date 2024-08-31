@@ -55,6 +55,13 @@ function getCrmToken($type, $id = null)
         return null;
     }
 }
+function formatString($string) {
+    $string = str_replace('_', ' ', $string);
+
+    $string = ucwords($string);
+
+    return $string;
+}
 
 function logo($key, $uid = null)
 {

@@ -423,7 +423,7 @@
                     <a class="menu-link px-5" href="{{ route('role.list') }}">
                         <span class="menu-icon">
                             <img width="25" height="25"
-                                src="https://img.icons8.com/ios/50/000000/customer-insights-manager.png"
+                                src="{{ asset('uploads/roles.png') }}"
                                 alt="customer-insights-manager" />
                         </span>
                         <span class="menu-title">Roles</span>
@@ -437,7 +437,7 @@
                     <a class="menu-link px-5" href="{{ route('permission.manage') }}">
                         <span class="menu-icon">
                             <img width="25" height="25"
-                                src="https://img.icons8.com/external-tanah-basah-basic-outline-tanah-basah/24/000000/external-key-user-tanah-basah-basic-outline-tanah-basah.png"
+                                src="{{ asset('uploads/permissions.png') }}"
                                 alt="external-key-user-tanah-basah-basic-outline-tanah-basah" />
                         </span>
                         <span class="menu-title">Manage Permissions</span>
@@ -450,7 +450,7 @@
                     <a class="menu-link px-5" href="{{ route('propertypermission.manage') }}">
                         <span class="menu-icon">
                             <img width="25" height="25"
-                                src="https://img.icons8.com/external-tanah-basah-basic-outline-tanah-basah/24/000000/external-key-user-tanah-basah-basic-outline-tanah-basah.png"
+                                src="{{ asset('uploads/permissions.png') }}"
                                 alt="external-key-user-tanah-basah-basic-outline-tanah-basah" />
                         </span>
                         <span class="menu-title">Property Permissions</span>
@@ -465,7 +465,7 @@
 
                         <span class="menu-icon">
                             <img width="25" height="25"
-                                src="https://img.icons8.com/ios/50/000000/conference-call--v1.png"
+                                src="{{ asset('uploads/users.png') }}"
                                 alt="conference-call--v1" />
                         </span>
                         <span class="menu-title">Users</span>
@@ -476,7 +476,7 @@
                 <div class="menu-item px-3">
                     <a class="menu-link px-5" href="{{ route('setting') }}">
                         <span class="menu-icon">
-                            <img width="25" height="25" src="https://img.icons8.com/ios/50/000000/settings--v1.png"
+                            <img width="25" height="25" src="{{ asset('uploads/setting.png') }}"
                                 alt="settings--v1" />
                         </span>
                         <span class="menu-title">Settings</span>
