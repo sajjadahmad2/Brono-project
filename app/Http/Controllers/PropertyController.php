@@ -14,7 +14,8 @@ class PropertyController extends Controller
 {
     public function list(Request $req)
     {
-        $perpage = $req->input('perpage', 12);
+        $perpage = $req->input('perpage', 50);
+
         $query = Property::query();
         $types = Property::select('type')->distinct()->pluck('type');
         $location_detail = Property::select('location_detail')->distinct()->pluck('location_detail');
@@ -33,7 +34,7 @@ class PropertyController extends Controller
         $selectedLocations = $req->input('location', []);
         $selectedPropertyTypes = $req->input('propertyType', []);
         $selectedCategories = $req->input('category', []);
-
+        $selectedPerpage = $req->input('perpage', 50);
         if (!empty($selectedKeyword)) {
             $query->where(function ($q) use ($selectedKeyword) {
                 $q->where('ref', 'like', "%$selectedKeyword%")
@@ -83,17 +84,10 @@ class PropertyController extends Controller
                 $q->whereIn('new_build', $selectedCategories);
             });
         }
+        $propertiesCount = $query->count();
+        $properties = $query->orderBy('id', 'DESC')->paginate($perpage === 'all' ? 50 : $perpage);
 
-        $properties = $query->orderBy('id', 'DESC')->paginate($perpage);
-        // dd($properties);
-        // return view('property.partials-list', compact('properties'))->render();
-        // Fetch distinct types, locations, and price range
-        $properties = $query->orderBy('id', 'DESC')->paginate($perpage);
-
-        return view('property.list', compact(
-            'properties', 'types', 'location_detail', 'maxPrice', 'minPrice', 'minAreaSqFt', 'maxAreaSqFt',
-            'selectedKeyword', 'selectedPriceRange', 'selectedAreaRange', 'selectedLocations', 'selectedPropertyTypes', 'selectedCategories'
-        ));
+        return view('property.list', get_defined_vars());
     }
 
     public function show(Property $property)
@@ -486,21 +480,30 @@ class PropertyController extends Controller
     }
     public function import(Request $request)
     {
-        //    $request->validate([
-        //         'xmlFile' => 'required|file|mimes:xml|max:10240', // Max 10MB
-        //     ]);
+        // Validate the inputs
+        $request->validate([
+            'xmlUrl' => 'required|url',  // Validate the XML URL
+        ]);
 
-        // Store the uploaded file in the storage folder
-        $filePath = $request->file('xmlFile')->storeAs('uploads', 'properties' . time() . '.xml');
+        // Fetch XML content from the URL
+        $xmlContent = file_get_contents($request->input('xmlUrl'));
 
-        // Instantiate the PropertyImporter service
+        if ($xmlContent === false) {
+            return redirect()->back()->withErrors(['xmlUrl' => 'Unable to fetch the XML file from the provided URL.']);
+        }
+
+        // Store the fetched XML content as a file in the storage
+        $filePath = 'uploads/properties' . time() . '.xml';
+        file_put_contents(storage_path('app/' . $filePath), $xmlContent);
+
+        // Instantiate the PropertyImporter service and import the XML
         $importer = new PropertyImporter();
         $path = storage_path('app/' . $filePath);
-
         $importer->importLargeXML($path);
 
-        return redirect()->route('property.list');
+        return redirect()->route('property.list')->with('success', 'XML imported successfully!');
     }
+
 
 // New Funtion
     // use App\Models\Property; // Make sure to import your Property model

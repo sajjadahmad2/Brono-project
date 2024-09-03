@@ -8,7 +8,7 @@
             <!--begin::Heading-->
             <div class="d-flex align-items-center mb-2">
                 <!--begin::Title-->
-                <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">Conversion Rates</span>
+                <span class="fs-2x fw-bold text-gray-800 me-2 lh-1 ls-n2">Conversion Rates</span>
                 <!--end::Title-->
             </div>
             <!--end::Heading-->

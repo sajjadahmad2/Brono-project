@@ -2377,7 +2377,7 @@
         max: max,
         from: 10000,
         to: 1000000,
-        prefix: 'ft  ',
+        prefix:  'm&sup2 ',
         onStart: updateInputs,
         onChange: updateInputs,
         step: 100,

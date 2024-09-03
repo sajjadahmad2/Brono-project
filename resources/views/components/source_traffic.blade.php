@@ -1,6 +1,11 @@
+<style>
+    .channel-card {
+        height: 98%;
+    }
+</style>
 <div class="col-lg-4 col-xl-4 col-xxl-4 col-xxl- mb-5 mb-xl-10">
     <!--begin::List widget 9-->
-    <div class="card card-flush h-xl-100">
+    <div class="channel-card card card-flush">
         <!--begin::Header-->
         <div class="card-header pt-7">
             <!--begin::Title-->
@@ -73,7 +78,7 @@
                         <!--end::Name-->
 
                         <!--begin::Label-->
-                        <span class="badge {{ $key === 0 ? 'badge-light-success' : 'badge-light-primary' }}">
+                        <span class="badge {{ $key === 0 ? 'badge-light-success' : 'badge-light-danger' }}">
                             {{ number_format($opportunity['percentage'], 2) }}%
                         </span>
                         <!--end::Label-->

@@ -145,6 +145,7 @@ class PropertyImporter
 
     public function importLargeXML($filePath)
     {
+        set_time_limit(0);
         try {
 
             if (!file_exists($filePath)) {
@@ -194,8 +195,8 @@ class PropertyImporter
     {
 
         try {
-            // Create the property record
-            $property = Property::create([
+            // updateOrCreate the property record
+            $property = Property::updateOrCreate([
                 'ref' => (string) $propertyData->ref,
                 'type' => (string) $propertyData->type,
                 'town' => (string) $propertyData->town,
@@ -204,7 +205,7 @@ class PropertyImporter
                 'currency' => (string) $propertyData->currency,
                 'location_detail' => (string) $propertyData->location_detail,
                 'status' => (string)1,
-                'user_id' => (int) 2,
+                'user_id' => 2,
                 'beds' => (int) $propertyData->beds,
                 'baths' => (int) $propertyData->baths,
                 'pool' => (bool) $propertyData->pool,
@@ -222,7 +223,7 @@ class PropertyImporter
             // Process features if any
             if (isset($propertyData->features)) {
                 foreach ($propertyData->features->feature as $feature) {
-                    $property->features()->create(['feature' => (string) $feature]);
+                    $property->features()->updateOrCreate(['feature' => (string) $feature]);
                 }
             }
 
@@ -236,7 +237,7 @@ class PropertyImporter
                     'url' => is_array($url) && count($url) > 1 ? $url[0] : $url,
                 ];
                 // dd($arr);
-                $d = $property->urls()->create($arr);
+                $d = $property->urls()->updateOrCreate($arr);
             }
         }
 
@@ -244,19 +245,26 @@ class PropertyImporter
 
             // Process descriptions if any
             if (isset($propertyData->desc)) {
-                $propertyDataArray = json_decode(json_encode($propertyData->desc),true);
+                $propertyDataArray = json_decode(json_encode($propertyData->desc), true);
                 foreach ($propertyDataArray as $language => $description) {
-                    $desc=is_array($description) ? $description[0] ?? '' : $description;
-                    preg_match('/\b[A-Z\s]+\b/', $desc, $matches);
-                    $title = isset($matches[0]) ? trim($matches[0]) : '';
+                    // Normalize description to handle both array and string formats
+                    $desc = is_array($description) ? $description[0] ?? '' : $description;
+
+                    // Updated regex pattern to capture uppercase title-like text at the start
+                    preg_match('/^([A-Z\s]+)(?=\s+[A-Z][a-z]|$)/', $desc, $matches);
+
+                    // Extract and trim the matched title
+                    $title = isset($matches[1]) ? trim($matches[1]) : '';
+
                     if ($title) {
                         $property->property_title = $title;
                     }
-                    $property->descriptions()->create([
-                        'language' => $language,
-                        'description' => is_array($description) ? $description[0] ?? '' : $description,
-                    ]);
 
+                    // updateOrCreate a new description entry for the property
+                    $property->descriptions()->updateOrCreate([
+                        'language' => $language,
+                        'description' => $desc,
+                    ]);
                 }
                 $property->save();
             }
@@ -267,7 +275,7 @@ class PropertyImporter
             // Process energy rating if any
             if (isset($propertyData->energy_rating)) {
                 // dd($propertyData->energy_rating);
-                $property->energyRating()->create([
+                $property->energyRating()->updateOrCreate([
                     'consumption' => (string) $propertyData->energy_rating->consumption,
                     'emissions' => json_encode($propertyData->energy_rating->emissions),
                 ]);
@@ -276,14 +284,14 @@ class PropertyImporter
             // Process surface area if any
             if (isset($propertyData->surface_area)) {
 
-                $property->surfaceArea()->create([
+                $property->surfaceArea()->updateOrCreate([
                     'built' => (float) $propertyData->surface_area->built,
                     'plot' => (float) $propertyData->surface_area->plot,
                 ]);
             }
             if (isset($propertyData->location)) {
 
-                $property->location()->create([
+                $property->location()->updateOrCreate([
                     'longitude' => (float) $propertyData->location->longitude,
                     'latitude' => (float) $propertyData->location->latitude,
                 ]);
@@ -298,7 +306,7 @@ class PropertyImporter
     protected function processImage(Property $property, $imagePath)
     {
         try {
-            $property->images()->create(['url' => $imagePath]);
+            $property->images()->updateOrCreate(['url' => $imagePath]);
         } catch (\Exception $e) {
             Log::error('Error processing image: ' . $e->getMessage());
             throw $e; // Rethrow to trigger rollback
@@ -308,7 +316,7 @@ class PropertyImporter
     protected function processUrl(Property $property, $language, $url)
 {
     try {
-        $property->urls()->create([
+        $property->urls()->updateOrCreate([
             'language' => $language,
             'url' => $url,
         ]);

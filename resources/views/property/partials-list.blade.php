@@ -1,4 +1,4 @@
-<div class="container mx-auto mt-8 property-list">
+<div class="property-list">
 
     <div class="row g-6">
         @forelse ($properties as $property)
@@ -62,7 +62,7 @@
                         </p>
                         <p class="card-text text-muted mt-2">
                             <span id="short-description-{{ $property->id }}">
-                                {!! Str::limit(strip_tags($property->descriptionEn->description), 200) !!}
+                                {!! Str::limit(strip_tags($property->descriptionEn?->description), 200) !!}
                             </span>
                             {{-- <span id="full-description-{{ $property->id }}" style="display:none;">
                                 {!! $property->descriptionEn->description !!}

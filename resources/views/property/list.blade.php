@@ -24,6 +24,10 @@
             transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
         }
 
+        .flex-column-fluid {
+            flex: 0 0 auto;
+        }
+
         .select2-results {
             background-color: #ffffff;
         }
@@ -38,6 +42,13 @@
 
         select2-results__option select2-results__option--selectable select2-results__option--highlighted {
             background-color: black;
+        }
+
+        .prop {
+            margin-bottom: -27%;
+        }
+        .shoaib{
+            display: flex;
         }
     </style>
     <!-- Page-Title -->
@@ -58,7 +69,40 @@
     </div>
     <!-- end page title end breadcrumb -->
     <div class="row p-4">
-        <div class="col-md-12 text-right">
+        <div class="flex items-center justify-between col-md-6 col-sm-12">
+            <div class="relative flex items-start justify-end mb-8">
+                <!-- Dropdown Container -->
+                    <div class="relative inline-block min-w-[150px]">
+                        <select id="perpage" name="perpage"
+                            class="form-select block w-full py-2 pl-3 pr-10 border border-gray-300 bg-white text-gray-900  shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition ease-in-out duration-150">
+                            <option value="all" {{ in_array('all', (array) $selectedPerpage) ? 'selected' : '' }}>Default
+                            </option>
+                            <option value="50" {{ in_array('50', (array) $selectedPerpage) ? 'selected' : '' }}>50
+                            </option>
+                            <option value="100" {{ in_array('100', (array) $selectedPerpage) ? 'selected' : '' }}>100
+                            </option>
+                            <option value="500" {{ in_array('500', (array) $selectedPerpage) ? 'selected' : '' }}>500
+                            </option>
+                        </select>
+                        <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+
+                    <!-- Properties Count Container -->
+                    <div class="prop absolute bottom-0 left-0 mt-4 flex flex-col items-start  ">
+                        <p class="text-gray-600 text-sm">Properties Count</p>
+                        <div class="bg-white border border-gray-300 rounded-lg px-2 py-1">
+                            <h1 class="text-1xl font-semibold text-gray-900">
+                                {{ isset($propertiesCount) ? $propertiesCount : 0 }}</h1>
+                        </div>
+                    </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-6 col-sm-12 text-right">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_3">
                 Import XML
             </button>
@@ -66,7 +110,7 @@
         </div>
     </div>
 
-    <div class="container mx-auto p-5 ">
+    <div class="row p-4">
         <!-- Main Div to Click (Filter) -->
         <div class="bg-white rounded-lg shadow-md cursor-pointer flex items-center p-4" id="filter-button">
             <i class="fas fa-filter text-blue-500 text-2xl mr-3" id="filter-icon"></i>
@@ -168,6 +212,10 @@
                 </div>
             </form>
         </div>
+        {{-- Properties image display --}}
+        <div class="mt-5 partial">
+            @include('property.partials-list')
+        </div>
     </div>
 
     <div class="modal fade" tabindex="-1" id="kt_modal_3">
@@ -175,75 +223,59 @@
             <div class="modal-content position-absolute">
                 <div class="modal-header">
                     <h5 class="modal-title">Import Data From XML FILE</h5>
-
-                    <!--begin::Close-->
                     <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
                         aria-label="Close">
                         <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
                     </div>
-                    <!--end::Close-->
                 </div>
 
                 <div class="modal-body">
-                    <form action="{{ route('property.import') }}" method="POST" enctype="multipart/form-data"
-                        id="xmlform">
+                    <form action="{{ route('property.import') }}" method="POST" id="xmlform">
                         @csrf
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="xmlFile">Select XML File</label>
-                                <input type="file" name="xmlFile" id="xmlFile" class="form-control" accept=".xml"
-                                    required>
+                                <label for="xmlUrl">XML File URL</label>
+                                <input type="url" name="xmlUrl" id="xmlUrl" class="form-control"
+                                    placeholder="Enter XML URL" required>
                             </div>
+
                         </div>
                     </form>
                 </div>
 
                 <div class="modal-footer">
-
                     <button type="submit" class="btn btn-primary" form="xmlform">Import</button>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- Properties image display --}}
-    <div class="partial">
-        @include('property.partials-list')
+    <div id="loader"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:9999;">
+        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
     </div>
+
+
 @endsection
 @section('js')
     @include('property.area-js')
     <script>
         $(document).ready(function() {
-            // $('#filterform').on('submit', function(e) {
-            //     e.preventDefault();
-            //     var formData = {
-            //         keyword: $('#keyword').val(),
-            //         location: $('#location').val(),
-            //         propertyType: $('#property-type').val(),
-            //         category: $('#category').val(),
-            //         priceRange: $('#price-range').val(),
-            //         areaRange: $('#area_range').val()
-            //     };
+            document.getElementById('xmlform').addEventListener('submit', function() {
+                document.getElementById('loader').style.display = 'block';
 
-            //     $.ajax({
-            //         url: "{{ route('property.filter') }}", // Replace with your endpoint URL
-            //         type: 'GET',
-            //         data: formData,
-            //         headers: {
-            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-            //                 'content') // If using Laravel, include the CSRF token
-            //         },
-            //         success: function(response) {
-            //             $('.partial').html('');
-            //             $('.partial').html(response.data);
-            //         },
-            //         error: function(xhr, status, error) {
-            //             console.error('An error occurred:', error);
-            //         }
-            //     });
-            // });
+            });
+            document.getElementById('perpage').addEventListener('change', function() {
+                // Get the selected value from the dropdown
+                let perpage = this.value;
 
+                // Redirect to the property.list route with the perpage parameter
+                window.location.href = "{{ route('property.list') }}?perpage=" + perpage;
+            });
             document.querySelectorAll('#toggle-description').forEach(function(button) {
                 button.addEventListener('click', function() {
                     var card = this.closest('.card');
@@ -311,7 +343,7 @@
 
             document.querySelector('#RangeSlider .range-slider-input-left').addEventListener('input', updateSlider);
             document.querySelector('#RangeSlider .range-slider-input-right').addEventListener('input',
-            updateSlider);
+                updateSlider);
 
             updateSlider(); // Initialize slider position
         });

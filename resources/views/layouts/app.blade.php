@@ -36,7 +36,7 @@
     <link href="https://keenthemes.com/metronic" rel="canonical" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
         rel="stylesheet" />
-
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <style>
         .page-title-box {
@@ -62,7 +62,7 @@
 
 
     @php
-    $user = auth()->user();
+        $user = auth()->user();
     @endphp
     <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
         <!--begin::Page-->
@@ -182,6 +182,7 @@
         </div>
         <!--end:::Main-->
     </div>
+    </div>
     <!--end::Wrapper-->
 
     <form id="logout-form" action="{{ route('logout') }}" method="post">
@@ -207,11 +208,11 @@
         var defaultThemeMode = "light";
         var themeMode;
 
-        if ( document.documentElement ) {
-            if ( document.documentElement.hasAttribute("data-bs-theme-mode")) {
+        if (document.documentElement) {
+            if (document.documentElement.hasAttribute("data-bs-theme-mode")) {
                 themeMode = document.documentElement.getAttribute("data-bs-theme-mode");
             } else {
-                if ( localStorage.getItem("data-bs-theme") !== null ) {
+                if (localStorage.getItem("data-bs-theme") !== null) {
                     themeMode = localStorage.getItem("data-bs-theme");
                 } else {
                     themeMode = defaultThemeMode;
@@ -373,9 +374,10 @@
         });
     </script>
 
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/flowbite@1.4.3/dist/flowbite.js"></script>
-<script src="https://unpkg.com/flowbite@1.4.3/dist/datepicker.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/flowbite@1.4.3/dist/flowbite.js"></script>
+    <script src="https://unpkg.com/flowbite@1.4.3/dist/datepicker.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     @yield('js')
 </body>

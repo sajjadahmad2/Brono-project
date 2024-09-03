@@ -820,3 +820,26 @@ function getRandomColor()
 {
     return sprintf('#%06X', mt_rand(0, 0xFFFFFF));
 }
+//PDO service function to get the result much faster
+if (!function_exists('runQuery')) {
+    function runQuery($sql, $params = [])
+    {
+        $dsn = 'mysql:host=' . env('DB_HOST', '127.0.0.1') . ';dbname=' . env('DB_DATABASE', 'xml_toolkit') . ';charset=utf8';
+        $username = env('DB_USERNAME', 'root');
+        $password = env('DB_PASSWORD', '');
+
+        try {
+            $pdo = new PDO($dsn, $username, $password);
+            $pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
+            $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // Handle the exception or log it
+            throw new \Exception('Database query failed: ' . $e->getMessage());
+        }
+    }
+}
