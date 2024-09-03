@@ -134,6 +134,7 @@ class PropertyApiController extends Controller
     //10. Filter Properties Function
     public function filterproperty(Request $req)
     {
+
         $query = Property::query();
         // Keyword search
         if ($req->has('keyword') && !empty($req->keyword)) {

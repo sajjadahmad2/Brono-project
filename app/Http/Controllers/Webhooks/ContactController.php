@@ -175,7 +175,7 @@ class ContactController extends Controller
 
     }
 
-    public function handle_outbound_message($data=[])
+    public function handle_outbound_message_old($data=[])
     {
 
         $dateAdded = isset($data['dateAdded']) ? $data['dateAdded'] : null;
@@ -199,6 +199,44 @@ class ContactController extends Controller
         Log::info("Call created successfully.");
 
         return $call;
+    }
+    
+    
+    
+    public function handle_outbound_message($data=[])
+    {
+
+
+        try{
+            $dateAdded = isset($data['dateAdded']) ? $data['dateAdded'] : null;
+            $dateAdded =!is_null($dateAdded) ? Carbon::parse($dateAdded)->format('Y-m-d H:i:s') : null;
+            // Data to update or create the call
+            $callData = [
+                'type' => $data['type'],
+                'location_id' => $data['locationId'],
+                'attachments' => isset($data['attachments']) ? json_encode($data['attachments']) : null,
+                'contact_id' => isset($data['contactId']) ? $data['contactId'] : null,
+                'conversation_id' => isset($data['conversationId']) ? $data['conversationId'] : null,
+                'date_added' => $dateAdded,
+                'direction' => isset($data['direction']) ? $data['direction'] : null,
+                'message_type' => isset($data['messageType']) ? $data['messageType'] : null,
+                'message_id' => isset($data['messageId']) ? $data['messageId'] : null,
+                'status' => isset($data['status']) ? $data['status'] : null,
+            ];
+    
+            // Create the call
+            $call = Call::create($callData);
+            Log::info("Call created successfully.");
+    
+            return $call;
+        }catch(\Exception $e){
+            Log::info('-----------------  Array to string conversion error -----------------');
+            Log::info(json_encode($data));
+            Log::alert("Error: ".$e->getMessage());
+            Log::info('-----------------  Array to string conversion error -----------------');
+        }
+
+       
     }
 
 

@@ -39,7 +39,7 @@ class DashboardController extends Controller
         return Cache::get($cacheKey);
     }
 
-    public function users($locid = null, $refresh = false)
+    public function usersWithoutSort($locid = null, $refresh = false)
     {
 
         if (is_null($locid)) {
@@ -65,6 +65,47 @@ class DashboardController extends Controller
 
         return Cache::get($cacheKey);
     }
+    
+    
+    //this is the new function and its handling the sorting of the users alphabatically
+    public function users($locid = null, $refresh = false)
+    {
+        if (is_null($locid)) {
+            $location_id = auth()->user()->location_id;
+        } else {
+            $location_id = $locid;
+        }
+    
+        $user = User::where('location_id', $location_id)->first();
+        $cacheKey = 'ghl_users_' . $location_id;
+    
+        if ($refresh || !Cache::has($cacheKey)) {
+            $users = ghl_api_call('users/', $user->id);
+            $users = json_decode($users, true);
+    
+            if ($users && isset($users['users'])) {
+                // Sort users by name alphabetically
+                usort($users['users'], function ($a, $b) {
+                    return strcmp($a['name'], $b['name']);
+                });
+    
+                Cache::put($cacheKey, $users['users'], now()->addDays(3));
+    
+                return $users['users'];
+            }
+    
+            return [];
+        }
+    
+        // Get cached users and sort them alphabetically
+        $cachedUsers = Cache::get($cacheKey);
+        usort($cachedUsers, function ($a, $b) {
+            return strcmp($a['name'], $b['name']);
+        });
+    
+        return $cachedUsers;
+    }
+
 
     public function contacts($locid = null, $filters = null)
     {
@@ -688,7 +729,7 @@ class DashboardController extends Controller
         ];
     }
 
-    public function topStatsOld($users, $tags, $req, $contacts = null, $opportunities = null)
+    public function topStats($users, $tags, $req, $contacts = null, $opportunities = null)
     {
 
         if (is_null($contacts)) {
@@ -817,7 +858,7 @@ class DashboardController extends Controller
 
     }
 
-    public function topStats($users, $tags, $req, $contacts = null, $opportunities = null)
+    public function topStatsNew($users, $tags, $req, $contacts = null, $opportunities = null)
     {
         if (is_null($contacts)) {
             $contacts = $this->contacts();
@@ -939,7 +980,7 @@ class DashboardController extends Controller
 
         return $alllocations;
     }
-    public function companyDashboard(Request $request)
+    public function companyDashboard(Request $request, $loc_id=null)
     {
         set_time_limit(3000000);
         $default = '0fu8c2Te17KqLDYyr8RE';
@@ -1063,9 +1104,6 @@ class DashboardController extends Controller
 
     public function dashboard(Request $req)
     {
-
-        // $dd = $this->sourceStatsSabir($req);
-        // dd($dd);
         set_time_limit(0);
         if (Auth::user()->hasRole('admin')) {
             $current_year = Carbon::now()->year;
@@ -1075,7 +1113,6 @@ class DashboardController extends Controller
 
             return view('dashboard-backup', get_defined_vars());
         } elseif (Auth::user()->hasRole('company')) {
-            //dd(Cache::get('ghl_tags_0fu8c2Te17KqLDYyr8RE'),Cache::get('ghl_users_0fu8c2Te17KqLDYyr8RE'));
             $users = $this->users();
             $tags = $this->tags();
             $opportunities_stats = null;
@@ -1083,28 +1120,8 @@ class DashboardController extends Controller
             $opportunities_stats = null;
             $oppointment_stats = null;
             $call_stats = null;
-            // $assigned_per_user = $this->opportunityStats($users, true, $req);
-            // if ($assigned_per_user) {
-            //     $assigned_per_user = $assigned_per_user['opportunities_assigned_per_user'] ?? [];
-            // }
-
-            // dd($assigned_per_user);
-
-            // if (is_connected()) {
-            //     $contact_stats = $this->contactsStats($users, $tags);
-            //     $opportunities_stats = $this->opportunityStats();
-            //     $oppointment_stats = $this->appointmentStats($users);
-            //     $call_stats = $this->callStats();
-            //     $response = ['contact_stats' => $contact_stats,
-            //         'opportunities_stats' => $opportunities_stats,
-            //         'oppointment_stats' => $oppointment_stats,
-            //         'call_stats' => $call_stats];
-            // }
-            // dd($users,$tags);
             $top_stats = $this->topStats($users, $tags, $req);
-            // dd($top_stats);
             $cov_stats = $this->conversionStats($users, $req);
-            // dd($cov_stats);
             $assigned_per_user = $this->opportunityStatsSabir($users, true, $req);
             if ($assigned_per_user) {
                 $assigned_per_user = $assigned_per_user['opportunities_assigned_per_user'] ?? [];
@@ -1180,7 +1197,8 @@ class DashboardController extends Controller
             }
         }
         return $result;}
-    public function conversionStats($users, $req, $contacts = null)
+        
+    public function conversionStatsCurrent($users, $req, $contacts = null)
     {
         $leads = ['total' => 0, 'conversion_rate' => 0, 'direction' => 'up', 'direction_value' => 0];
         $calls = ['total' => 0, 'conversion_rate' => 0, 'direction' => 'up', 'direction_value' => 0];
@@ -1193,6 +1211,7 @@ class DashboardController extends Controller
         } else {
             $location_id = auth()->user()->location_id;
         }
+        
         //contacts
         $contactsCount = Contact::where('location_id', $location_id)->count();
 
@@ -1202,6 +1221,15 @@ class DashboardController extends Controller
         $callsCount = Call::where('location_id', $location_id)->count();
         $calls['total'] = $callsCount;
         $calls['conversion_rate'] = ($callsCount / $contactsCount) * 100;
+        
+         //sale
+        $opportunityCounts = Opportunity::where('location_id', $location_id)
+            ->selectRaw('COUNT(*) as total, SUM(status = "won") as won')
+            ->first();
+
+        $sale['total'] = $opportunityCounts->total;
+        $sale['conversion_rate'] = ($opportunityCounts->won / $contactsCount) * 100;
+
 
         //appointments
         $appointments = Appointment::where('location_id', $location_id)->get()->toArray();
@@ -1232,13 +1260,7 @@ class DashboardController extends Controller
         $online_meet['total'] = count($online_meetings);
         $online_meet['conversion_rate'] = ($online_meet['total'] / $contactsCount) * 100;
 
-        //sale
-        $opportunityCounts = Opportunity::where('location_id', $location_id)
-            ->selectRaw('COUNT(*) as total, SUM(status = "won") as won')
-            ->first();
-
-        $sale['total'] = $opportunityCounts->total;
-        $sale['conversion_rate'] = ($opportunityCounts->won / $contactsCount) * 100;
+       
 
         //in person meetings
 
@@ -1736,12 +1758,230 @@ class DashboardController extends Controller
 
         return $ress;
     }
+    
+    public function conversionStats($users, $req, $contacts = null)
+    {
+        $location_id = $req->location_id ?? auth()->user()->location_id;
+        $contactsCount = Contact::where('location_id', $location_id)->count();
+    
+        $leads = [
+            'total' => $contactsCount,
+            'conversion_rate' => 0,
+            'direction' => 'up',
+            'direction_value' => 0
+        ];
+    
+        $callsCount = Call::where('location_id', $location_id)->count();
+        $calls = [
+            'total' => $callsCount,
+            'conversion_rate' => ($callsCount / $contactsCount) * 100,
+            'direction' => 'up',
+            'direction_value' => 0
+        ];
+    
+        $opportunityCounts = Opportunity::where('location_id', $location_id)
+            ->selectRaw('COUNT(*) as total, SUM(status = "won") as won')
+            ->first();
+        $saleTotal = $opportunityCounts->total;
+        $saleWon = $opportunityCounts->won;
+        $sale = [
+            'total' => $saleTotal,
+            'conversion_rate' => ($saleWon / $contactsCount) * 100,
+            'direction' => 'down',
+            'direction_value' => 0
+        ];
+    
+        $appointments = $this->appointments($req);
+        $groups = collect($this->calendarsGroups($req)['groups']);
+        $calendars = collect($this->calendars($req)['calendars']);
+    
+        $meetingTypes = [
+            'online_meet' => $groups->where('name', '!=', 'INTAKE')->pluck('id')->toArray(),
+            'in_person_meet' => $groups->where('name', 'INTAKE')->pluck('id')->toArray(),
+            'viewing' => $groups->where('name', 'VIEWING')->pluck('id')->toArray(),
+        ];
+    
+        // Calculate the stats for each meeting type
+        $cov_stats = collect($meetingTypes)->map(function ($groupIds, $key) use ($calendars, $appointments, $contactsCount) {
+            $calendarIds = $calendars->whereIn('groupId', $groupIds)->pluck('id')->toArray();
+            $filteredAppointments = collect($appointments)->whereIn('calendar_id', $calendarIds);
+            $total = $filteredAppointments->count();
+            return [
+                'total' => $total,
+                'conversion_rate' => ($total / $contactsCount) * 100,
+                'direction' => 'up',  // Default direction, will be updated later
+                'direction_value' => 0,
+            ];
+        });
+    
+        // Add leads and calls first to maintain order
+        $cov_stats->prepend($leads, 'leads');
+        $cov_stats->prepend($calls, 'calls');
+    
+        // Add sale at the end to maintain order
+        $cov_stats->put('sale', $sale);
+    
+        // Now update the direction values in the correct order
+        $cov_stats->transform(function ($item, $key) use ($cov_stats) {
+            switch ($key) {
+                case 'online_meet':
+                    $item = $this->calculateDirection($cov_stats['calls'], $item);
+                    break;
+                case 'in_person_meet':
+                    $item = $this->calculateDirection($cov_stats['online_meet'], $item);
+                    break;
+                case 'viewing':
+                    $item = $this->calculateDirection($cov_stats['in_person_meet'], $item);
+                    break;
+                case 'sale':
+                    $item = $this->calculateDirection($cov_stats['viewing'], $item);
+                    break;
+            }
+            return $item;
+        });
+    
+        return $cov_stats->toArray();
+    }
+
+    /*
+      Calculate the direction based on the comparison of two items.
+      If the current total is greater than the previous, return 'up', otherwise 'down'.
+      Also calculate the percentage change and assign it to `direction_value`.
+    */
+    
+    public function calculateDirection($previous, $current)
+    {
+        $prevTotal = $previous['total'];
+        $currTotal = $current['total'];
+    
+        if ($prevTotal == 0) {
+            $directionValue = $currTotal > 0 ? 100 : 0;
+            $direction = $currTotal > 0 ? 'up' : 'down';
+        } else {
+            $directionValue = (($currTotal - $prevTotal) / $prevTotal) * 100;
+            $direction = $currTotal >= $prevTotal ? 'up' : 'down';
+        }
+    
+        $current['direction'] = $direction;
+        $current['direction_value'] = round($directionValue, 2);
+    
+        return $current;
+    }
+
+    
 
     public function dashboardTestSabir(Request $req)
     {
-        $users = $this->users();
+        
+        
+        /* test dashboard start */
+        
 
-        $this->opportunityStatsSabir($users, true, $req);
+        set_time_limit(0);
+        if (Auth::user()->hasRole('admin')) {
+            $current_year = Carbon::now()->year;
+            $permissions = Permission::all();
+            $roles = Role::all();
+            $users = User::role('company')->latest()->limit(5)->get();
+
+            return view('dashboard-backup', get_defined_vars());
+        } elseif (Auth::user()->hasRole('company')) {
+            $users = $this->users();
+            $tags = $this->tags();
+            $opportunities_stats = null;
+            $contact_stats = null;
+            $opportunities_stats = null;
+            $oppointment_stats = null;
+            $call_stats = null;
+            $top_stats = $this->topStats($users, $tags, $req);
+            $cov_stats = $this->conversionStats($users, $req);
+            $assigned_per_user = $this->opportunityStatsSabir($users, true, $req);
+            if ($assigned_per_user) {
+                $assigned_per_user = $assigned_per_user['opportunities_assigned_per_user'] ?? [];
+            }
+
+            $finalOpportunities = $this->sourceStats($req);
+
+        }
+        
+        return view('not_allowed', get_defined_vars());
+  
+         /* test dashboard end */
+        
+        
+        
+        $all_contacts = $this->contacts();
+        $users = $this->users();
+        $stats = $this->conversionStatsSabiii($users,$req,$all_contacts);
+        dd($stats);
+        
+        
+        $location_id = auth()->user()->location_id;
+        $params = ['location_id' => $location_id];
+    
+        // Queries to get sources and their counts from each table
+        $cons = "SELECT source, COUNT(*) as count FROM contacts WHERE location_id = :location_id GROUP BY source";
+        $opps = "SELECT source, COUNT(*) as count FROM opportunities WHERE location_id = :location_id GROUP BY source";
+        $appoins = "SELECT source, COUNT(*) as count FROM appointments WHERE location_id = :location_id GROUP BY source";
+    
+        $contactSources = runQuery($cons, $params);
+        $opportunitySources = runQuery($opps, $params);
+        $appointmentSources = runQuery($appoins, $params);
+    
+        // Convert results to associative arrays of sources with counts
+        $contactSourceCounts = array_column($contactSources, 'count', 'source');
+        $opportunitySourceCounts = array_column($opportunitySources, 'count', 'source');
+        $appointmentSourceCounts = array_column($appointmentSources, 'count', 'source');
+    
+        // Find all unique sources across all tables
+        $contactSourcesList = array_keys($contactSourceCounts);
+        $opportunitySourcesList = array_keys($opportunitySourceCounts);
+        $appointmentSourcesList = array_keys($appointmentSourceCounts);
+    
+        $allSources = array_unique(array_merge(
+            $contactSourcesList,
+            $opportunitySourcesList,
+            $appointmentSourcesList
+        ));
+    
+        // Calculate unique sources count for each table
+        $uniqueContactSourcesCount = count($contactSourcesList);
+        $uniqueOpportunitySourcesCount = count($opportunitySourcesList);
+        $uniqueAppointmentSourcesCount = count($appointmentSourcesList);
+        $totalUniqueSourcesCount = count($allSources);
+    
+        // Prepare the analysis data
+        $analysis = [
+            'unique_sources' => [
+                'contacts' => $uniqueContactSourcesCount,
+                'opportunities' => $uniqueOpportunitySourcesCount,
+                'appointments' => $uniqueAppointmentSourcesCount,
+                'union' => $totalUniqueSourcesCount,
+            ],
+            'source_analysis' => [],
+        ];
+    
+        // Calculate occurrences and add to source analysis
+        foreach ($allSources as $source) {
+            $analysis['source_analysis'][$source] = [
+                'contacts_count' => $contactSourceCounts[$source] ?? 0,
+                'opportunities_count' => $opportunitySourceCounts[$source] ?? 0,
+                'appointments_count' => $appointmentSourceCounts[$source] ?? 0,
+                'total_count' => ($contactSourceCounts[$source] ?? 0) +
+                                 ($opportunitySourceCounts[$source] ?? 0) +
+                                 ($appointmentSourceCounts[$source] ?? 0),
+            ];
+        }
+    
+        // Output the analysis data as JSON
+        echo json_encode($analysis);
+        die;
     }
+
+
+   
+
+
+
 
 }

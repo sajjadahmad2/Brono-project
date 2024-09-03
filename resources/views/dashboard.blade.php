@@ -100,8 +100,7 @@
         <div class="col-md-12 mb-3 d-flex justify-content-end align-items-center" style="gap: 20px;">
             <!--begin::Col for user dropdown-->
             <div class="col-md-2" id="user-filter">
-                <select id="user-select"
-                    class="form-select form-select-sm px-3 py-2 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-[#f8285a] focus:border-[#f8285a] transition duration-300 ease-in-out">
+                <select id="user-select" class="user-filter form-select form-select-sm px-3 py-2 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-[#f8285a] focus:border-[#f8285a] transition duration-300 ease-in-out">
                     <option value="">Select User</option>
                     @foreach ($users as $user)
                     <option value="{{ $user['id'] }}">{{ $user['name'] }}</option>
@@ -484,39 +483,52 @@
     @if (is_connected())
     <script>
         var start = moment().subtract(29, "days");
-                var end = moment();
-
-                function cb(start, end) {
-                    $("#kt_daterangepicker_4").val(start.format("MMMM D, YYYY") + " - " + end.format("MMMM D, YYYY"));
-                }
-
-                $("#kt_daterangepicker_4").daterangepicker({
-                    startDate: start,
-                    endDate: end,
-                    showDropdowns: true, // Enable month and year dropdowns
-                    ranges: {
-                        "Today": [moment(), moment()],
-                        "Yesterday": [moment().subtract(1, "days"), moment().subtract(1, "days")],
-                        "Last 7 Days": [moment().subtract(6, "days"), moment()],
-                        "Last 30 Days": [moment().subtract(29, "days"), moment()],
-                        "This Month": [moment().startOf("month"), moment().endOf("month")],
-                        "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf(
-                            "month")]
-                    },
-                    locale: {
-                        format: "MMMM D, YYYY"
-                    }
-                }, cb);
-
-                cb(start, end);
-
-
-                 $("#kt_daterangepicker_4").on('apply.daterangepicker', function(ev, picker) {
-                    filterContacts();
-                });
-
-
+        var end = moment();
+    
+        function cb(start, end) {
+            if (start === null && end === null) {
+                $("#kt_daterangepicker_4").val(""); // Clear the input for "All Data"
+            } else {
+                $("#kt_daterangepicker_4").val(start.format("MMMM D, YYYY") + " - " + end.format("MMMM D, YYYY"));
+            }
+        }
+    
+        $("#kt_daterangepicker_4").daterangepicker({
+            startDate: start,
+            endDate: end,
+            showDropdowns: true, // Enable month and year dropdowns
+            ranges: {
+                "Today": [moment(), moment()],
+                "Yesterday": [moment().subtract(1, "days"), moment().subtract(1, "days")],
+                "Last 7 Days": [moment().subtract(6, "days"), moment()],
+                "This Week": [moment().startOf("week"), moment().endOf("week")],
+                "Last Week": [moment().subtract(1, "week").startOf("week"), moment().subtract(1, "week").endOf("week")],
+                "Last 30 Days": [moment().subtract(29, "days"), moment()],
+                "This Month": [moment().startOf("month"), moment().endOf("month")],
+                "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")],
+                "Last 365 Days": [moment().subtract(364, "days"), moment()],
+                "This Year": [moment().startOf("year"), moment().endOf("year")],
+                "Last Year": [moment().subtract(1, "year").startOf("year"), moment().subtract(1, "year").endOf("year")],
+                "Custom Range": [],
+                "All Data": [null, null]
+            },
+            locale: {
+                format: "MMMM D, YYYY"
+            }
+        }, cb);
+    
+        cb(start, end);
+    
+        $("#kt_daterangepicker_4").on('apply.daterangepicker', function(ev, picker) {
+            if (picker.chosenLabel === "All Data") {
+                cb(null, null); // Clear the input when "All Data" is selected
+            } else {
+                cb(picker.startDate, picker.endDate);
+            }
+            filterContacts();
+        });
     </script>
+
 
     <script>
         /*
@@ -2028,11 +2040,11 @@
     </script>
     @endif
     <script>
-        $(document).ready(function() {
-                $('#user-select').select2({
-                    placeholder: 'Select User',
-                    allowClear: true
-                });
-            });
+        // $('body').ready(function() {
+        //         $('.user-select').select2({
+        //             placeholder: 'Select User',
+                   
+        //         });
+        //     });
     </script>
     @endsection

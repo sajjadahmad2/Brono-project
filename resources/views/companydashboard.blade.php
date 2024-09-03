@@ -2034,6 +2034,12 @@
                         allowClear: true
                     });
                 });
+                
+                 
+                $('body').on('change','#user-select', function(){
+                     filterContacts();
+                 })
+                
             </script>
         @endif
 

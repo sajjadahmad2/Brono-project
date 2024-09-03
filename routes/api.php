@@ -35,5 +35,5 @@ Route::get('/get/properties/search', [PropertyApiController::class, 'search']);
 Route::get('/get/properties/types', [PropertyApiController::class, 'getDistinctTypes']);
 Route::get('/get/properties/type/{type}', [PropertyApiController::class, 'getByType']);
 Route::get('/get/properties/currency', [PropertyApiController::class, 'getpropertycurrency']);
-Route::get('/property/filter', [PropertyApiController::class, 'filterproperty'])->name('filter.properties');
+Route::get('/properties/by/filter', [PropertyApiController::class, 'filterproperty'])->name('filter.properties');
 Route::get('/properties/all/filter/items', [PropertyApiController::class, 'getFilterItems'])->name('filter.items');

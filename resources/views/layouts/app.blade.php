@@ -50,6 +50,9 @@
         .form-group {
             margin-bottom: 1rem;
         }
+.flex-column-fluid {
+    flex: 0 0 auto;
+}
     </style>
 
     @yield('css')
@@ -73,7 +76,7 @@
                     data-kt-sticky-offset="{default: false, lg: '300px'}" style="animation-duration: 0.3s;">
 
                     <!--begin::Header container-->
-                    <div class="app-container  container-fluid d-flex align-items-stretch justify-content-between "
+                    <div class="app-container  container d-flex align-items-stretch justify-content-between "
                         id="kt_app_header_container">
                         <!--begin::Header mobile toggle-->
                         <div class="d-flex align-items-center d-lg-none ms-n2 me-2" title="Show sidebar menu">
@@ -158,27 +161,7 @@
                 </div>
             </div>
 
-            <!--begin::Footer-->
-            <div id="kt_app_footer" style="padding:12px"
-                class="app-footer  d-flex flex-column flex-md-row flex-center flex-md-stack pb-3 ">
-                <!--begin::Copyright-->
-                <div class="text-gray-900 order-2 order-md-1 mt-2 px-5">
-                    <span class="text-muted fw-semibold me-1">2024©</span>
-                    <a href="#" target="_blank" class="text-gray-800 text-hover-primary">XMS Admin
-                        Panel</a>
-                </div>
-                <!--end::Copyright-->
 
-                <!--begin::Menu-->
-                <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
-                    <li class="menu-item"><a href="#" target="_blank" class="menu-link px-5">
-                            Crafted with <i class="fas fa-heart text-danger px-3"></i> by XortLogiX</span>
-                        </a>
-                    </li>
-                </ul>
-                <!--end::Menu-->
-            </div>
-            <!--end::Footer-->
         </div>
         <!--end:::Main-->
     </div>

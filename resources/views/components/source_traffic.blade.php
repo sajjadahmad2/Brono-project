@@ -34,9 +34,9 @@
                         <!--begin::Wrapper-->
                         <div class="d-flex flex-stack">
                             <!--begin::Icon-->
-                            @if ($opportunity['source'] === 'Facebook')
+                            @if (strpos(strtolower($opportunity['source']), 'facebook') !== false)
                             <img src="{{ asset('icons/facebook.png') }}" class="w-55px ms-n1 me-10" alt="">
-                            @elseif($opportunity['source'] === 'Instagram')
+                            @elseif(strpos(strtolower($opportunity['source']), 'instagram') !== false)
                             <img src="{{ asset('icons/instagram.png') }}" class="w-55px ms-n1 me-10" alt="">
                             @elseif($opportunity['source'] === 'Direct Traffic')
                             <img src="{{ asset('icons/direct_traffic.png') }}" class="w-55px ms-n1 me-10" alt="">

@@ -1,13 +1,15 @@
-
 <!--begin:Menu item-->
+@php
 
-<div class="text-center text-gray-800 text-hover-primary bg-hover-light rounded  me-0 ml-10 me-lg-2">
+    $users = App\Models\User::role('company')->latest()->limit(5)->get();
+@endphp
+<div class="text-center text-gray-800 text-hover-primary bg-hover-light rounded  me-0  me-lg-2">
     <a class="menu-link" href="{{ route('dashboard') }}">
 
         {{-- <a class="menu-link" href="{{ route('dashboard') }}"> --}}
-            <span class="menu-title">Dashboard</span>
-            <span class="menu-arrow d-lg-none"></span>
-        </a>
+        <span class="menu-title">Dashboard</span>
+        <span class="menu-arrow d-lg-none"></span>
+    </a>
 </div>
 
 <!--end:Menu item-->
@@ -46,20 +48,110 @@
                 <div class="mh-450px scroll-y me-n5 pe-5">
                     <!--begin::Row-->
                     <div class="row g-2">
+
+
+
                         @can('view user')
-                        <div class="col-4">
-                            <a href="{{ route('view.company.dashboard') }}"
-                                class="d-flex flex-column flex-center text-center text-gray-800 text-hover-primary bg-hover-light rounded py-4 px-3 mb-3">
-                                <img src="{{ asset('uploads/dashboard.png') }}" class="w-25px h-25px mb-2" alt="" />
-                                <span class="fw-semibold">Gold Estate</span>
-                            </a>
-                        </div>
+                            <div class="col-4">
+                                <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+                                    data-kt-menu-placement="bottom-start"
+                                    class="menu-item  menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
+                                    <!--begin:Menu link-->
+                                    <a href=""
+                                        class="d-flex flex-column flex-center text-center text-gray-800 text-hover-primary bg-hover-light rounded py-4 px-3 mb-3">
+                                        <img src="{{ asset('uploads/dashboard.png') }}" class="w-25px h-25px mb-2"
+                                            alt="" />
+                                        <span class="fw-semibold">Dashboards</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                    <!--begin:Menu sub-->
+                                    <div class="menu menu-sub menu-sub-dropdown menu-column w-100 w-sm-350px"
+                                        data-kt-menu="true">
+                                        <!--begin::Card-->
+                                        <div class="card">
+                                            <!--begin::Card header-->
+                                            <div class="card-header">
+                                                <!--begin::Card title-->
+                                                <div class="card-title">My Dashboards</div>
+                                                <!--end::Card title-->
+
+                                            </div>
+                                            <!--end::Card header-->
+                                            <!--begin::Card body-->
+                                            <div class="card-body py-5">
+                                                <!--begin::Scroll-->
+                                                <div class="mh-450px scroll-y me-n5 pe-5">
+                                                    <!--begin::Row-->
+                                                    <div class="row g-2">
+
+                                                        @foreach ($users as $user)
+                                                            <div class="menu-item p-0 m-0">
+                                                                <!--begin:Menu link-->
+                                                                <a href="{{ route('view.company.dashboard', ['id' => $user->location_id]) }}"
+                                                                    class=" menu-link active">
+                                                                    <span
+                                                                        class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-40px h-40px me-3">
+                                                                        <img src="{{ logo('company_main_logo', $user->id) }}"
+                                                                            class="ki-duotone ki-element-11 text-primary fs-1">
+                                                                        </img></span>
+
+                                                                    <span class="d-flex flex-column">
+                                                                        <span
+                                                                            class="fs-6 fw-bold text-gray-800">{{ isset($user) ? $user->first_name . ' ' . $user->last_name : 'Location name' }}</span>
+                                                                        <span
+                                                                            class="fs-7 fw-semibold text-muted">{{ isset($user) ? $user->location_id : '0fu8c2Te17KqLDYyr8RE' }}</span>
+                                                                    </span>
+                                                                </a>
+                                                                <!--end:Menu link-->
+                                                            </div>
+                                                        @endforeach
+                                                        <!--begin::Col-->
+                                                    </div>
+                                                    <!--end::Row-->
+                                                </div>
+                                                <!--end::Scroll-->
+                                            </div>
+                                            <!--end::Card body-->
+                                        </div>
+                                        <!--end::Card-->
+                                    </div>
+                                    <!--end:Menu sub-->
+                                </div>
+                            </div>
                         @endcan
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        <!--<div class="col-4">-->
+                        <!--    <a href="{{ route('view.company.dashboard') }}"-->
+                        <!--        class="d-flex flex-column flex-center text-center text-gray-800 text-hover-primary bg-hover-light rounded py-4 px-3 mb-3">-->
+                        <!--        <img src="{{ asset('uploads/dashboard.png') }}" class="w-25px h-25px mb-2" alt="" />-->
+                        <!--        <span class="fw-semibold">Gold Estate</span>-->
+                        <!--    </a>-->
+                        <!--</div>-->
+
                         <!--begin::Col-->
                         <div class="col-4">
                             <a href="{{ route('property.list') }}"
                                 class="d-flex flex-column flex-center text-center text-gray-800 text-hover-primary bg-hover-light rounded py-4 px-3 mb-3">
-                                <img src="{{ asset('uploads/property.png') }}" class="w-25px h-25px mb-2" alt="" />
+                                <img src="{{ asset('uploads/property.png') }}" class="w-25px h-25px mb-2"
+                                    alt="" />
                                 <span class="fw-semibold">PMS</span>
                             </a>
                         </div>
@@ -69,7 +161,8 @@
                             <a href="{{ route('style.dashboard') }}"
                                 class="d-flex flex-column flex-center text-center text-gray-800 text-hover-primary bg-hover-light rounded py-4 px-3 mb-3">
 
-                                <img src="{{ asset('uploads/designer.png') }}" class="w-25px h-25px mb-2" alt="" />
+                                <img src="{{ asset('uploads/designer.png') }}" class="w-25px h-25px mb-2"
+                                    alt="" />
                                 <span class="fw-semibold">Designer</span>
                             </a>
                         </div>
@@ -83,7 +176,8 @@
                         <div class="col-4">
                             <a href="#"
                                 class="d-flex flex-column flex-center text-center text-gray-800 text-hover-primary bg-hover-light rounded py-4 px-3 mb-3">
-                                <img src="{{ image('svg/brand-logos/atica.svg') }}" class="w-25px h-25px mb-2" alt="" />
+                                <img src="{{ image('svg/brand-logos/atica.svg') }}" class="w-25px h-25px mb-2"
+                                    alt="" />
                                 <span class="fw-semibold">Atica</span>
                             </a>
                         </div>
@@ -142,8 +236,8 @@
                         <div class="col-4">
                             <a href="#"
                                 class="d-flex flex-column flex-center text-center text-gray-800 text-hover-primary bg-hover-light rounded py-4 px-3 mb-3">
-                                <img src="{{ image('svg/brand-logos/dribbble-icon-1.svg') }}" class="w-25px h-25px mb-2"
-                                    alt="" />
+                                <img src="{{ image('svg/brand-logos/dribbble-icon-1.svg') }}"
+                                    class="w-25px h-25px mb-2" alt="" />
                                 <span class="fw-semibold">Dribble</span>
                             </a>
                         </div>
@@ -162,8 +256,8 @@
                         <div class="col-4">
                             <a href="#"
                                 class="d-flex flex-column flex-center text-center text-gray-800 text-hover-primary bg-hover-light rounded py-4 px-3 mb-3">
-                                <img src="{{ image('svg/brand-logos/google-podcasts.svg') }}" class="w-25px h-25px mb-2"
-                                    alt="" />
+                                <img src="{{ image('svg/brand-logos/google-podcasts.svg') }}"
+                                    class="w-25px h-25px mb-2" alt="" />
                                 <span class="fw-semibold">Podcasts</span>
                             </a>
                         </div>
@@ -202,8 +296,8 @@
                         <div class="col-4">
                             <a href="#"
                                 class="d-flex flex-column flex-center text-center text-gray-800 text-hover-primary bg-hover-light rounded py-4 px-3 mb-3">
-                                <img src="{{ image('svg/brand-logos/instagram-2-1.svg') }}" class="w-25px h-25px mb-2"
-                                    alt="" />
+                                <img src="{{ image('svg/brand-logos/instagram-2-1.svg') }}"
+                                    class="w-25px h-25px mb-2" alt="" />
                                 <span class="fw-semibold">Instagram</span>
                             </a>
                         </div>
@@ -244,7 +338,7 @@
     <!--begin:Menu sub-->
     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px"
         data-kt-menu="true" style="">
-        {{--  <div class="separator my-2"></div>  --}}
+        {{-- <div class="separator my-2"></div> --}}
         <!--end::Menu separator-->
 
         <!--begin::Menu item-->
@@ -306,7 +400,8 @@
                 data-kt-menu="true" data-kt-element="theme-mode-menu" style="">
                 <!--begin::Menu item-->
                 <div class="menu-item px-3 my-0">
-                    <a href="#" class="menu-link px-3 py-2 active" data-kt-element="mode" data-kt-value="light">
+                    <a href="#" class="menu-link px-3 py-2 active" data-kt-element="mode"
+                        data-kt-value="light">
                         <span class="menu-icon" data-kt-element="icon">
                             <i class="ki-outline ki-night-day fs-2"></i> </span>
                         <span class="menu-title">
@@ -418,70 +513,66 @@
             <!--begin::Menu sub-->
             <div class="menu-sub menu-sub-dropdown w-175px py-4">
                 @can('view role')
-                <!--begin::Menu item-->
-                <div class="menu-item px-3">
-                    <a class="menu-link px-5" href="{{ route('role.list') }}">
-                        <span class="menu-icon">
-                            <img width="25" height="25"
-                                src="{{ asset('uploads/roles.png') }}"
-                                alt="customer-insights-manager" />
-                        </span>
-                        <span class="menu-title">Roles</span>
-                    </a>
-                </div>
+                    <!--begin::Menu item-->
+                    <div class="menu-item px-3">
+                        <a class="menu-link px-5" href="{{ route('role.list') }}">
+                            <span class="menu-icon">
+                                <img width="25" height="25" src="{{ asset('uploads/roles.png') }}"
+                                    alt="customer-insights-manager" />
+                            </span>
+                            <span class="menu-title">Roles</span>
+                        </a>
+                    </div>
                 @endcan
                 <!--end::Menu item-->
                 @can('view permission')
-                <!--begin::Menu item-->
-                <div class="menu-item px-3">
-                    <a class="menu-link px-5" href="{{ route('permission.manage') }}">
-                        <span class="menu-icon">
-                            <img width="25" height="25"
-                                src="{{ asset('uploads/permissions.png') }}"
-                                alt="external-key-user-tanah-basah-basic-outline-tanah-basah" />
-                        </span>
-                        <span class="menu-title">Manage Permissions</span>
-                    </a>
-                </div>
+                    <!--begin::Menu item-->
+                    <div class="menu-item px-3">
+                        <a class="menu-link px-5" href="{{ route('permission.manage') }}">
+                            <span class="menu-icon">
+                                <img width="25" height="25" src="{{ asset('uploads/permissions.png') }}"
+                                    alt="external-key-user-tanah-basah-basic-outline-tanah-basah" />
+                            </span>
+                            <span class="menu-title">Manage Permissions</span>
+                        </a>
+                    </div>
                 @endcan
                 @can('view permission')
-                <!--begin::Menu item-->
-                <div class="menu-item px-3">
-                    <a class="menu-link px-5" href="{{ route('propertypermission.manage') }}">
-                        <span class="menu-icon">
-                            <img width="25" height="25"
-                                src="{{ asset('uploads/permissions.png') }}"
-                                alt="external-key-user-tanah-basah-basic-outline-tanah-basah" />
-                        </span>
-                        <span class="menu-title">Property Permissions</span>
-                    </a>
-                </div>
+                    <!--begin::Menu item-->
+                    <div class="menu-item px-3">
+                        <a class="menu-link px-5" href="{{ route('propertypermission.manage') }}">
+                            <span class="menu-icon">
+                                <img width="25" height="25" src="{{ asset('uploads/permissions.png') }}"
+                                    alt="external-key-user-tanah-basah-basic-outline-tanah-basah" />
+                            </span>
+                            <span class="menu-title">Property Permissions</span>
+                        </a>
+                    </div>
                 @endcan
                 <!--end::Menu item-->
                 <!--begin::Menu item-->
                 @can('view user')
-                <div class="menu-item px-3">
-                    <a class="menu-link px-5" href="{{ route('user.list') }}">
+                    <div class="menu-item px-3">
+                        <a class="menu-link px-5" href="{{ route('user.list') }}">
 
-                        <span class="menu-icon">
-                            <img width="25" height="25"
-                                src="{{ asset('uploads/users.png') }}"
-                                alt="conference-call--v1" />
-                        </span>
-                        <span class="menu-title">Users</span>
-                    </a>
-                </div>
+                            <span class="menu-icon">
+                                <img width="25" height="25" src="{{ asset('uploads/users.png') }}"
+                                    alt="conference-call--v1" />
+                            </span>
+                            <span class="menu-title">Users</span>
+                        </a>
+                    </div>
                 @endcan
                 @can('manage settings')
-                <div class="menu-item px-3">
-                    <a class="menu-link px-5" href="{{ route('setting') }}">
-                        <span class="menu-icon">
-                            <img width="25" height="25" src="{{ asset('uploads/setting.png') }}"
-                                alt="settings--v1" />
-                        </span>
-                        <span class="menu-title">Settings</span>
-                    </a>
-                </div>
+                    <div class="menu-item px-3">
+                        <a class="menu-link px-5" href="{{ route('setting') }}">
+                            <span class="menu-icon">
+                                <img width="25" height="25" src="{{ asset('uploads/setting.png') }}"
+                                    alt="settings--v1" />
+                            </span>
+                            <span class="menu-title">Settings</span>
+                        </a>
+                    </div>
                 @endcan
                 <!--end::Menu item-->
 
